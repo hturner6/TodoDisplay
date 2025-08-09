@@ -6,7 +6,6 @@ from tickTick.projectTaskParser import parse_project_tasks
 BASE_URL = 'https://api.ticktick.com'
 
 def get_projects():
-    access_token = os.getenv('ACCESS_TOKEN')
     project_url = f"{BASE_URL}/open/v1/project"
     headers = {
         "Authorization": get_auth_header()
@@ -16,7 +15,6 @@ def get_projects():
     return response.json()
 
 def get_project_data(project_id):
-    access_token = os.getenv('ACCESS_TOKEN')
     project_data_url = f"{BASE_URL}/open/v1/project/{project_id}/data"
     headers = {
         "Authorization": get_auth_header()
