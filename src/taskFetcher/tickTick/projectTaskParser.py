@@ -1,4 +1,5 @@
 from datetime import datetime
+from models.task import Task
 
 def parse_project_tasks(project_json):
     tasks = project_json.get('tasks', [])
@@ -11,17 +12,16 @@ def parse_project_tasks(project_json):
         column_tasks[column['name']] = []
     for task in tasks:
         parsed_task = parse_task(task)
-        column_name = columns_map.get(task.get('columnId'), 'No Column')
+        column_name = columns_map.get(task.get('category'), 'No Column')
         column_tasks[column_name].append(parsed_task)
     return column_tasks
 
 def parse_task(task_json):
-    return {
-        'title': task_json.get('title'),
-        'columnId': task_json.get('columnId'),
-        'dueDate': parse_due_date(task_json.get('dueDate')),
-        'tags': task_json.get('tags', [])
-    }
+    return Task(
+        title=task_json.get('title'),
+        due_date=parse_due_date(task_json.get('dueDate')),
+        category=task_json.get('columnId'),
+    )
 
 def days_elapsed(start_date, end_date):
     # Both dates should be datetime.date or datetime.datetime objects
