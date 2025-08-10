@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.models.task import Task
+from models.task import Task
 
 def parse_project_tasks(project_json):
     tasks = project_json.get('tasks', [])
