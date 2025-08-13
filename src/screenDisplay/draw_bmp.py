@@ -15,7 +15,7 @@ def display_bmp(picdir):
     time.sleep(2)
 
 def display_image(image: Image):
-    image = resize_image(image, width=648, height=480)
+    image = resize_image(image)
     image = convert_image_to_BMP(image)
     epd = epd5in83_V2.EPD()
     logging.info("init and Clear")
