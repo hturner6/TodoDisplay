@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import argparse
 from models.task import Task
 from taskDisplay.createTaskImage import create_task_image
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
