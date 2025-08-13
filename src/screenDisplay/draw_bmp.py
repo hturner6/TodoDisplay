@@ -24,3 +24,11 @@ def display_image(image: Image):
     logging.info("display image")
     epd.display(epd.getbuffer(image))
     time.sleep(2)
+
+def clear_display():
+    epd = epd5in83_V2.EPD()
+    logging.info("init and Clear")
+    epd.init()
+    epd.Clear()
+    time.sleep(2)
+    logging.info("Display cleared")
