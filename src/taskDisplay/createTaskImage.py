@@ -8,7 +8,7 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
     if tasks is None:
         tasks = []
 
-    sortedTasks = sorted(tasks, key=lambda x: x.due_date)
+    sortedTasks = sorted(tasks, key=lambda x: (x.due_date is None, x.due_date))
     # Create a blank image
     taskFont = ImageFont.truetype(fontPath, 20)
     img = Image.new("RGB", (width, height), color="white")
@@ -16,7 +16,7 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
 
     # Draw tasks on the image
     for i, task in enumerate(sortedTasks):
-        task_text = f"* {task.title} - {task.due_date}"
+        task_text = task.__str__()
         draw.text((10, 20 + i * 30), task_text, font=taskFont, fill="black")
 
     return img
