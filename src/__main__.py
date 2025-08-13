@@ -10,7 +10,6 @@ def task_image():
     project_id = "687164e8fb06fe7e7a3d621a"
     rawTasks = get_project_data(project_id)
     tasks = parse_project_tasks(rawTasks)
-    print(tasks)
     image = create_task_image(tasks)
     # image.show()
     display_image(image)

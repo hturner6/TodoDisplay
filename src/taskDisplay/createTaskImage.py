@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from models.task import Task
 
-fontPath = "screenDisplay/fonts/BitterPro-Black.ttf"
+fontPath = "screenDisplay/fonts/BitterPro-Regular.ttf"
 
 
 def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
@@ -9,7 +9,7 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
         tasks = []
 
     # Create a blank image
-    taskFont = ImageFont.truetype(fontPath, 18)
+    taskFont = ImageFont.truetype(fontPath, 20)
     img = Image.new("RGB", (width, height), color="white")
     draw = ImageDraw.Draw(img)
 
