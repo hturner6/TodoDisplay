@@ -32,16 +32,12 @@ def days_elapsed(start_date, end_date):
 def parse_due_date(due_date):
     if not due_date:
         return "No due date"
-    print(due_date)
     # Ticktick sets the due date to start of day and converts local timezone to UTC
     # we need to convert back to localtimezone for the correct date
     date = datetime.fromisoformat(due_date).astimezone().date()
     today = datetime.now().date()
     days = days_elapsed(date, today)
 
-    print(date)
-    print(today)
-    print()
     if date == today:
         return "Due today"
     elif date < today:
