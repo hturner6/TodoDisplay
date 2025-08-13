@@ -1,5 +1,5 @@
 import argparse 
-from screenDisplay.createImage import resize_image, convert_image_to_BMP
+from screenDisplay.imageHelpers import resize_image, convert_image_to_BMP
 from screenDisplay.draw_bmp import display_bmp
 
 def display_image(image_path):

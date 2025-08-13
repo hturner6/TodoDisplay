@@ -30,5 +30,5 @@ def print_project_tasks(tasks_by_column):
             print(f" - {task['title']}, {task['dueDate']}")
 
 def get_auth_header():
+    load_dotenv()
     return f"Bearer {os.getenv('ACCESS_TOKEN')}"
-
