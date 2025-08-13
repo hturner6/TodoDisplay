@@ -2,8 +2,10 @@ import argparse
 import os
 import json
 from dotenv import load_dotenv
-from tickTick.apiTokenVerifier import verify_api_key
-from tickTick.tickTickClient import get_projects, get_project_data
+from taskFetcher.tickTick.apiTokenVerifier import verify_api_key
+from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
+from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
+from models.task import TaskEncoder
 
 # TODO: Remove hardcoded values
 def create_Url():
@@ -44,8 +46,8 @@ def main():
         print(json.dumps(projects_json, indent=2))
     if args.tasks:
         project_data = get_project_data(args.tasks)
-        print(json.dumps(project_data, indent=2))
-
+        parsed_tasks = parse_project_tasks(project_data)
+        print(json.dumps(parsed_tasks, indent=2, cls=TaskEncoder))
 
 if __name__ == "__main__":
     main()

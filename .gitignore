@@ -1,3 +1,9 @@
+
+**/img/*
+!**/img/Mockup.png
+**/fonts/*
+!**/fonts/BitterPro-Regular.ttf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
