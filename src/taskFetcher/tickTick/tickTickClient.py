@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 import requests
-from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 
 BASE_URL = 'https://api.ticktick.com'
 

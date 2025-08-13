@@ -1,10 +1,8 @@
-import asyncio
 from dotenv import load_dotenv
 from models.task import Task
 from taskDisplay.createTaskImage import create_task_image
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from taskFetcher.tickTick.tickTickClient import get_project_data
-from screenDisplay.imageHelpers import resize_image, convert_image_to_BMP
 from screenDisplay.draw_bmp import display_image
 
 def main():
