@@ -14,8 +14,6 @@ def main():
     print(tasks)
     image = create_task_image(tasks)
     # image.show()
-    image = resize_image(image)
-    image = convert_image_to_BMP(image)
     display_image(image)
 
 if __name__ == "__main__":
