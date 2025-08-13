@@ -1,7 +1,21 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 width = 648
 height = 480
+
+def create_image(tasks: list = None):
+    if tasks is None:
+        tasks = []
+
+    # Create a blank image
+    img = Image.new("RGB", (width, height), color="white")
+    draw = ImageDraw.Draw(img)
+
+    # Draw tasks on the image
+    for i, task in enumerate(tasks):
+        draw.text((10, 10 + i * 20), task, fill="black")
+
+    img.save("screenDisplay/img/test.png", "PNG")
 
 def resize_image(image_path, output_path):
     """

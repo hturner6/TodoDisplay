@@ -49,6 +49,5 @@ def main():
         parsed_tasks = parse_project_tasks(project_data)
         print(json.dumps(parsed_tasks, indent=2, cls=TaskEncoder))
 
-
 if __name__ == "__main__":
     main()
