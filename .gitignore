@@ -1,6 +1,8 @@
 
 **/img/*
 !**/img/Mockup.png
+**/fonts/*
+!**/fonts/BitterPro-Black.ttf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
