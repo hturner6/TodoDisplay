@@ -10,13 +10,15 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
 
     sortedTasks = sorted(tasks, key=lambda x: (x.due_date is None, x.due_date))
     # Create a blank image
+    titleFont = ImageFont.truetype(fontPath, 24)
     taskFont = ImageFont.truetype(fontPath, 20)
     img = Image.new("RGB", (width, height), color="white")
     draw = ImageDraw.Draw(img)
 
     # Draw tasks on the image
+    draw.text((10, 20), "Tasks:", font=titleFont, fill="black")
     for i, task in enumerate(sortedTasks):
         task_text = task.__str__()
-        draw.text((10, 20 + i * 30), task_text, font=taskFont, fill="black")
+        draw.text((10, 50 + i * 30), task_text, font=taskFont, fill="black")
 
     return img
