@@ -33,9 +33,17 @@ class Task:
             return f"Overdue by {abs(days)} days"
         else:
             return f"Due {Task.format_date_string(date)}"
-    
+
     def format_date_string(date):
         return date.strftime('%a %d %b')
+
+    def is_today_or_overdue(self) -> bool:
+        if self.due_date is None:
+            return False
+
+        today = datetime.now().date()
+        return self.due_date <= today
+
 
     def toJSON(self):
         return {
