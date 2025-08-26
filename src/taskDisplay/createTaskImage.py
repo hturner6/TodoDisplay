@@ -15,7 +15,7 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
     taskFont = ImageFont.truetype(fontPath, 20)
     img = Image.new('1', (width, height), color="white")
     draw = ImageDraw.Draw(img)
-    draw.fontmode = "1"
+    draw.fontmode = "L"
 
     # Draw tasks on the image
     draw.text((10, 20), "Todays Tasks:", font=titleFont, fill="black")
@@ -30,7 +30,6 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
             task_text = task.__str__()
             draw.text((10, heightToDraw), task_text, font=taskFont, fill="black")
             heightToDraw = heightToDraw - 30
-        print(heightToDraw)
         draw.text((10, heightToDraw), "General Tasks:", font=titleFont, fill="black")
 
     return img
