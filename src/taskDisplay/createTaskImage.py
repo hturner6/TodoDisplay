@@ -15,9 +15,10 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
     taskFont = ImageFont.truetype(fontPath, 20)
     img = Image.new('1', (width, height), color="white")
     draw = ImageDraw.Draw(img)
+    draw.fontmode = "1"
 
     # Draw tasks on the image
-    draw.text((10, 20), "Tasks:", font=titleFont, fill="black")
+    draw.text((10, 20), "Todays Tasks:", font=titleFont, fill="black")
     for i, task in enumerate(groupA):
         task_text = task.__str__()
         draw.text((10, 50 + i * 30), task_text, font=taskFont, fill="black")
@@ -30,7 +31,7 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
             draw.text((10, heightToDraw), task_text, font=taskFont, fill="black")
             heightToDraw = heightToDraw - 30
         print(heightToDraw)
-        draw.text((10, heightToDraw), "Tasks:", font=titleFont, fill="black")
+        draw.text((10, heightToDraw), "General Tasks:", font=titleFont, fill="black")
 
     return img
 
@@ -40,6 +41,6 @@ def split_task_groups(tasks: list[Task]) -> (list[Task], list[Task]):
 
     groupA, groupB = [], []
     for task in tasks:
-        (groupA, groupB)[task.is_today_or_overdue()].append(task)
+        groupA.append(task) if task.is_today_or_overdue() else groupB.append(task)
 
     return (groupA, groupB)
