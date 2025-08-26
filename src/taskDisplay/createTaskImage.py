@@ -13,9 +13,8 @@ def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
     # Create a blank image
     titleFont = ImageFont.truetype(fontPath, 24)
     taskFont = ImageFont.truetype(fontPath, 20)
-    img = Image.new('1', (width, height), color="white")
+    img = Image.new('L', (width, height), color="white")
     draw = ImageDraw.Draw(img)
-    draw.fontmode = "L"
 
     # Draw tasks on the image
     draw.text((10, 20), "Todays Tasks:", font=titleFont, fill="black")
