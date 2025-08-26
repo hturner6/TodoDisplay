@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from models.task import Task
 
-fontPath = "screenDisplay/fonts/BitterPro-Regular.ttf"
+fontPath = "screenDisplay/fonts/Verdana.ttf"
 
 
 def create_task_image(tasks: list[Task] = None, width=648, height=480) -> Image:
