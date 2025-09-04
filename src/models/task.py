@@ -28,14 +28,22 @@ class Task:
         days = Task.days_elapsed(date, today)
 
         if date == today:
-            return "Due Today"
+            return "Today"
         elif date < today:
             return f"Overdue by {abs(days)} days"
         else:
-            return f"Due {Task.format_date_string(date)}"
-    
+            return f"{Task.format_date_string(date)}"
+
     def format_date_string(date):
         return date.strftime('%a %d %b')
+
+    def is_today_or_overdue(self) -> bool:
+        if self.due_date is None:
+            return False
+
+        today = datetime.now().date()
+        return self.due_date <= today
+
 
     def toJSON(self):
         return {
@@ -45,6 +53,9 @@ class Task:
         }
 
     def __str__(self):
+        if self.due_date is None:
+            return f"* {self.title}"
+
         return f"* {self.title} - {Task.format_due_date(self.due_date)}"
 
 class TaskEncoder(JSONEncoder):

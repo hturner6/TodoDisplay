@@ -1,4 +1,4 @@
-import argparse 
+import argparse
 import os
 import json
 from dotenv import load_dotenv
@@ -47,7 +47,7 @@ def main():
     if args.tasks:
         project_data = get_project_data(args.tasks)
         parsed_tasks = parse_project_tasks(project_data)
-        print(json.dumps(parsed_tasks, indent=2, cls=TaskEncoder))
+        print(parsed_tasks)
 
 if __name__ == "__main__":
     main()

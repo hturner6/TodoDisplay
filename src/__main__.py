@@ -2,10 +2,12 @@ from dotenv import load_dotenv
 import argparse
 import time
 from models.task import Task
-from taskDisplay.createTaskImage import create_task_image
+from taskDisplay.createTaskImage import TaskDrawer
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from taskFetcher.tickTick.tickTickClient import get_project_data
 from screenDisplay.draw_bmp import display_image, clear_display
+
+fontPath = "screenDisplay/fonts/Verdana.ttf"
 
 def task_run(refresh_interval_minutes):
     while True:
@@ -17,7 +19,8 @@ def task_image():
     project_id = "687164e8fb06fe7e7a3d621a"
     rawTasks = get_project_data(project_id)
     tasks = parse_project_tasks(rawTasks)
-    image = create_task_image(tasks)
+    taskDrawer = TaskDrawer(fontPath)
+    image = taskDrawer.create_task_image(tasks)
     # image.show()
     display_image(image)
 
@@ -25,7 +28,8 @@ def task_test():
     project_id = "687164e8fb06fe7e7a3d621a"
     rawTasks = get_project_data(project_id)
     tasks = parse_project_tasks(rawTasks)
-    image = create_task_image(tasks)
+    taskDrawer = TaskDrawer(fontPath)
+    image = taskDrawer.create_task_image(tasks)
     image.show()
 
 def main():
@@ -45,7 +49,7 @@ def main():
     elif args.test:
         task_test()
     else:
-        print("No valid argument provided. Use --image to create and display the mockup image.") 
+        print("No valid argument provided. Use --image to create and display the mockup image.")
 
 if __name__ == "__main__":
     main()
