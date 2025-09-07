@@ -24,7 +24,7 @@ class TaskDrawer():
         # Draw tasks on the image
         self.draw_group("Todays Tasks:", titlePosition=self.heightOffset, tasks=groupA)
         midpoint=self.height/2 + self.heightOffset
-        self.draw_group("General Tasks:", titlePosition=midpoint, tasks=groupB)
+        self.draw_group("Upcoming Tasks:", titlePosition=midpoint, tasks=groupB)
 
         return self.img
 
