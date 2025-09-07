@@ -32,11 +32,15 @@ def task_test():
     image = taskDrawer.create_task_image(tasks)
     image.show()
 
+def refresh_token();
+    return
+
 def main():
     parser = argparse.ArgumentParser(description="Your script description")
     parser.add_argument('--task', action='store_true', help='Displays the task image on an epaper screen')
     parser.add_argument('--test', action='store_true', help='Displays the task image locally')
     parser.add_argument('--clear', action='store_true', help='Clears the display')
+    parser.add_argument('--refresh', action='store_true', help='Refreshes the auth token')
     parser.add_argument('--run', type=int, help='Runs the task display with a specified interval (in minutes)')
     args = parser.parse_args()
 
@@ -48,6 +52,8 @@ def main():
         clear_display()
     elif args.test:
         task_test()
+    elif args.refresh:
+        refresh_token()
     else:
         print("No valid argument provided. Use --image to create and display the mockup image.")
 
