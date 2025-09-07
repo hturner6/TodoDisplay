@@ -3,6 +3,7 @@ import argparse
 import time
 from models.task import Task
 from taskDisplay.createTaskImage import TaskDrawer
+from taskFetcher.tickTick.apiTokenVerifier import refresh_token
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from taskFetcher.tickTick.tickTickClient import get_project_data
 from screenDisplay.draw_bmp import display_image, clear_display
@@ -32,8 +33,8 @@ def task_test():
     image = taskDrawer.create_task_image(tasks)
     image.show()
 
-def refresh_token();
-    return
+def refresh_token_main() -> None:
+    refresh_token()
 
 def main():
     parser = argparse.ArgumentParser(description="Your script description")
@@ -53,7 +54,7 @@ def main():
     elif args.test:
         task_test()
     elif args.refresh:
-        refresh_token()
+        refresh_token_main()
     else:
         print("No valid argument provided. Use --image to create and display the mockup image.")
 

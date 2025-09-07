@@ -2,6 +2,7 @@ import webbrowser
 import requests
 import os
 import base64
+import dotenv
 
 redirect_uri = 'https://localhost:3000'
 scope = 'tasks:read' 
@@ -9,12 +10,26 @@ scope = 'tasks:read'
 token_url = 'https://ticktick.com/oauth/token'
 
 def refresh_token():
+    dotenv.load_dotenv()
     auth_url: str = create_Url()
     webbrowser.open(auth_url, new=0, autoraise=True)
     # TODO: use redirect url to grab the 'code' query param value
     auth_code: str = input('Enter the code: ') 
     access_token: str = verify_api_key(auth_code)
-    # TODO: update .env access token
+    update_dotenv(access_token)
+    
+
+def update_dotenv(new_access_token: str) -> None:
+    DOTENV_KEY = "ACCESS_TOKEN"
+    dotenv_file = dotenv.find_dotenv()
+    dotenv.load_dotenv(dotenv_file)
+
+    print(os.environ[DOTENV_KEY])  # outputs "value"
+    os.environ[DOTENV_KEY] = new_access_token
+    print(os.environ[DOTENV_KEY])  # outputs 'newvalue'
+
+    # Write changes to .env file.
+    dotenv.set_key(dotenv_file, DOTENV_KEY, os.environ[DOTENV_KEY])
 
 # TODO: Remove hardcoded values
 def create_Url() -> str:

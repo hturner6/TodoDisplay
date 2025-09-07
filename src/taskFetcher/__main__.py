@@ -2,7 +2,7 @@ import argparse
 import os
 import json
 from dotenv import load_dotenv
-from taskFetcher.tickTick.apiTokenVerifier import verify_api_key, create_Url, refresh_token
+from taskFetcher.tickTick.apiTokenVerifier import verify_api_key, create_Url, refresh_token_main
 from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from models.task import TaskEncoder
