@@ -15,7 +15,7 @@ def task_run(refresh_interval_minutes):
     
     while True:
         schedule.run_pending()
-        sleep(1)
+        time.sleep(1)
     
 
 def task_image():
