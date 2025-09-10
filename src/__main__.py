@@ -11,6 +11,7 @@ from screenDisplay.draw_bmp import display_image, clear_display
 fontPath = "screenDisplay/fonts/Verdana.ttf"
 
 def task_run(refresh_interval_minutes):
+    print(f"Running TodoDisplay every {refresh_interval_minutes} minutes")
     schedule.every(refresh_interval_minutes).minutes.do(task_image)
     
     while True:
