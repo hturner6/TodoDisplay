@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import argparse
 import time
+import schedule
 from models.task import Task
 from taskDisplay.createTaskImage import TaskDrawer
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
@@ -10,10 +11,8 @@ from screenDisplay.draw_bmp import display_image, clear_display
 fontPath = "screenDisplay/fonts/Verdana.ttf"
 
 def task_run(refresh_interval_minutes):
-    while True:
-        print("Fetching tasks and updating display...")
-        task_image()
-        time.sleep(refresh_interval_minutes * 60)  # Convert minutes to seconds
+    schedule.every(refresh_interval_minutes).minutes.do(task_image)
+    
 
 def task_image():
     project_id = "687164e8fb06fe7e7a3d621a"
