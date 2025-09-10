@@ -13,6 +13,10 @@ fontPath = "screenDisplay/fonts/Verdana.ttf"
 def task_run(refresh_interval_minutes):
     schedule.every(refresh_interval_minutes).minutes.do(task_image)
     
+    while True:
+        schedule.run_pending()
+        sleep(1)
+    
 
 def task_image():
     project_id = "687164e8fb06fe7e7a3d621a"
