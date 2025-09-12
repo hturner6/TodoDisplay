@@ -11,20 +11,21 @@ class TaskDrawer():
         self.draw = ImageDraw.Draw(self.img)
         self.heightOffset = 20
 
+        self.task_font_size = 20
         self.titleFont = ImageFont.truetype(fontPath, 24)
-        self.taskFont = ImageFont.truetype(fontPath, 20)
+        self.taskFont = ImageFont.truetype(fontPath, self.task_font_size)
 
     def create_task_image(self, tasks: list[Task] = None) -> Image:
         if tasks is None:
             tasks = []
 
-        sortedTasks = sorted(tasks, key=lambda x: (x.due_date is None, x.due_date))
-        (groupA, groupB) = TaskDrawer.split_task_groups(sortedTasks)
-
-        # Draw tasks on the image
-        self.draw_group("Todays Tasks:", titlePosition=self.heightOffset, tasks=groupA)
-        midpoint=self.height/2 + self.heightOffset
-        self.draw_group("General Tasks:", titlePosition=midpoint, tasks=groupB)
+        dailyTasks = [task for task in tasks if task.is_today_or_overdue()]
+        if len(dailyTasks) == 0:
+            self.draw_all_completed("Todays Tasks:", titlePosition=self.heightOffset)
+        else:
+            sortedTasks = sorted(dailyTasks, key=lambda x: (x.due_date is None, x.due_date))
+            # Draw tasks on the image
+            self.draw_group("Todays Tasks:", titlePosition=self.heightOffset, tasks=sortedTasks)
 
         return self.img
 
@@ -33,7 +34,16 @@ class TaskDrawer():
         self.draw.text((10, titlePosition), title, font=self.titleFont, fill="black")
         for i, task in enumerate(tasks):
             task_text = task.__str__()
-            self.draw.text((10, titlePosition + (i+1) * 30), task_text, font=self.taskFont, fill="black")
+            text_height = titlePosition + (i+1) * 30
+            is_out_of_bounds: bool = (text_height + self.task_font_size) > self.height
+            if is_out_of_bounds:
+                return
+
+            self.draw.text((10, text_height), task_text, font=self.taskFont, fill="black")
+
+    def draw_all_completed(self, title: str, titlePosition: int):
+        self.draw.text((10, titlePosition), title, font=self.titleFont, fill="black")
+        self.draw.text((10, titlePosition + 30), "* All tasks completed", font=self.taskFont, fill="black")
 
     def split_task_groups(tasks: list[Task]) -> (list[Task], list[Task]):
         if tasks is None:
