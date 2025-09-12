@@ -8,7 +8,7 @@ from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from taskFetcher.tickTick.tickTickClient import get_project_data
 from screenDisplay.draw_bmp import display_image, clear_display
 
-fontPath = "screenDisplay/fonts/Verdana.ttf"
+fontPath = "./src/screenDisplay/fonts/Verdana.ttf"
 
 def task_run(refresh_interval_minutes):
     print(f"Running TodoDisplay every {refresh_interval_minutes} minutes")
