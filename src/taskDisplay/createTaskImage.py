@@ -11,14 +11,15 @@ class TaskDrawer():
         self.draw = ImageDraw.Draw(self.img)
         self.heightOffset = 20
 
+        self.task_font_size = 20
         self.titleFont = ImageFont.truetype(fontPath, 24)
-        self.taskFont = ImageFont.truetype(fontPath, 20)
+        self.taskFont = ImageFont.truetype(fontPath, self.task_font_size)
 
     def create_task_image(self, tasks: list[Task] = None) -> Image:
         if tasks is None:
             tasks = []
 
-        dailyTasks = list(filter(Task.is_today_or_overdue, tasks))
+        dailyTasks = [task for task in tasks if task.is_today_or_overdue()]
         if len(dailyTasks) == 0:
             self.draw_all_completed("Todays Tasks:", titlePosition=self.heightOffset)
         else:
@@ -33,7 +34,12 @@ class TaskDrawer():
         self.draw.text((10, titlePosition), title, font=self.titleFont, fill="black")
         for i, task in enumerate(tasks):
             task_text = task.__str__()
-            self.draw.text((10, titlePosition + (i+1) * 30), task_text, font=self.taskFont, fill="black")
+            text_height = titlePosition + (i+1) * 30
+            is_out_of_bounds: bool = (text_height + self.task_font_size) > self.height
+            if is_out_of_bounds:
+                return
+
+            self.draw.text((10, text_height), task_text, font=self.taskFont, fill="black")
 
     def draw_all_completed(self, title: str, titlePosition: int):
         self.draw.text((10, titlePosition), title, font=self.titleFont, fill="black")
