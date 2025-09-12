@@ -18,13 +18,13 @@ class TaskDrawer():
         if tasks is None:
             tasks = []
 
-        sortedTasks = sorted(tasks, key=lambda x: (x.due_date is None, x.due_date))
-        (groupA, groupB) = TaskDrawer.split_task_groups(sortedTasks)
-
-        # Draw tasks on the image
-        self.draw_group("Todays Tasks:", titlePosition=self.heightOffset, tasks=groupA)
-        midpoint=self.height/2 + self.heightOffset
-        self.draw_group("Upcoming Tasks:", titlePosition=midpoint, tasks=groupB)
+        dailyTasks = list(filter(Task.is_today_or_overdue, tasks))
+        if len(dailyTasks) == 0:
+            self.draw_all_completed("Todays Tasks:", titlePosition=self.heightOffset)
+        else:
+            sortedTasks = sorted(dailyTasks, key=lambda x: (x.due_date is None, x.due_date))
+            # Draw tasks on the image
+            self.draw_group("Todays Tasks:", titlePosition=self.heightOffset, tasks=sortedTasks)
 
         return self.img
 
@@ -34,6 +34,10 @@ class TaskDrawer():
         for i, task in enumerate(tasks):
             task_text = task.__str__()
             self.draw.text((10, titlePosition + (i+1) * 30), task_text, font=self.taskFont, fill="black")
+
+    def draw_all_completed(self, title: str, titlePosition: int):
+        self.draw.text((10, titlePosition), title, font=self.titleFont, fill="black")
+        self.draw.text((10, titlePosition + 30), "* All tasks completed", font=self.taskFont, fill="black")
 
     def split_task_groups(tasks: list[Task]) -> (list[Task], list[Task]):
         if tasks is None:
