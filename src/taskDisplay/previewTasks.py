@@ -34,13 +34,25 @@ def _long() -> list[Task]:
     ]
 
 
+def _states() -> list[Task]:
+    return [
+        Task("To do", _today()),
+        Task("Priority to do", _today(), priority=True),
+        Task("Done", _today(), status=Task.DONE),
+        Task("Moved to tomorrow", _today(), status=Task.MOVED),
+        Task("Cancelled item", _today(), status=Task.CANCELLED),
+        Task("A note", _today(), status=Task.NOTE),
+    ]
+
+
 # Layouts worth checking while tuning the look: nothing to show, a typical day, a full screen,
-# and titles that are too wide for the display.
+# titles that are too wide for the display, and every completion state.
 SCENARIOS = {
     "empty": _empty,
     "few": _few,
     "many": _many,
     "long": _long,
+    "states": _states,
 }
 
 

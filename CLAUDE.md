@@ -13,7 +13,7 @@ Any change to how the display looks (`src/taskDisplay/`, fonts, layout, glyphs, 
 - Run it from the repo root.
 - Write the PNG outside the repo (your scratchpad). The default `previews/` folder and `preview*.png` are gitignored, but any other name inside the repo is not. Never `git add` a preview image.
 - `--no-open` stops it launching a viewer on the user's machine. Always pass it.
-- `--fake` takes `empty`, `few`, `many` or `long`. Check all four after a layout change: an empty screen, a typical day, a full screen and titles too wide for the display. No credentials are needed.
+- `--fake` takes `empty`, `few`, `many`, `long` or `states`. Check all five after a layout change: an empty screen, a typical day, a full screen, titles too wide for the display and every completion glyph. Add `--safe-area` to outline the frame-safe margins. No credentials are needed.
 - Without `--fake` it fetches real tasks, which needs `src/taskFetcher/.env`. Avoid it unless the task is about the fetcher.
 - `--raw` skips the 1-bit black/white conversion, showing the unconverted image.
 
