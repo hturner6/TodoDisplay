@@ -14,7 +14,15 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 .venv/bin/python src/__main__.py --preview --fake few              # sample tasks, no credentials
 ```
 
-`--fake` takes `empty`, `few`, `many` or `long`. The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image. The PNG opens in your default viewer afterwards; add `--no-open` to turn that off. If your default PNG handler is not a plain viewer, set `PREVIEW_VIEWER` to a command, e.g. `PREVIEW_VIEWER=feh`.
+`--fake` takes `empty`, `few`, `many`, `long` or `states` (every completion glyph). The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image. The PNG opens in your default viewer afterwards; add `--no-open` to turn that off. If your default PNG handler is not a plain viewer, set `PREVIEW_VIEWER` to a command, e.g. `PREVIEW_VIEWER=feh`.
+
+## Layout and frame margins
+
+The display draws in pure 1-bit black and white (the panel has no greys) in DejaVu Sans Bold, with a date header, a week strip, ruled task rows and an 'Updated HH:MM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
+
+## When the screen is redrawn
+
+To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker; if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TickTick) is shown. The driver has no partial refresh, so every update is a full one.
 
 ## Forcing a refresh on the Pi
 
