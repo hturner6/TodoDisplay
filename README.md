@@ -14,4 +14,4 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 .venv/bin/python src/__main__.py --preview out.png --fake few # sample tasks, no credentials
 ```
 
-`--fake` takes `empty`, `few`, `many` or `long`. The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image.
+`--fake` takes `empty`, `few`, `many` or `long`. The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image. The PNG opens in your default viewer afterwards; add `--no-open` to turn that off.
