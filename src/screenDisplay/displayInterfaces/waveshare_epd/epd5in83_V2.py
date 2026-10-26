@@ -159,7 +159,9 @@ class EPD:
         self.send_command(0x07) # DEEP_SLEEP
         self.send_data(0XA5)
         
-        epdconfig.delay_ms(2000)
+        # Waveshare waits 2000 ms here, undocumented. The sleep command is a few SPI bytes and
+        # the next init() resets the panel, so 200 ms is a settle margin before power is cut.
+        epdconfig.delay_ms(200)
         epdconfig.module_exit()
         
 ### END OF FILE ###
