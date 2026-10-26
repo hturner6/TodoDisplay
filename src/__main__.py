@@ -56,8 +56,8 @@ def main():
     parser.add_argument('--test', action='store_true', help='Displays the task image locally')
     parser.add_argument('--clear', action='store_true', help='Clears the display')
     parser.add_argument('--run', type=int, help='Runs the task display with a specified interval (in minutes)')
-    parser.add_argument('--preview', nargs='?', const='preview.png', metavar='PATH',
-                        help='Saves the task image to a PNG (default preview.png) without using the display')
+    parser.add_argument('--preview', nargs='?', const='previews/preview.png', metavar='PATH',
+                        help='Saves the task image to a PNG (default previews/preview.png) without using the display')
     parser.add_argument('--fake', choices=sorted(SCENARIOS), help='With --preview, use sample tasks instead of fetching')
     parser.add_argument('--no-open', action='store_true', help='With --preview, do not open the PNG afterwards')
     parser.add_argument('--raw', action='store_true', help='With --preview, skip the black/white panel simulation')

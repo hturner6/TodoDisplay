@@ -14,6 +14,7 @@ def save_preview(image: Image.Image, path: str, simulate_panel: bool = True) -> 
     """
     if simulate_panel:
         image = convert_image_to_BMP(resize_image(image))
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     image.save(path)
 
 
