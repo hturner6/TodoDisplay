@@ -15,3 +15,7 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 ```
 
 `--fake` takes `empty`, `few`, `many` or `long`. The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image. The PNG opens in your default viewer afterwards; add `--no-open` to turn that off. If your default PNG handler is not a plain viewer, set `PREVIEW_VIEWER` to a command, e.g. `PREVIEW_VIEWER=feh`.
+
+## Forcing a refresh on the Pi
+
+The service only redraws every 30 minutes. To redraw now, run `./refresh.sh` on the Pi (add `--clear` to wipe the screen first and remove ghosting). It stops the `TodoDisplay` service while drawing, since the service holds the display's GPIO, and starts it again afterwards.
