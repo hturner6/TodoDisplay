@@ -4,6 +4,8 @@ import time
 import schedule
 from models.task import Task
 from taskDisplay.createTaskImage import TaskDrawer
+from taskDisplay.preview import save_preview
+from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from taskFetcher.tickTick.tickTickClient import get_project_data
 from screenDisplay.draw_bmp import display_image, clear_display
@@ -36,15 +38,31 @@ def task_test():
     image = taskDrawer.create_task_image(tasks)
     image.show()
 
+def task_preview(path, fake=None, simulate_panel=True):
+    if fake:
+        tasks = fake_tasks(fake)
+    else:
+        project_id = "687164e8fb06fe7e7a3d621a"
+        tasks = parse_project_tasks(get_project_data(project_id))
+    image = TaskDrawer(fontPath).create_task_image(tasks)
+    save_preview(image, path, simulate_panel)
+    print(f"Preview saved to {path}")
+
 def main():
     parser = argparse.ArgumentParser(description="Your script description")
     parser.add_argument('--task', action='store_true', help='Displays the task image on an epaper screen')
     parser.add_argument('--test', action='store_true', help='Displays the task image locally')
     parser.add_argument('--clear', action='store_true', help='Clears the display')
     parser.add_argument('--run', type=int, help='Runs the task display with a specified interval (in minutes)')
+    parser.add_argument('--preview', nargs='?', const='preview.png', metavar='PATH',
+                        help='Saves the task image to a PNG (default preview.png) without using the display')
+    parser.add_argument('--fake', choices=sorted(SCENARIOS), help='With --preview, use sample tasks instead of fetching')
+    parser.add_argument('--raw', action='store_true', help='With --preview, skip the black/white panel simulation')
     args = parser.parse_args()
 
-    if args.run:
+    if args.preview:
+        task_preview(args.preview, fake=args.fake, simulate_panel=not args.raw)
+    elif args.run:
         task_run(args.run)
     elif args.task:
         task_image()
