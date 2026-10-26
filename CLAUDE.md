@@ -24,6 +24,18 @@ The preview is a layout check, not a contrast check. A photo of the real panel l
 - Use `.venv` (gitignored). The laptop needs only `pillow`, `python-dotenv`, `requests`, `schedule` and `pytest`. Do not install the Pi hardware packages in `requirements.txt` on a laptop.
 - Run tests with `.venv/bin/python -m pytest tests`.
 
+## Deployment (Raspberry Pi)
+
+- The Pi (Zero 2 W, Bookworm, hostname `inkpi`, user `hturner`) runs the app as the systemd service `TodoDisplay.service`, which runs `run.sh` (`--run 30`). It is not a cron job, despite older README wording (see #34).
+- The service holds the display GPIO. Running the app by hand while it is up fails with `lgpio.error: 'GPIO busy'`. Stop it first: `sudo systemctl stop TodoDisplay`, run `.venv/bin/python ./src/__main__.py --task`, then `sudo systemctl start TodoDisplay`.
+- To deploy: merge to `master`, then on the Pi `git pull` and `sudo systemctl restart TodoDisplay`.
+- The TickTick token lasts about 180 days. A 401 from the API means it expired. Renew from `src/` on the Pi: `../.venv/bin/python -m taskFetcher --user` prints the authorize URL, then `-m taskFetcher --verify <code>`, put the new token into the Pi's `src/taskFetcher/.env` (mode 600), restart the service. The user does this themselves; never ask for the code or token in chat.
+- The agent cannot enter sudo passwords. Give privileged commands for the user to run (`! <command>` in the prompt).
+
+## TodoApp integration (planned)
+
+The user's own Android app (`../TodoApp`, Firestore sync) is becoming the main source of tasks. The plan and decisions are in issues #35 to #39: a read-only service account, a REST fetcher, a two-column layout (today's Daily Items and this week's Weekly Items), and a `--source` option. For the data format read `docs/adr/0015-*.md` and `app/src/main/java/com/hturner/simpletodo/Sync/` in that repo. Project IDs, user ids and key files stay in the Pi's local config, never in this repo or its issues.
+
 ## Secrets
 
 This repo is public. Never commit or paste into issues, PRs or chat: the TickTick token or OAuth code, `.env` contents, service-account keys, Firebase project IDs or user ids, wifi passwords. `.env` is gitignored; only `.env.sample` (names, no values) is committed.
