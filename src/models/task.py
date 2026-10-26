@@ -3,10 +3,19 @@ from datetime import datetime
 
 
 class Task:
-    def __init__(self, title: str, due_date: datetime, category: str = None):
+    TODO = "todo"
+    DONE = "done"
+    CANCELLED = "cancelled"
+    MOVED = "moved"
+    NOTE = "note"
+
+    def __init__(self, title: str, due_date: datetime, category: str = None,
+                 status: str = TODO, priority: bool = False):
         self.title = title
         self.due_date = due_date
         self.category = category
+        self.status = status
+        self.priority = priority
 
     def __repr__(self):
         return f"Task(title={self.title}, due_date={self.due_date}, category={self.category})"
@@ -33,6 +42,18 @@ class Task:
             return f"Overdue by {abs(days)} days"
         else:
             return f"{Task.format_date_string(date)}"
+
+    def short_due_label(self) -> str:
+        """Compact due text for the display, e.g. "Today", "2d overdue" or "Fri 30 Oct"."""
+        if self.due_date is None:
+            return ""
+
+        today = datetime.now().date()
+        if self.due_date == today:
+            return "Today"
+        if self.due_date < today:
+            return f"{Task.days_elapsed(self.due_date, today)}d overdue"
+        return Task.format_date_string(self.due_date)
 
     def format_date_string(date):
         return date.strftime('%a %d %b')

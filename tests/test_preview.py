@@ -10,7 +10,7 @@ from taskDisplay.createTaskImage import TaskDrawer
 from taskDisplay.preview import save_preview
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
-FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/Verdana.ttf")
+FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/DejaVuSans-Bold.ttf")
 
 
 @pytest.mark.parametrize("scenario", sorted(SCENARIOS))

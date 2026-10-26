@@ -1,8 +1,14 @@
 from PIL import Image
 import logging
 import time
+from datetime import datetime, timedelta
 from screenDisplay.displayInterfaces.waveshare_epd import epd5in83_V2
 from screenDisplay.imageHelpers import resize_image, convert_image_to_BMP
+
+# The panel is wiped to white this often by a long-running process, to clear any ghosting.
+# The driver has no partial refresh, so every update is already a full refresh.
+FULL_CLEAR_EVERY = timedelta(hours=24)
+_last_full_clear = None
 
 def display_bmp(picdir):
     epd = epd5in83_V2.EPD()
@@ -21,9 +27,20 @@ def display_image(image: Image):
     logging.info("init and Clear")
     epd.init()
 
+    global _last_full_clear
+    now = datetime.now()
+    if _last_full_clear is None:
+        _last_full_clear = now
+    elif now - _last_full_clear >= FULL_CLEAR_EVERY:
+        logging.info("periodic full clear")
+        epd.Clear()
+        _last_full_clear = now
+
     logging.info("display image")
     epd.display(epd.getbuffer(image))
     time.sleep(2)
+    # Power the panel down between updates; the next display_image calls init() again.
+    epd.sleep()
 
 def clear_display():
     epd = epd5in83_V2.EPD()
