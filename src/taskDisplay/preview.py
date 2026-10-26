@@ -1,4 +1,5 @@
 import os
+import shlex
 import subprocess
 import sys
 from PIL import Image
@@ -17,9 +18,13 @@ def save_preview(image: Image.Image, path: str, simulate_panel: bool = True) -> 
 
 
 def open_file(path: str) -> None:
-    """Opens the file in the machine's default viewer."""
-    if sys.platform.startswith("win"):
+    """Opens the file in the viewer named by $PREVIEW_VIEWER, else the machine's default viewer."""
+    viewer = os.environ.get("PREVIEW_VIEWER")
+    if viewer:
+        command = shlex.split(viewer) + [path]
+    elif sys.platform.startswith("win"):
         os.startfile(path)
+        return
     else:
-        opener = "open" if sys.platform == "darwin" else "xdg-open"
-        subprocess.Popen([opener, path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        command = ["open" if sys.platform == "darwin" else "xdg-open", path]
+    subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
