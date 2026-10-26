@@ -208,3 +208,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local layout previews
+previews/
+preview*.png
