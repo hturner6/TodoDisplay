@@ -15,6 +15,7 @@ class DrawTasks:
     tasks: list[Task]
     updated_at: datetime
     stale: bool = False  # the data is old because refreshing keeps failing
+    reason: str = ""  # why it keeps failing, e.g. "Sign-in expired"; only when stale
 
 
 @dataclass(frozen=True)
@@ -66,7 +67,8 @@ class RefreshPolicy:
         self.shown_failure = "stale"
         self.signature = None
         self.drawn_at = now
-        return DrawTasks(self.last_tasks, self.last_success, stale=True)
+        reason, _ = self.source.describe_error(error)
+        return DrawTasks(self.last_tasks, self.last_success, stale=True, reason=reason)
 
 
 class Refresher:

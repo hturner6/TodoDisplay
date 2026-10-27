@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import argparse
+from datetime import datetime, timedelta
 import os
 from pathlib import Path
 import time
@@ -14,6 +15,8 @@ from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, resolve_source
 from screenDisplay.draw_bmp import EPaperPanel
 
 fontPath = "./src/screenDisplay/fonts/DejaVuSans-Bold.ttf"
+# Screens --preview --fake can show beyond the task scenarios.
+PREVIEW_SCREENS = ["stale", "error"]
 # The screen is left alone overnight; QUIET_HOURS="off" turns that off.
 DEFAULT_QUIET_HOURS = "23:00-06:00"
 ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
@@ -31,7 +34,7 @@ def make_renderer(source):
     def render(action):
         drawer = make_drawer(source)
         if isinstance(action, DrawTasks):
-            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale)
+            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale, reason=action.reason)
         return drawer.create_message_image(action.heading, action.detail)
     return render
 
@@ -63,9 +66,16 @@ def task_test(source):
 
 def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False):
     if fake:
-        source = FakeSource(fake)
+        source = FakeSource(fake if fake in SCENARIOS else "few")
     drawer = make_drawer(source)
-    image = drawer.create_task_image(source.fetch())
+    if fake == "error":
+        image = drawer.create_message_image(*source.describe_error(OSError()))
+    elif fake == "stale":
+        stale_since = datetime.now() - timedelta(hours=3)
+        image = drawer.create_task_image(source.fetch(), updated_at=stale_since, stale=True,
+                                         reason=source.describe_error(OSError())[0])
+    else:
+        image = drawer.create_task_image(source.fetch())
     save_preview(image, path, simulate_panel, safe_area=drawer.margins if safe_area else None)
     print(f"Preview saved to {path}")
     if open_after:
@@ -81,7 +91,8 @@ def main():
     parser.add_argument('--run', type=int, help='Runs the task display with a specified interval (in minutes)')
     parser.add_argument('--preview', nargs='?', const='previews/preview.png', metavar='PATH',
                         help='Saves the task image to a PNG (default previews/preview.png) without using the display')
-    parser.add_argument('--fake', choices=sorted(SCENARIOS), help='With --preview, use sample tasks instead of fetching')
+    parser.add_argument('--fake', choices=sorted(SCENARIOS) + PREVIEW_SCREENS,
+                        help='With --preview, use sample tasks instead of fetching; stale and error show those screens')
     parser.add_argument('--no-open', action='store_true', help='With --preview, do not open the PNG afterwards')
     parser.add_argument('--raw', action='store_true', help='With --preview, skip the black/white panel simulation')
     parser.add_argument('--safe-area', action='store_true', help='With --preview, outline the frame-safe area in red')
