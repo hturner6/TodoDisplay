@@ -13,10 +13,10 @@ def get_projects():
     response.raise_for_status()
     return response.json()
 
-def get_project_data(project_id):
+def get_project_data(project_id, token=None):
     project_data_url = f"{BASE_URL}/open/v1/project/{project_id}/data"
     headers = {
-        "Authorization": get_auth_header()
+        "Authorization": f"Bearer {token}" if token else get_auth_header()
     }
     response = requests.get(project_data_url, headers=headers)
     response.raise_for_status()

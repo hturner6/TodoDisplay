@@ -1,31 +1,17 @@
 import argparse
-import os
 import json
+import os
+from datetime import date
 from dotenv import load_dotenv
-from taskFetcher.tickTick.apiTokenVerifier import verify_api_key
+from taskFetcher.tickTick.apiTokenVerifier import authorize_url, verify_api_key
 from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
-from models.task import TaskEncoder
-from taskFetcher.todoApp.todoAppFetcher import fetch_todoapp_tasks
+from taskDisplay.screenLayout import select
+from taskFetcher.todoApp.todoAppSource import TodoAppSource
 
-# TODO: Remove hardcoded values
 def create_Url():
-    client_id = os.getenv('CLIENT_ID')
-    authorize_url = 'https://ticktick.com/oauth/authorize'
-    redirect_uri = 'https://localhost:3000'
-    scope = 'tasks:read'
-    state = 'test'
-
-    authorization_url = (
-        f"{authorize_url}?client_id={client_id}"
-        f"&scope={scope.replace(' ', '%20')}"
-        f"&state={state}"
-        f"&redirect_uri={redirect_uri}"
-        f"&response_type=code"
-    )
-
-    print('Open this URL in your browser to authorize the application:');
-    print(authorization_url);
+    print('Open this URL in your browser to authorize the application:')
+    print(authorize_url())
 
 # TODO: use redirect url to grab the 'code' query param value
 
@@ -51,7 +37,8 @@ def main():
         parsed_tasks = parse_project_tasks(project_data)
         print(parsed_tasks)
     if args.todoapp:
-        for task in fetch_todoapp_tasks():
+        # What the display would show: the fetcher returns everything, the screen's rule chooses.
+        for task in sum(select(TodoAppSource(os.environ).fetch(), date.today()), []):
             print(f"{'week' if task.weekly else 'day '} {task.due_date} {task.scheduled_time or '     '} [{task.status}]{' !' if task.priority else ''} {task.title}")
 
 if __name__ == "__main__":

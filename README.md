@@ -1,6 +1,6 @@
 # TODO Display
 
-An app custom created for displaying tasks from TickTick on the waveshare 5.83 inch e-paper display.
+An app custom created for displaying tasks from TodoApp (or TickTick) on the waveshare 5.83 inch e-paper display.
 The screen is 648 x 480 pixels
 
 The task fetcher module can be run in the src/ folder via the command `python -m taskFetcher`
@@ -22,7 +22,40 @@ The display draws in pure 1-bit black and white (the panel has no greys) in Deja
 
 ## When the screen is redrawn
 
-To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker; if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TickTick) is shown. The driver has no partial refresh, so every update is a full one.
+To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker; if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TodoApp or TickTick) is shown. The driver has no partial refresh, so every update is a full one.
+
+## Running on the Pi (systemd)
+
+The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere, and compare it with `systemctl cat TodoDisplay` on the Pi.
+
+```
+sudo cp deploy/TodoDisplay.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now TodoDisplay
+journalctl -u TodoDisplay -f          # follow the log
+```
+
+To deploy a change: merge to `master`, then on the Pi `git pull` and `sudo systemctl restart TodoDisplay`.
+
+**GPIO busy.** The service holds the display's GPIO, so running the app by hand while it is up fails with `lgpio.error: 'GPIO busy'`. Stop the service first, then start it again afterwards (`./refresh.sh` does this for you):
+
+```
+sudo systemctl stop TodoDisplay
+.venv/bin/python ./src/__main__.py --task
+sudo systemctl start TodoDisplay
+```
+
+## Renewing the TickTick token
+
+Only needed while using `--source ticktick`. The token lasts about 180 days, and a 401 from the API (the screen shows "Sign-in expired") means it has expired. The current one runs out around late April 2027 (`--verify` prints the new date each time you renew). `CLIENT_ID` and `CLIENT_SECRET` must already be set in `src/taskFetcher/.env`. From `src/` on the Pi:
+
+```
+../.venv/bin/python -m taskFetcher --user           # prints the authorize URL; open it and approve
+../.venv/bin/python -m taskFetcher --verify <code>  # <code> is the `code` in the redirect URL
+sudo systemctl restart TodoDisplay
+```
+
+`--verify` writes the new `ACCESS_TOKEN` into `src/taskFetcher/.env` (mode 600) and prints the file path and the expiry date, never the token. Type the code into the terminal; never paste it into chat or an issue. `TICKTICK_PROJECT_ID` and `TICKTICK_REDIRECT_URI` can also be set in that file; see `.env.sample`.
 
 ## Forcing a refresh on the Pi
 
