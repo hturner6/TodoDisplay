@@ -5,7 +5,7 @@ from taskFetcher.todoApp.todoAppFetcher import fetch_todoapp_tasks
 
 SOURCES = ("todoapp", "ticktick")
 DEFAULT_SOURCE = "todoapp"
-TICKTICK_PROJECT_ID = "687164e8fb06fe7e7a3d621a"
+DEFAULT_TICKTICK_PROJECT_ID = "687164e8fb06fe7e7a3d621a"
 
 
 def resolve_source(cli_value=None, env=os.environ) -> str:
@@ -16,10 +16,15 @@ def resolve_source(cli_value=None, env=os.environ) -> str:
     return name
 
 
+def ticktick_project_id(env=os.environ) -> str:
+    """TICKTICK_PROJECT_ID from .env, else the project the display has always shown."""
+    return (env.get("TICKTICK_PROJECT_ID") or "").strip() or DEFAULT_TICKTICK_PROJECT_ID
+
+
 def fetch_tasks(source: str):
     if source == "todoapp":
         return fetch_todoapp_tasks()
-    return parse_project_tasks(get_project_data(TICKTICK_PROJECT_ID))
+    return parse_project_tasks(get_project_data(ticktick_project_id()))
 
 
 def uses_columns(source: str) -> bool:

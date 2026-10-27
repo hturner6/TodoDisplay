@@ -1,0 +1,16 @@
+# Drafted from the notes in CLAUDE.md, not copied from the Pi: compare with `systemctl cat TodoDisplay`.
+[Unit]
+Description=TodoDisplay e-paper task display
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hturner
+WorkingDirectory=/home/hturner/Documents/TodoDisplay
+ExecStart=/home/hturner/Documents/TodoDisplay/run.sh
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

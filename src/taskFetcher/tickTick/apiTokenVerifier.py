@@ -4,11 +4,27 @@ import base64
 from datetime import date, timedelta
 from pathlib import Path
 
-redirect_uri = 'https://localhost:3000'
-scope = 'tasks:read' 
+DEFAULT_REDIRECT_URI = 'https://localhost:3000'
+scope = 'tasks:read'
+authorize_base_url = 'https://ticktick.com/oauth/authorize'
 
 token_url = 'https://ticktick.com/oauth/token'
 ENV_FILE = Path(__file__).resolve().parents[1] / '.env'
+
+
+def redirect_uri(env=os.environ):
+    """TICKTICK_REDIRECT_URI from .env; it must match the redirect set on the TickTick app."""
+    return (env.get('TICKTICK_REDIRECT_URI') or '').strip() or DEFAULT_REDIRECT_URI
+
+
+def authorize_url(env=os.environ):
+    return (
+        f"{authorize_base_url}?client_id={env.get('CLIENT_ID')}"
+        f"&scope={scope.replace(' ', '%20')}"
+        f"&state=test"
+        f"&redirect_uri={redirect_uri(env)}"
+        f"&response_type=code"
+    )
 
 
 def save_token(token, env_file=ENV_FILE):
@@ -39,7 +55,7 @@ def verify_api_key(authorization_code, env_file=ENV_FILE):
         "code": authorization_code,
         "grant_type": "authorization_code",
         "scope": scope,
-        "redirect_uri": redirect_uri
+        "redirect_uri": redirect_uri()
     }
     response = requests.post(token_url, headers=headers, data=data,
                              auth=(client_id, client_secret))

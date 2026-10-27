@@ -109,3 +109,22 @@ def test_a_stale_loose_temp_file_does_not_loosen_the_env_file(token_response, tm
     apiTokenVerifier.verify_api_key("code", env_file=env)
 
     assert stat.S_IMODE(os.stat(env).st_mode) == 0o600
+
+
+def test_authorize_url_uses_the_default_redirect_and_client():
+    url = apiTokenVerifier.authorize_url(env={"CLIENT_ID": "id"})
+
+    assert url == ("https://ticktick.com/oauth/authorize?client_id=id&scope=tasks:read&state=test"
+                   "&redirect_uri=https://localhost:3000&response_type=code")
+
+
+def test_the_redirect_can_be_set_in_env_and_is_sent_when_verifying(token_response, tmp_path, monkeypatch):
+    monkeypatch.setenv("TICKTICK_REDIRECT_URI", "https://example.test/cb")
+    sent = {}
+    monkeypatch.setattr(apiTokenVerifier.requests, "post",
+                        lambda *args, **kwargs: sent.update(kwargs["data"]) or token_response)
+
+    apiTokenVerifier.verify_api_key("code", env_file=tmp_path / ".env")
+
+    assert sent["redirect_uri"] == "https://example.test/cb"
+    assert "redirect_uri=https://example.test/cb" in apiTokenVerifier.authorize_url(env=os.environ)
