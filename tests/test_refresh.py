@@ -142,7 +142,7 @@ def test_a_failure_keeps_the_screen_until_the_data_is_stale_then_marks_it_once()
     assert len(panel.shown) == 1
 
     refresher.refresh(NOW + STALE_AFTER + timedelta(minutes=1))
-    assert panel.shown[-1] == DrawTasks(tasks, NOW, stale=True)
+    assert panel.shown[-1] == DrawTasks(tasks, NOW, stale=True, reason="Cannot reach it")
 
     refresher.refresh(NOW + timedelta(hours=3))
     assert len(panel.shown) == 2

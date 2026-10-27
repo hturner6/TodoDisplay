@@ -6,7 +6,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from taskDisplay.createTaskImage import Margins, TaskDrawer, parse_margins
+from taskDisplay.createTaskImage import DEFAULT_MARGINS, Margins, TaskDrawer, parse_margins
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
 FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/DejaVuSans-Bold.ttf")
@@ -47,6 +47,24 @@ def test_a_stale_screen_says_so_in_the_footer():
         return sum(1 for value in image.crop(footer).get_flattened_data() if value == 0)
 
     assert black_pixels(stale) > black_pixels(normal)
+
+
+def test_a_stale_screen_names_the_cause_in_the_footer():
+    updated = datetime(2026, 10, 26, 9, 0)
+    expired = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True, reason="Sign-in expired")
+    offline = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True, reason="No network")
+    plain = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True)
+
+    assert len({expired.tobytes(), offline.tobytes(), plain.tobytes()}) == 3
+
+
+def test_a_stale_footer_with_a_cause_stays_inside_the_margins():
+    margins = DEFAULT_MARGINS
+    image = TaskDrawer(FONT).create_task_image(
+        [], updated_at=datetime(2026, 10, 26, 9, 0), stale=True, reason="Cannot reach TodoApp")
+
+    left, _, right, _ = image.point(lambda value: 255 - value).getbbox()
+    assert left >= margins.left and right <= image.width - margins.right
 
 
 def test_the_drawer_does_not_decide_staleness_from_the_clock():
