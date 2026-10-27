@@ -14,15 +14,39 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 .venv/bin/python src/__main__.py --preview --fake few              # sample tasks, no credentials
 ```
 
-`--fake` takes `empty`, `few`, `many`, `long` or `states` (every completion glyph). The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image. The PNG opens in your default viewer afterwards; add `--no-open` to turn that off. If your default PNG handler is not a plain viewer, set `PREVIEW_VIEWER` to a command, e.g. `PREVIEW_VIEWER=feh`.
+`--fake` takes `empty`, `few`, `many`, `long` or `states` (every completion glyph), or `stale` and `error` to see the stale-data footer and the full-screen error notice. The PNG is passed through the same resize and 1-bit conversion as the real display; add `--raw` to skip that and see the unconverted greyscale image. The PNG opens in your default viewer afterwards; add `--no-open` to turn that off. If your default PNG handler is not a plain viewer, set `PREVIEW_VIEWER` to a command, e.g. `PREVIEW_VIEWER=feh`.
 
 ## Layout and frame margins
 
-The display draws in pure 1-bit black and white (the panel has no greys) in DejaVu Sans Bold, with a date header, a week strip, ruled task rows and an 'Updated HH:MM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
+The display draws in pure 1-bit black and white (the panel has no greys) in Inter Bold with an italic Newsreader date heading (the TodoApp's type; see `docs/design-system.md`), with a date header, a week strip, ruled task rows (a priority row has a heavy asterisk before its bullet, as in the TodoApp) and an 'Updated 9:30 AM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
+
+## Fonts and licences
+
+The display's text is set in Inter and Newsreader Italic, the TodoApp's typefaces, bundled as static Latin-subset instances in `src/screenDisplay/fonts/` (`Inter-Bold.ttf`, `Newsreader-SemiBoldItalic.ttf`). Both are © their authors and licensed under the SIL Open Font License 1.1, which allows bundling and redistribution; the full licence texts are `OFL-Inter.txt` and `OFL-Newsreader.txt` in the same folder and must stay with the fonts. `docs/design-system.md` explains the choice. The other font files in that folder are not used by the display.
 
 ## When the screen is redrawn
 
-To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker; if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TodoApp or TickTick) is shown. The driver has no partial refresh, so every update is a full one.
+To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker that names the cause (e.g. "STALE - Cannot reach TodoApp - last update 09:30"); if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TodoApp or TickTick) is shown. The driver has no partial refresh, so every update is a full one.
+
+**Quiet hours.** The `--run` loop neither fetches nor draws overnight (default 23:00 to 06:00), leaving the last picture on the panel, which keeps it without power. The first refresh after the window always redraws. Set `QUIET_HOURS="HH:MM-HH:MM"` in `src/taskFetcher/.env` to change the window, or `QUIET_HOURS=off` to disable it. A one-off `--task` (and `./refresh.sh`) ignores quiet hours.
+
+## Weather
+
+Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour (a failed request is retried after ten minutes); if it keeps failing, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
+
+## Weather
+
+Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour (a failed request is retried after ten minutes); if it keeps failing, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
+
+## Polish word of the day
+
+A beginner Polish word with its meaning and an example sentence (and its translation) sits under the tasks: the word and meaning on the footer line, the example above it. The words are in `src/taskDisplay/polishWords.csv` and one is picked by date, so it is the same all day and every word comes round before any repeats. Tasks come first: the word is only drawn when it costs no task its place, so a full day hides it, and a stale or error screen never shows it. Set `WORD_OF_THE_DAY=off` in `src/taskFetcher/.env` to turn it off.
+
+The list has 339 sourced entries and 8 hand-written ones (phrases and verb forms such as "dzień dobry" and "rozumiem"). The columns are `polish`, `english`, `example`, `example_english`, then the Tatoeba sentence ids and authors (blank for the hand-written rows). Quote fields that contain commas when editing.
+
+**Where it comes from.** I chose the words by hand (everyday nouns, verbs, adjectives, numbers, days and adverbs) and wrote their English meanings. Each word was then checked against the [Leipzig Corpora Collection](https://wortschatz-leipzig.de/) Polish word lists (news 2020, 300K sentences, and Wikipedia 2021, 100K sentences) to confirm it is an attested word; frequency did not cut any word, because news text under-represents household words. The example sentences and their English translations are taken from [Tatoeba](https://tatoeba.org/) (Polish-English pairs), choosing short, clean sentences and skipping anything rude or morbid.
+
+**Licences and credit.** Tatoeba sentences are licensed [CC BY 2.0 FR](https://creativecommons.org/licenses/by/2.0/fr/), which requires naming each sentence's author: the authors and sentence ids are in `polishWords.csv` (look a sentence up at `https://tatoeba.org/en/sentences/show/<id>`; "unknown" means Tatoeba lists no author). The Leipzig lists are licensed CC BY 4.0 (as listed by [Wiktionary](https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Polish); Leipzig's own page could not be read to confirm it). Citation: D. Goldhahn, T. Eckart & U. Quasthoff, "Building Large Monolingual Dictionaries at the Leipzig Corpora Collection: From 100 to 200 Languages", Proceedings of LREC 2012. The meanings and the choice of words are mine and have not been checked by a Polish speaker.
 
 ## Running on the Pi (systemd)
 

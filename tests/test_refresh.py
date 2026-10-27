@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from pathlib import Path
 
 import pytest
@@ -7,7 +7,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from models.task import Task
+from taskDisplay.quietHours import QuietHours
 from taskDisplay.refresh import REDRAW_AFTER, STALE_AFTER, DrawMessage, DrawTasks, Refresher
+from taskFetcher.weather import Weather
 from taskFetcher.sources import resolve_source
 from taskFetcher.taskSource import TaskSource
 from taskFetcher.tickTick import tickTickSource
@@ -142,7 +144,7 @@ def test_a_failure_keeps_the_screen_until_the_data_is_stale_then_marks_it_once()
     assert len(panel.shown) == 1
 
     refresher.refresh(NOW + STALE_AFTER + timedelta(minutes=1))
-    assert panel.shown[-1] == DrawTasks(tasks, NOW, stale=True)
+    assert panel.shown[-1] == DrawTasks(tasks, NOW, stale=True, reason="Cannot reach it")
 
     refresher.refresh(NOW + timedelta(hours=3))
     assert len(panel.shown) == 2
@@ -180,6 +182,130 @@ def test_refreshing_without_a_time_uses_the_clock():
     refresher.refresh()
 
     assert abs(panel.shown[0].updated_at - datetime.now()) < timedelta(seconds=5)
+
+
+# --- weather ---------------------------------------------------------------------------------------
+
+class StubWeather:
+    """Answers current(now) with whatever is set."""
+
+    def __init__(self, weather=None):
+        self.weather = weather
+
+    def current(self, now):
+        return self.weather
+
+
+def weather_screen(weather):
+    source, panel = ScriptedSource(), RecordingPanel()
+    source.result = [Task("a", TODAY)]
+    return source, panel, weather, Refresher(source, lambda action: action, panel, weather=weather)
+
+
+def test_the_weather_is_drawn_with_the_tasks():
+    source, panel, _, refresher = weather_screen(StubWeather(Weather(12, "rain")))
+
+    refresher.refresh(NOW)
+
+    assert panel.shown == [DrawTasks(source.result, NOW, weather=Weather(12, "rain"))]
+
+
+def test_a_change_in_the_weather_redraws_but_the_same_weather_does_not():
+    _, panel, weather, refresher = weather_screen(StubWeather(Weather(12, "rain")))
+    refresher.refresh(NOW)
+
+    refresher.refresh(NOW + timedelta(minutes=30))
+    assert len(panel.shown) == 1
+
+    weather.weather = Weather(13, "rain")
+    refresher.refresh(NOW + timedelta(minutes=30))
+    assert len(panel.shown) == 2
+
+
+def test_no_weather_service_and_no_weather_both_draw_the_tasks_alone():
+    _, panel, _, refresher = weather_screen(None)
+    refresher.refresh(NOW)
+
+    _, other_panel, _, other = weather_screen(StubWeather(None))
+    other.refresh(NOW)
+
+    assert panel.shown[0].weather is None and other_panel.shown[0].weather is None
+
+
+def test_weather_that_blows_up_never_stops_the_tasks_being_drawn():
+    class Broken:
+        def current(self, now):
+            raise RuntimeError("boom")
+
+    _, panel, _, refresher = weather_screen(Broken())
+
+    refresher.refresh(NOW)
+
+    assert panel.shown[0].weather is None
+
+
+# --- quiet hours ----------------------------------------------------------------------------------
+
+class CountingSource(ScriptedSource):
+    def __init__(self):
+        super().__init__()
+        self.fetches = 0
+
+    def fetch(self):
+        self.fetches += 1
+        return super().fetch()
+
+
+def quiet_screen():
+    source = CountingSource()
+    panel = RecordingPanel()
+    quiet = QuietHours.parse("23:00-06:00")
+    return source, panel, Refresher(source, lambda action: action, panel, quiet_hours=quiet)
+
+
+def test_nothing_is_fetched_or_drawn_during_quiet_hours():
+    source, panel, refresher = quiet_screen()
+    source.result = [Task("a", TODAY)]
+
+    refresher.refresh(datetime(2026, 10, 26, 2, 0))
+
+    assert source.fetches == 0 and panel.shown == []
+
+
+def test_the_first_refresh_after_quiet_hours_draws_even_if_nothing_changed():
+    source, panel, refresher = quiet_screen()
+    source.result = [Task("a", TODAY)]
+    refresher.refresh(datetime(2026, 10, 26, 22, 30))
+
+    refresher.refresh(datetime(2026, 10, 27, 5, 59))
+    assert len(panel.shown) == 1
+
+    refresher.refresh(datetime(2026, 10, 27, 6, 0))
+    assert len(panel.shown) == 2
+
+
+@pytest.mark.parametrize("moment, quiet", [
+    (time(22, 59), False), (time(23, 0), True), (time(0, 0), True), (time(5, 59), True), (time(6, 0), False),
+])
+def test_a_window_that_crosses_midnight_is_quiet_late_and_early(moment, quiet):
+    assert QuietHours.parse("23:00-06:00").contains(moment) is quiet
+
+
+@pytest.mark.parametrize("moment, quiet", [(time(0, 59), False), (time(1, 0), True), (time(5, 59), True), (time(6, 0), False)])
+def test_a_window_within_one_day_is_quiet_only_inside_it(moment, quiet):
+    assert QuietHours.parse("01:00-06:00").contains(moment) is quiet
+
+
+@pytest.mark.parametrize("text, expected", [
+    ("off", None), ("", None), (None, None), (" 22:30 - 07:15 ", QuietHours(time(22, 30), time(7, 15))),
+])
+def test_quiet_hours_config_text(text, expected):
+    assert QuietHours.from_config(text) == expected
+
+
+def test_unreadable_quiet_hours_config_is_an_error_not_a_silent_default():
+    with pytest.raises(ValueError):
+        QuietHours.from_config("late-ish")
 
 
 # --- a failing fetch never leaks the error text -------------------------------------------------
