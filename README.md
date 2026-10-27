@@ -27,3 +27,32 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 ## Forcing a refresh on the Pi
 
 The service only redraws every 30 minutes. To redraw now, run `./refresh.sh` on the Pi (add `--clear` to wipe the screen first and remove ghosting). It stops the `TodoDisplay` service while drawing, since the service holds the display's GPIO, and starts it again afterwards.
+
+## Connecting the Pi to TodoApp (read-only)
+
+The Pi reads TodoApp data from Firestore with a dedicated service account that has only the `Cloud Datastore Viewer` role, because the app's security rules also let members write. Run the guided setup from the repo root on your laptop:
+
+```
+./scripts/setup-todoapp-access.sh
+```
+
+It walks you through finding the project id and user id, creating the service account and its JSON key, copying the key to the Pi (`~/.config/tododisplay/`, mode 600, outside the checkout) and setting `TODOAPP_PROJECT_ID`, `TODOAPP_SPACE_ID` and `TODOAPP_KEY_FILE` in `src/taskFetcher/.env` on both machines. Never commit the key or those values; the repo is public.
+
+## Trying the TodoApp fetcher
+
+Once the Pi (or laptop) has the `TODOAPP_*` values in `src/taskFetcher/.env`, list what the display would show: today's Daily Items, then this week's (Monday to Sunday) Weekly Items.
+
+```
+cd src && ../.venv/bin/python -m taskFetcher --todoapp
+```
+
+It signs in with `openssl`, which Raspberry Pi OS includes, so no extra Python packages are needed.
+
+## Choosing where tasks come from
+
+The display shows tasks from TodoApp by default (today's Daily Items on the left, this week's Weekly Items on the right). TickTick is kept as a fallback.
+
+- One-off: `--source todoapp` or `--source ticktick`, on any command (`--task`, `--run`, `--preview`).
+- For the systemd service: set `TASK_SOURCE=ticktick` (or `todoapp`) in `src/taskFetcher/.env` on the Pi, then `sudo systemctl restart TodoDisplay`.
+
+The flag wins over `TASK_SOURCE`, which wins over the default. An unknown name stops the app with an error naming the choices.

@@ -20,6 +20,8 @@ GLYPH_COLUMN = 42
 ROW_PADDING = 8
 MAX_TITLE_LINES = 2
 STALE_AFTER = timedelta(hours=2)
+COLUMN_GAP = 24
+DAILY_SHARE = 0.56  # of the content width; Daily Items carry a time, Weekly Items only a day
 
 
 def parse_margins(text: str) -> Margins:
@@ -81,12 +83,14 @@ def _with_ellipsis(font, line: str, max_width: float) -> str:
 
 class TaskDrawer():
     def __init__(self, fontPath, width=648, height=480, margins: Margins = DEFAULT_MARGINS,
-                 show_week_strip: bool = True, hide_done: bool = False):
+                 show_week_strip: bool = True, hide_done: bool = False, two_columns: bool = None):
         self.width = width
         self.height = height
         self.margins = margins
         self.show_week_strip = show_week_strip
         self.hide_done = hide_done
+        # None draws the Weekly column only when there are Weekly Items; True always draws it.
+        self.two_columns = two_columns
         self.titleFont = ImageFont.truetype(fontPath, TITLE_SIZE)
         self.taskFont = ImageFont.truetype(fontPath, TASK_SIZE)
         self.metaFont = ImageFont.truetype(fontPath, META_SIZE)
@@ -111,6 +115,11 @@ class TaskDrawer():
         today = today or datetime.now().date()
 
         footer_top = self._draw_footer(updated_at)
+        if self.two_columns or self.two_columns is None and any(task.weekly for task in tasks):
+            # The Weekly column labels each item with its day, so the week strip would be a
+            # repeat that costs a third of the height.
+            self._draw_columns(tasks, self._draw_header(today, week_strip=False), footer_top)
+            return self.img
         top = self._draw_header(today)
 
         daily = [task for task in tasks if task.is_today_or_overdue()]
@@ -140,13 +149,13 @@ class TaskDrawer():
 
     # --- header and footer ---------------------------------------------------------------------
 
-    def _draw_header(self, today: date) -> int:
+    def _draw_header(self, today: date, week_strip: bool = None) -> int:
         """Draws the date heading and week strip, and returns the y where the content can start."""
         y = self.margins.top
         self.draw.text((self.left, y), today.strftime("%A %-d %B"), font=self.titleFont, fill=BLACK)
         y += TITLE_SIZE + 14
 
-        if self.show_week_strip:
+        if self.show_week_strip if week_strip is None else week_strip:
             monday = today - timedelta(days=today.weekday())
             cell_width = (self.right - self.left) / 7
             strip_height = META_SIZE + 12
@@ -187,8 +196,58 @@ class TaskDrawer():
 
     # --- rows ----------------------------------------------------------------------------------
 
-    def _draw_rows(self, tasks: list[Task], top: int, footer_top: int):
-        text_x = self.left + GLYPH_COLUMN
+    def _draw_columns(self, tasks: list[Task], top: int, footer_top: int):
+        """Today's Daily Items on the left, this week's Weekly Items on the right."""
+        def ordered(column):
+            if self.hide_done:
+                column = [task for task in column if task.status != Task.DONE]
+            return (sorted((task for task in column if task.status == Task.TODO),
+                           key=lambda task: (task.due_date is None, task.due_date))
+                    + [task for task in column if task.status != Task.TODO])
+
+        daily = ordered([task for task in tasks if not task.weekly and task.is_today_or_overdue()])
+        weekly = ordered([task for task in tasks if task.weekly])
+
+        content = self.right - self.left
+        divider = self.left + round(content * DAILY_SHARE)
+        columns = (
+            ("TODAY", daily, self.left, divider - COLUMN_GAP // 2, self._daily_meta, "Nothing planned"),
+            ("THIS WEEK", weekly, divider + COLUMN_GAP // 2, self.right, self._weekly_meta, "Nothing this week"),
+        )
+        self.draw.line((divider, top + 8, divider, footer_top - 8), fill=BLACK, width=2)
+        for heading, column, x0, x1, meta_for, empty in columns:
+            self.draw.text((x0, top + 6), heading, font=self.metaFont, fill=BLACK)
+            rows_top = top + 6 + META_SIZE + 10
+            self.draw.line((x0, rows_top - 4, x1, rows_top - 4), fill=BLACK, width=1)
+            if column:
+                self._draw_rows(column, rows_top, footer_top, x0, x1, meta_for)
+            else:
+                for i, line in enumerate(wrap_text(self.taskFont, empty, [x1 - x0], 2)):
+                    self.draw.text((x0, rows_top + ROW_PADDING + i * (TASK_SIZE + 6)), line,
+                                   font=self.taskFont, fill=BLACK)
+
+    @staticmethod
+    def _daily_meta(task: Task) -> str:
+        """Overdue wins over the time, because a late item matters more than when it was due."""
+        # "late", not "overdue": the label shares the first line with the title, and a longer
+        # one forces a word that would otherwise fit to be broken in two.
+        days_late = Task.days_elapsed(task.due_date, datetime.now().date())
+        if days_late > 0:
+            return f"{days_late}d late"
+        return task.scheduled_time.strftime("%H:%M") if task.scheduled_time else ""
+
+    @staticmethod
+    def _weekly_meta(task: Task) -> str:
+        # A Weekly Item belongs to the week, not a day (TodoApp stores it on the week's Monday),
+        # so a day label would mislead and cost title width.
+        return ""
+
+    def _draw_rows(self, tasks: list[Task], top: int, footer_top: int,
+                   x0: int = None, x1: int = None, meta_for=None):
+        x0 = self.left if x0 is None else x0
+        x1 = self.right if x1 is None else x1
+        meta_for = meta_for or Task.short_due_label
+        text_x = x0 + GLYPH_COLUMN
         line_height = TASK_SIZE + 6
         more_height = META_SIZE + 2 * ROW_PADDING
         limit = footer_top - 4
@@ -196,26 +255,29 @@ class TaskDrawer():
         shown = 0
 
         for task in tasks:
-            meta = task.short_due_label()
+            meta = meta_for(task)
             meta_width = self.metaFont.getlength(meta) + 16 if meta else 0
             lines = wrap_text(self.taskFont, task.title,
-                              [self.right - text_x - meta_width, self.right - text_x], MAX_TITLE_LINES)
+                              [x1 - text_x - meta_width, x1 - text_x], MAX_TITLE_LINES)
             row_height = len(lines) * line_height + 2 * ROW_PADDING
             remaining = len(tasks) - shown - 1
             reserve = more_height if remaining else 0
             if y + row_height + reserve > limit:
                 break
 
-            self._draw_row(task, lines, meta, y, text_x, line_height)
+            self._draw_row(task, lines, meta, y, text_x, line_height, x0, x1)
             y += row_height
-            self.draw.line((self.left, y - 1, self.right, y - 1), fill=BLACK, width=1)
+            self.draw.line((x0, y - 1, x1, y - 1), fill=BLACK, width=1)
             shown += 1
 
         if shown < len(tasks):
             self.draw.text((text_x, y + ROW_PADDING), f"+{len(tasks) - shown} more",
                            font=self.metaFont, fill=BLACK)
 
-    def _draw_row(self, task: Task, lines: list[str], meta: str, y: int, text_x: int, line_height: int):
+    def _draw_row(self, task: Task, lines: list[str], meta: str, y: int, text_x: int, line_height: int,
+                  x0: int = None, x1: int = None):
+        x0 = self.left if x0 is None else x0
+        x1 = self.right if x1 is None else x1
         for i, line in enumerate(lines):
             line_y = y + ROW_PADDING + i * line_height
             self.draw.text((text_x, line_y), line, font=self.taskFont, fill=BLACK)
@@ -226,10 +288,10 @@ class TaskDrawer():
 
         if meta:
             meta_width = self.metaFont.getlength(meta)
-            self.draw.text((self.right - meta_width, y + ROW_PADDING + 4), meta, font=self.metaFont, fill=BLACK)
+            self.draw.text((x1 - meta_width, y + ROW_PADDING + 4), meta, font=self.metaFont, fill=BLACK)
 
         glyph_cy = y + ROW_PADDING + line_height // 2
-        self._draw_glyph(task, self.left + 24, glyph_cy)
+        self._draw_glyph(task, x0 + 24, glyph_cy)
 
     # --- glyphs: fixed-size shapes, so they look the same whatever the font ---------------------
 

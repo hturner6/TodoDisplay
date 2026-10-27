@@ -28,6 +28,7 @@
 #
 
 import logging
+from PIL import Image
 from . import epdconfig
 
 # Display resolution
@@ -123,44 +124,33 @@ class EPD:
         return 0
 
     def getbuffer(self, image):
-        # logger.debug("bufsiz = ",int(self.width/8) * self.height)
-        buf = [0xFF] * (int(self.width/8) * self.height)
+        # Packed 1-bit rows, 1 = white, which is the layout the panel expects. Done by PIL rather
+        # than a per-pixel Python loop, which takes seconds on a Pi Zero.
         image_monocolor = image.convert('1')
         imwidth, imheight = image_monocolor.size
-        pixels = image_monocolor.load()
-        # logger.debug("imwidth = %d, imheight = %d",imwidth,imheight)
         if(imwidth == self.width and imheight == self.height):
             logger.debug("Vertical")
-            for y in range(imheight):
-                for x in range(imwidth):
-                    # Set the bits for the column of pixels at the current position.
-                    if pixels[x, y] == 0:
-                        buf[int((x + y * self.width) / 8)] &= ~(0x80 >> (x % 8))
         elif(imwidth == self.height and imheight == self.width):
             logger.debug("Horizontal")
-            for y in range(imheight):
-                for x in range(imwidth):
-                    newx = y
-                    newy = self.height - x - 1
-                    if pixels[x, y] == 0:
-                        buf[int((newx + newy*self.width) / 8)] &= ~(0x80 >> (y % 8))
-        return buf
-        
+            image_monocolor = image_monocolor.transpose(Image.ROTATE_90)
+        else:
+            return [0xFF] * (self.width // 8 * self.height)
+        return list(image_monocolor.tobytes())
+
     def display(self, image):
-        buf = [0x00] * int(self.width * self.height / 8)
-        for i in range(0, int(self.width * self.height / 8)):
-            buf[i] = ~image[i]
+        size = self.width * self.height // 8
         self.send_command(0x10)
-        self.send_data2([0x00] * int(self.width * self.height / 8))
+        self.send_data2([0x00] * size)
         self.send_command(0x13)
-        self.send_data2(buf)
+        self.send_data2([byte ^ 0xFF for byte in image])
         self.TurnOnDisplay()
-        
+
     def Clear(self):
+        size = self.width * self.height // 8
         self.send_command(0x10)
-        self.send_data2([0x00] * int(self.width * self.height / 8))
+        self.send_data2([0x00] * size)
         self.send_command(0x13)
-        self.send_data2([0x00] * int(self.width * self.height / 8))
+        self.send_data2([0x00] * size)
         self.TurnOnDisplay()
 
     def sleep(self):
@@ -169,7 +159,9 @@ class EPD:
         self.send_command(0x07) # DEEP_SLEEP
         self.send_data(0XA5)
         
-        epdconfig.delay_ms(2000)
+        # Waveshare waits 2000 ms here, undocumented. The sleep command is a few SPI bytes and
+        # the next init() resets the panel, so 200 ms is a settle margin before power is cut.
+        epdconfig.delay_ms(200)
         epdconfig.module_exit()
         
 ### END OF FILE ###

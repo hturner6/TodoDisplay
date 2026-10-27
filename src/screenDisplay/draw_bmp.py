@@ -26,21 +26,22 @@ def display_image(image: Image):
     epd = epd5in83_V2.EPD()
     logging.info("init and Clear")
     epd.init()
+    try:
+        global _last_full_clear
+        now = datetime.now()
+        if _last_full_clear is None:
+            _last_full_clear = now
+        elif now - _last_full_clear >= FULL_CLEAR_EVERY:
+            logging.info("periodic full clear")
+            epd.Clear()
+            _last_full_clear = now
 
-    global _last_full_clear
-    now = datetime.now()
-    if _last_full_clear is None:
-        _last_full_clear = now
-    elif now - _last_full_clear >= FULL_CLEAR_EVERY:
-        logging.info("periodic full clear")
-        epd.Clear()
-        _last_full_clear = now
-
-    logging.info("display image")
-    epd.display(epd.getbuffer(image))
-    time.sleep(2)
-    # Power the panel down between updates; the next display_image calls init() again.
-    epd.sleep()
+        logging.info("display image")
+        epd.display(epd.getbuffer(image))
+    finally:
+        # Always power the panel down and release SPI/GPIO, even if drawing failed; the next
+        # display_image calls init() again. display() already waits for the panel to finish.
+        epd.sleep()
 
 def clear_display():
     epd = epd5in83_V2.EPD()
