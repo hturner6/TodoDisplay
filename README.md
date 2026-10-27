@@ -27,3 +27,13 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 ## Forcing a refresh on the Pi
 
 The service only redraws every 30 minutes. To redraw now, run `./refresh.sh` on the Pi (add `--clear` to wipe the screen first and remove ghosting). It stops the `TodoDisplay` service while drawing, since the service holds the display's GPIO, and starts it again afterwards.
+
+## Trying the TodoApp fetcher
+
+Once the Pi (or laptop) has the `TODOAPP_*` values in `src/taskFetcher/.env`, list what the display would show: today's Daily Items, then this week's (Monday to Sunday) Weekly Items.
+
+```
+cd src && ../.venv/bin/python -m taskFetcher --todoapp
+```
+
+It signs in with `openssl`, which Raspberry Pi OS includes, so no extra Python packages are needed.

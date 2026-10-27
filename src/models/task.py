@@ -1,5 +1,5 @@
 from json import JSONEncoder
-from datetime import datetime
+from datetime import datetime, time
 
 
 class Task:
@@ -10,12 +10,15 @@ class Task:
     NOTE = "note"
 
     def __init__(self, title: str, due_date: datetime, category: str = None,
-                 status: str = TODO, priority: bool = False):
+                 status: str = TODO, priority: bool = False,
+                 scheduled_time: time = None, weekly: bool = False):
         self.title = title
         self.due_date = due_date
         self.category = category
         self.status = status
         self.priority = priority
+        self.scheduled_time = scheduled_time
+        self.weekly = weekly
 
     def __repr__(self):
         return f"Task(title={self.title}, due_date={self.due_date}, category={self.category})"
