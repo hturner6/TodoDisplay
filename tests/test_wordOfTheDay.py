@@ -97,3 +97,48 @@ def test_every_word_comes_round_once_before_any_repeats():
 
 def test_no_words_means_no_word_of_the_day():
     assert word_for(DAY, []) is None
+
+
+def test_loading_reads_gender_and_forms_and_still_loads_files_without_them(tmp_path):
+    with_details = tmp_path / "a.csv"
+    with_details.write_text("polish,english,example,example_english,gender,forms\n"
+                            "kot,cat,Kot śpi.,The cat sleeps.,m,\nbyć,to be,Chcę być.,I want to be.,,jestem\n",
+                            encoding="utf-8")
+    without = tmp_path / "b.csv"
+    without.write_text("polish,english,example,example_english\nkot,cat,Kot śpi.,The cat sleeps.\n", encoding="utf-8")
+
+    assert load_words(with_details) == [Word("kot", "cat", "Kot śpi.", "The cat sleeps.", gender="m"),
+                                        Word("być", "to be", "Chcę być.", "I want to be.", forms="jestem")]
+    assert load_words(without) == [Word("kot", "cat", "Kot śpi.", "The cat sleeps.")]
+
+
+def test_the_shipped_list_marks_every_noun_with_a_gender_and_every_verb_with_a_form():
+    words = load_words(WORDS_FILE)
+    verbs = [w for w in words if w.english.startswith("to ")]
+
+    assert len(verbs) >= 50 and all(w.forms for w in verbs)
+    assert all(not w.gender for w in verbs)
+    assert {w.gender for w in words} <= {"", "m", "f", "n", "pl"}
+    assert sum(1 for w in words if w.gender) >= 150
+
+
+def test_known_genders_are_right():
+    gender = {w.polish: w.gender for w in load_words(WORDS_FILE)}
+
+    expected = {"kobieta": "f", "mężczyzna": "m", "dziecko": "n", "dom": "m", "noc": "f", "okno": "n", "środa": "f",
+                "mama": "f", "tata": "m", "pies": "m", "serce": "n", "drzwi": "pl", "pieniądze": "pl", "buty": "pl"}
+    assert {word: gender[word] for word in expected} == expected
+
+
+def test_known_forms_are_right():
+    forms = {w.polish: w.forms for w in load_words(WORDS_FILE)}
+
+    assert forms["być"] == "jestem" and forms["mieć"] == "mam" and forms["iść"] == "idę"
+    assert forms["zapomnieć"].startswith("pf") and forms["duży"] == "f. duża"
+
+
+def test_conjugated_entries_that_duplicate_an_infinitive_are_gone():
+    polish = {w.polish for w in load_words(WORDS_FILE)}
+
+    assert "rozumieć" in polish and "rozumiem" not in polish
+    assert "mówić" in polish and "mówię" not in polish

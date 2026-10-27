@@ -243,3 +243,48 @@ def test_a_word_too_wide_for_the_screen_is_cut_short_not_drawn_off_it():
     image = TaskDrawer(FONT, words=[wide]).create_task_image(FEW_TASKS, today=SOME_DAY)
 
     assert image.point(lambda value: 255 - value).getbbox()[2] <= image.width - DEFAULT_MARGINS.right
+
+
+# --- word details: gender, forms and the underlined word ----------------------------------------------
+
+def word_line(image):
+    return image.crop((0, 420, image.width // 2, image.height)).tobytes()
+
+
+def test_the_gender_is_drawn_after_the_word_and_a_verb_form_after_the_meaning():
+    plain = Word("kot", "cat", "Kot śpi tutaj.", "The cat sleeps here.")
+    gendered = Word("kot", "cat", "Kot śpi tutaj.", "The cat sleeps here.", gender="m")
+    with_form = Word("kot", "cat", "Kot śpi tutaj.", "The cat sleeps here.", forms="kota")
+
+    images = [word_line(TaskDrawer(FONT, words=[w]).create_task_image(FEW_TASKS, today=SOME_DAY))
+              for w in (plain, gendered, with_form)]
+
+    assert len(set(images)) == 3
+
+
+def test_the_gender_sits_lower_than_the_word_like_a_subscript():
+    def lowest_ink(word):
+        image = TaskDrawer(FONT, words=[word]).create_task_image([], today=SOME_DAY)
+        row = image.crop((DEFAULT_MARGINS.left, 440, DEFAULT_MARGINS.left + 40, image.height)).point(lambda v: 255 - v)
+        return row.getbbox()[3]
+
+    assert lowest_ink(Word("ok", "eye", "Ok.", "Ok.", gender="f")) > lowest_ink(Word("ok", "eye", "Ok.", "Ok."))
+
+
+def test_the_word_is_underlined_in_its_example_sentence():
+    def example_ink(word):
+        image = TaskDrawer(FONT, words=[word]).create_task_image([], today=SOME_DAY)
+        band = image.crop((0, 340, image.width, 400)).point(lambda v: 255 - v)
+        return sum(1 for v in band.get_flattened_data() if v)
+
+    found = Word("kot", "cat", "Wielki kot śpi tutaj.", "The big cat sleeps here.")
+    absent = Word("pies", "dog", "Wielki kot śpi tutaj.", "The big cat sleeps here.")
+
+    assert example_ink(found) - example_ink(absent) >= 20
+
+
+def test_a_long_word_line_is_cut_not_drawn_into_updated():
+    wide = Word("x" * 30, "y" * 30, "Ok.", "Ok.", gender="pl", forms="z" * 40)
+    image = TaskDrawer(FONT, words=[wide]).create_task_image(FEW_TASKS, today=SOME_DAY)
+
+    assert image.point(lambda value: 255 - value).getbbox()[2] <= image.width - DEFAULT_MARGINS.right

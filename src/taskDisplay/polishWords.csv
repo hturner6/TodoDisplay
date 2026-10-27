@@ -1,348 +1,346 @@
-polish,english,example,example_english,polish_sentence_id,polish_author,english_sentence_id,english_author
-cześć,hi / bye,Cześć! Jak się masz?,Hi! How are you?,5379472,Mateon1,30316,Zifre
-dziękuję,thank you,"Nie, dziękuję, tylko się rozglądam.","No, thank you. I'm just looking.",456990,gregloby,66813,CK
-proszę,please / here you are,"Proszę, na przyszłość bardziej uważaj.",Please take more care in the future.,348713,zipangu,267493,CM
-przepraszam,sorry / excuse me,"Przepraszam, ale nie mam zegarka.",I'm sorry I don't have my watch with me.,745495,zipangu,269530,CM
-dobranoc,good night,Mogę cię pocałować na dobranoc?,May I kiss you goodnight?,10464310,Shounen,6568785,Hybrid
-tak,yes,Tak. Nie. Może. Nie wiem.,Yes. No. Maybe. I don't know.,2681090,Koen,841407,riccioberto
-nie,no / not,"Zwyczajnie nie wiem, co powiedzieć...",I simply don't know what to say...,348657,zipangu,693485,Eldad
-człowiek,person,Człowiek nie przeżyje bez powietrza.,Man cannot live without air.,946854,zipangu,427994,witbrock
-kobieta,woman,Ta kobieta ma dwie torby.,That woman's got two bags.,959001,zipangu,958932,CM
-mężczyzna,man,"Oto mężczyzna, na którego czekałam.",This is the man for whom I have been waiting.,529383,scamuro,71727,unknown
-dziecko,child,To dziecko jeszcze nie chodzi.,The baby is not capable of walking yet.,352947,zipangu,272377,vertigo93
-rodzina,family,Jak się miewa twoja rodzina?,How is your family?,362444,zipangu,24081,CM
-matka,mother,Jak się ma Twoja matka?,How is your mother?,534069,orzechowski,70949,CK
-mama,mum,Moja mama zrobiła mi sweter.,My mother made me a sweater.,484537,ignacy130,484058,CK
-ojciec,father,Mój ojciec jest nieco staromodny.,My father is a bit old-fashioned.,348706,zipangu,319278,CK
-tata,dad,Jak się miewa twój tata?,How is your dad?,961004,zipangu,953331,CK
-syn,son,Jego syn ma osiem lat.,His son is eight years old.,872708,auditlog,287051,CK
-córka,daughter,Jej starsza córka jest mężatką.,Her older daughter is married.,577776,Bilberry,467955,CK
-brat,brother,Jestem starszy niż twój brat.,I'm older than your brother.,353183,zipangu,252798,CK
-siostra,sister,Moja siostra ma trzy lata.,My sister is three years old.,591353,buari,1803057,CM
-mąż,husband,Twój mąż jest w domu?,Is your husband at home?,2139140,liori,1192252,mookeee
-żona,wife,Moja żona chciała adoptować dziecko.,My wife wanted to adopt a child.,362023,zipangu,244157,CK
-przyjaciel,friend,Mój przyjaciel ma siedemnaście lat.,My friend is seventeen years old.,357886,zipangu,761865,Zifre
-chłopiec,boy,Chłopiec rzucił kamieniem w psa.,The boy threw a stone at the dog.,410735,zipangu,268006,CK
-dziewczyna,girl / girlfriend,Kim jest dziewczyna na zdjęciu?,Who is the girl in this picture?,365442,zipangu,58788,CC
-nauczyciel,teacher,Jak nazywa się jego nauczyciel?,What's his teacher's name?,4438990,Luanne,4401606,AlanF_US
-lekarz,doctor,Lekarz jest z następnym pacjentem.,The doctor is with another patient.,3782964,jeedrek,2540026,CK
-uczeń,pupil,Uczeń został ukarany za ściąganie.,The student was punished for cheating.,745302,laszchamachla,48917,CK
-student,student,Każdy student ma szafkę.,Each student has a locker.,585120,Bilberry,37488,CK
-sąsiad,neighbour,To nasz bezpośredni sąsiad.,He is our next door neighbor.,357001,zipangu,298200,Jesse
-pan,Mr / sir / gentleman,"Pan wie, kim oni są?",Do you know who they are?,353942,zipangu,56304,CK
-pani,Mrs / madam / lady,"Proszę, zamów tej pani taksówkę.",Please call this lady a taxi.,525584,Stark,61058,unknown
-ręka,hand / arm,Moja prawa ręka jest zdrętwiała.,My right hand is numb.,600126,Bilberry,27064,CK
-noga,leg / foot,Ciągle boli mnie noga.,My legs still hurt.,1090700,hebrajska,250648,CK
-głowa,head,Przeziębiłem się i boli mnie głowa.,I've caught a cold and my head hurts.,1182804,Ptr,319776,blay_paul
-oko,eye,Piłka uderzyła ją w oko.,The ball hit her in the eye.,360271,zipangu,33680,CK
-ucho,ear,Ucho mnie swędzi.,My ear is itching.,2679343,Koen,332214,TRANG
-twarz,face,Ona ma bardzo ładną twarz.,She has a very pretty face.,456934,gregloby,456693,lukaszpp
-serce,heart,Jego serce przepełniło się radością.,His heart filled with joy.,3992493,jeedrek,286795,CM
-ciało,body,Boli mnie całe ciało.,My whole body hurts.,1188563,hebrajska,7923942,shekitten
-nos,nose,Słoń ma długi nos.,An elephant has a long nose.,611635,simaqian,268258,CK
-dom,house / home,Czasami śni mi się dom.,I sometimes dream of home.,348743,zipangu,258153,CK
-mieszkanie,flat,Dzielę mieszkanie z moim bratem.,I'm sharing my flat with my brother.,593350,buari,592634,wondersz1
-pokój,room,Pokój był przesycony zapachem perfum.,The room was pervaded with the scent of perfume.,358922,zipangu,319569,unknown
-kuchnia,kitchen,Kuchnia jest na trzecim piętrze.,The kitchen is on the third floor.,7185212,arie,6397047,deniko
-okno,window,Obciążyli mnie za stłuczone okno.,They charged me for the broken window.,393292,kertoip,274187,CK
-drzwi,door,Drzwi do biura są żółte.,The door of the office is yellow.,415235,zipangu,397029,CM
-stół,table,Ten stół to bezcenny zabytek.,This table is a priceless antique.,2680411,Koen,60868,CK
-krzesło,chair,To krzesło jest bardzo wygodne.,This chair is very comfortable.,352133,zipangu,61330,CK
-łóżko,bed,To łóżko wydaje się solidne.,This bed looks solid.,529431,zipangu,60547,CM
-ściana,wall,Ściana jest częściowo pokryta bluszczem.,The wall is partly covered with ivy.,3863042,jeedrek,44086,CK
-łazienka,bathroom,Łazienka jest na końcu korytarza.,The bathroom is at the end of the hall.,3648581,nusia2302,35263,CK
-ogród,garden,Ten ogród najładniej wygląda wiosną.,The garden is at its best in spring.,351393,zipangu,44962,sundown
-chleb,bread,Bardziej lubię ryż niż chleb.,I like rice more than I like bread.,1626222,zipangu,1626135,CM
-woda,water,Woda jest niezbędna do życia.,Water is essential to life.,524920,Pacio,270818,CK
-mleko,milk,"Mleko lubię bardziej, niż sok.",I like milk more than juice.,554245,lukaszpp,436749,lukaszpp
-kawa,coffee,Ta kawa jest zbyt gorzka.,This coffee is too bitter.,363103,zipangu,61138,CK
-herbata,tea,Ta herbata jest zbyt gorzka.,This tea is too bitter.,2302796,liori,1064226,CK
-sok,juice,Wycisnął sok z kilku pomarańcz.,She squeezed the juice from several oranges.,349497,zipangu,315284,CK
-masło,butter,Rozsmarowała masło na chlebie.,She spread the butter on the bread.,527389,wojw5,312011,CK
-ser,cheese,Lubię masło bardziej niż ser.,I like butter better than cheese.,3041708,jeedrek,255001,CK
-jajko,egg,Kura zniosła jajko dziś rano.,The chicken laid an egg this morning.,369192,zipangu,35864,CK
-jabłko,apple,Chłopak ma jabłko w kieszeni.,The boy has an apple in his pocket.,352651,zipangu,46385,CK
-zupa,soup,Do ryżu pasuje zupa miso.,Rice is good with miso soup.,760265,zipangu,54339,CK
-mięso,meat,Mięso jeszcze jest nie gotowe.,The meat's not ready yet.,594041,simaqian,462816,lukaszpp
-ryba,fish,"Sądzę, że to ryba słodkowodna.",I believe this fish is a freshwater fish.,357268,zipangu,55776,CK
-ciasto,cake,Podziel ciasto na was oboje.,Divide the cake between you two.,366560,zipangu,62653,CK
-owoc,fruit,Jaki jest twój ulubiony owoc?,What's your favorite fruit?,2248092,mayahueli,906765,CK
-warzywo,vegetable,Jak się nazywa to warzywo po angielsku?,What do you call this vegetable in English?,360129,zipangu,56634,CK
-cukier,sugar,On rozpuścił cukier w kawie.,He dissolved some sugar in his coffee.,1589310,TopMan,289813,unknown
-sól,salt,Sól jest sprzedawana na kilogramy.,Salt is sold by weight.,1465657,Pandista,25749,CK
-piwo,beer,Poszedłem na piwo z przyjaciółmi.,I went to drink a beer with friends.,350061,zipangu,2409,Zifre
-wino,wine,Będziesz pić wino zamiast mleka?,Will you drink wine instead of milk?,1352211,Ollie1337,19475,shekitten
-obiad,lunch / dinner,"Kiedy jadłem obiad, zadzwonił telefon.","As I was having lunch, the phone rang.",416749,zipangu,246937,CK
-śniadanie,breakfast,On często je tutaj śniadanie.,He often eats breakfast there.,587579,Bilberry,290089,CK
-kolacja,supper,Kolacja powinna być już gotowa.,Dinner is probably ready by now.,959537,zipangu,953180,CK
-jedzenie,food,Podają tutaj bardzo dobre jedzenie.,They serve excellent food here.,631646,Bilberry,61969,CK
-miasto,city / town,Kiedyś było to piękne miasto.,It was once a beautiful city.,352762,zipangu,12098304,sundown
-wieś,village,Jak nazywa się ta wieś?,What is the name of this village?,7787661,Balamax,7787643,Balamax
-ulica,street,Ulica biegnie wzdłuż rzeki.,The street runs along the river.,3326235,Hikaru,44979,orcrist
-sklep,shop,To najtańszy sklep w mieście.,This is the cheapest store in town.,355679,zipangu,57866,CK
-szkoła,school,Szkoła spaliła się na popiół.,The schoolhouse was burnt to ashes.,2246857,mayahueli,240895,sundown
-praca,work / job,Ta praca spełnia moje oczekiwania.,This job fulfils my expectations.,742577,zipangu,59129,sundown
-biuro,office,Nietrudno było znaleźć jego biuro.,Finding his office was easy.,859041,zipangu,853932,piksea
-szpital,hospital,Kiedyś w tym budynku był szpital.,Formerly this building was a hospital.,366928,zipangu,272166,unknown
-kościół,church,Za moim domem jest kościół.,There is a church at the back of my house.,766153,zipangu,1600012,unknown
-park,park,Koło mojego domu jest park.,There is a park near my house.,358946,zipangu,250499,CK
-dworzec,station,Gdzie jest dworzec kolejowy?,Where is the train station?,676842,yessoos,638544,CM
-lotnisko,airport,Gdzie znajdę autobus na lotnisko?,Where do I get an airport bus?,2405778,procroco,18200,AlanF_US
-restauracja,restaurant,Restauracja znajduje się na parterze.,The restaurant is on the ground floor.,940965,lukaszpp,462900,lukaszpp
-hotel,hotel,To najgorszy hotel w mieście.,This is the worst hotel in town.,357714,zipangu,55503,CK
-bank,bank,Musimy poprosić bank o pożyczkę.,We must ask the bank for the loan.,364589,zipangu,18442,Dejo
-poczta,post office,Poczta jest w środku miasta.,The post office is located in the center of the town.,359771,zipangu,324552,CK
-morze,sea,Morze jest spokojne.,The sea is calm.,6305585,fau,1901580,Spamster
-góra,mountain,Ta góra jest pokryta śniegiem.,That mountain is covered with snow.,601343,buari,68359,CK
-las,forest,Wystarczy iskra żeby podpalić las.,A spark would be enough to burn a forest.,7119812,qmak,2756695,mervert1
-rzeka,river,Każdej wiosny rzeka tu wylewa.,Every spring the river floods here.,1353521,Ollie1337,266925,CK
-jezioro,lake,Jak głębokie jest to jezioro?,How deep is this lake?,352229,zipangu,59358,CK
-kraj,country,Cały kraj o tym mówi.,The whole country talks about it.,2378410,Piteris,2378413,Piteris
-świat,world,Czym byłby świat bez kobiet?,What would the world be without women?,353141,zipangu,1699,Swift
-plaża,beach,Ta plaża to raj dla surferów.,This beach is a paradise for surfers.,540108,Bilberry,60622,CK
-samochód,car,Nowy samochód należy do niej.,This new car belongs to her.,365605,zipangu,674499,yessoos
-autobus,bus,Autobus odjeżdża co dziesięć minut.,The bus leaves every ten minutes.,362826,zipangu,35332,CK
-pociąg,train,"Myślę, że pociąg zaraz przyjedzie.",I think the train will arrive soon.,362488,zipangu,12113344,sundown
-samolot,plane,Samolot wyleciał dokładnie o dziewiątej.,The plane took off at exactly nine o'clock.,3866118,jeedrek,44360,CK
-rower,bicycle,Ojciec kupił mi nowy rower.,Father bought me a new bicycle.,359176,zipangu,319206,CN
-droga,road / way,Droga powoli schodziła w dół.,The road descends slowly.,363187,zipangu,280415,unknown
-bilet,ticket,Weźmy bilet bez oznaczonej daty.,Let's get an open ticket.,351986,zipangu,20520,CK
-statek,ship,Ładują ropę naftową na statek.,They are loading oil into the ship.,571108,Bilberry,306987,CK
-dzień,day,Cały dzień grałem w tenisa.,I played tennis all day.,348678,zipangu,528449,fanty
-noc,night,A może zostaniesz na noc?,"Would you stay tonight, perhaps?",366547,zipangu,674417,yessoos
-tydzień,week,Przez tydzień był w szpitalu.,He was in hospital for a week.,352450,zipangu,10748536,sundown
-miesiąc,month,Grudzień to ostatni miesiąc roku.,December is the last month of the year.,532165,Wimmer,266506,CM
-rok,year,Przyszły rok jest rokiem wyborczym.,Next year is an election year.,997615,zipangu,954201,CK
-godzina,hour,Upłynęła mniej więcej jedna godzina.,About an hour has elapsed.,11678628,qmak,9980440,Amastan
-minuta,minute,Jedna minuta ma sześćdziesiąt sekund.,One minute has sixty seconds.,11581597,polski_ren,1416883,CK
-czas,time,"Nie wiem, czy mam czas.",I don't know if I have the time.,349416,zipangu,1292,Ramses
-rano,in the morning,Ona bierze prysznic co rano.,She showers every morning.,357206,zipangu,317076,CK
-wieczór,evening,"Dobry wieczór, na ile osób?",Good evening. How many are in your party?,364268,zipangu,65818,CM
-lato,summer,Lato jeszcze się nie skończyło.,Summer isn't over yet!,2216993,Mar,988184,riccioberto
-zima,winter,Chyba zima zawitała na dobre.,It looks like winter is here to stay.,987538,zipangu,954041,CK
-wiosna,spring,Wiosna to moja ulubiona pora roku.,Spring is my favourite season.,921430,zipangu,1164116,Chrikaru
-jesień,autumn,Jesień była długa i łagodna.,The autumn was long and mild.,6534438,arie,942292,spockofvulcan
-poniedziałek,Monday,W poniedziałek jest święto państwowe.,Monday is a bank holiday.,4327983,Rudzielec,4321303,monahxo
-wtorek,Tuesday,Dziś jest wtorek.,Today is Tuesday.,2967754,Mateusz,3256311,AlanF_US
-środa,Wednesday,"Dzisiaj jest środa, prawda?","Today is Wednesday, isn't it?",6067452,qmak,8589967,sundown
-czwartek,Thursday,W czwartek wybieramy się na basen.,"Thursday, we will go to a swimming pool.",1357150,times,1359557,starzykj
-piątek,Friday,On woli pojechać w piątek.,He'd prefer to go on Friday.,1060675,Karola,794460,sundown
-sobota,Saturday,"Zapomniałem, że dzisiaj jest sobota.",I forgot that today was Saturday.,3629738,Katubeltza,3626822,MTC
-niedziela,Sunday,Niedziela to ostatni dzień tygodnia.,Sunday is the last day of the week.,356536,zipangu,281873,Zifre
-słońce,sun,Słońce zaraz zajdzie na zachodzie.,The sun is about to sink in the west.,362929,zipangu,275063,unknown
-deszcz,rain,Deszcz zmienił się w śnieg.,The rain changed into snow.,533939,sapper,26696,CK
-śnieg,snow,"Kiedy się obudziłem, padał śnieg.",I awoke to find it snowing.,352107,zipangu,323695,Zifre
-wiatr,wind,Samotny żaglowiec płynie pod wiatr.,A lone sailboat is sailing against the wind.,357053,zipangu,929988,zipangu
-pogoda,weather,Pogoda szaleje w tym roku.,The weather has been unusual this year.,365418,zipangu,243171,CK
-niebo,sky,Wiesz dlaczego niebo jest niebieskie?,Do you know the reason why the sky looks blue?,451086,gregloby,18340,Zifre
-drzewo,tree,Niedźwiedź może wejść na drzewo.,A bear can climb a tree.,352910,zipangu,18079,CK
-kwiat,flower,"Ten kwiat jest piękny, nieprawdaż?","This flower is beautiful, isn't it?",623120,orzechowski,60050,CK
-pies,dog,Pies rzadko gryzie nie atakowany.,A dog seldom bites unless it is attacked.,349572,zipangu,239193,CK
-kot,cat,Nasz kot jest w kuchni.,Our cat is in the kitchen.,359226,zipangu,65516,CK
-ptak,bird,Jak nazywa się ten ptak?,What's the name of this bird?,364012,zipangu,555279,CM
-koń,horse,Koń umie biec bardzo szybko.,A horse can run very fast.,352904,zipangu,282380,sacredceltic
-książka,book,Ta książka wydaje się ciekawa.,This book seems interesting.,351557,zipangu,372418,ilayde
-telefon,phone,Kilka minut później zadzwonił telefon.,A few minutes later the telephone rang.,354056,zipangu,271070,sundown
-komputer,computer,Modem był wbudowany w komputer.,The modem was integrated into the computer.,360467,zipangu,6029384,Huskion
-gazeta,newspaper,Ta gazeta jest za darmo.,This newspaper is free.,1925935,zipangu,329684,fcbond
-list,letter,Możesz mi wysłać ten list?,Can you mail this letter for me?,350821,zipangu,838759,Scott
-torba,bag,To nie jest moja torba.,This isn't my bag.,2679339,Koen,55621,CK
-klucz,key,Poproszę mój klucz do pokoju.,"My room key, please.",458433,lukaszpp,456325,lukaszpp
-pieniądze,money,"Zbierają pieniądze, by kupić dom.",They are saving their money for the purchase of a house.,459884,zipangu,306243,CK
-zegarek,watch,Twój zegarek jest na biurku.,Your watch is on the desk.,348625,zipangu,70616,CK
-zdjęcie,photo,Czy mógłbym dostać twoje zdjęcie.,I would like your picture.,598894,Bilberry,17089,CK
-ubranie,clothes,Miałem na sobie najlepsze ubranie.,I wore my best clothes.,360035,zipangu,674259,yessoos
-buty,shoes,Wydaje dużo pieniędzy na buty.,She spends a lot of money on shoes.,364646,zipangu,313349,CK
-koszula,shirt,Podoba mi się twoja koszula.,I like your shirt.,3857621,jeedrek,1887541,CK
-życie,life,Jego życie jest w niebezpieczeństwie.,His life is in danger.,356954,zipangu,304059,CK
-miłość,love,Miłość jest z natury ślepa.,Love is by nature blind.,1587800,Bilberry,326276,rul
-problem,problem,Ten problem stanowi prawdziwe wyzwanie.,This problem is a real challenge.,365100,zipangu,56713,CK
-pytanie,question,Pytanie brzmi: co robić dalej?,What to do next is the question.,597701,simaqian,264181,Eldad
-odpowiedź,answer,Ucieczka to nie jest odpowiedź.,Running away isn't the answer.,999302,zipangu,954257,CK
-pomysł,idea,Sam pomysł nie jest zły.,The idea is not in itself a bad one.,705262,zipangu,47973,sundown
-imię,first name,To nie jest moje imię.,That's not my name.,2097217,Wessnosa,1897806,CK
-nazwisko,surname,Jego nazwisko często mi umyka.,His name often escapes me.,353162,zipangu,10782302,sundown
-słowo,word,Dobiera każde słowo z rozwagą.,He chose every word with care.,525092,Pacio,296114,CK
-język,language,Szwecja ma swój własny język.,Sweden has its own language.,353961,zipangu,460295,jeanne
-muzyka,music,Moja ulubiona muzyka to pop.,My favourite genre of music is pop.,353984,zipangu,1214922,eadbannon
-film,film,Ten film zebrał mieszane recenzje.,The movie received mixed reviews.,442910,zipangu,49564,CK
-gra,game,Ta gra jest prosta.,This game is easy.,3649651,Siganiv,2714604,CK
-sen,sleep / dream,Miałem straszny sen ostatniej nocy.,I had a dreadful dream last night.,789122,damc,30149,Eldad
-prezent,gift,"Zapomniał, że kupił jej prezent.",He forgot that he bought her a present.,531045,cps,530863,contour
-urodziny,birthday,Damy jej prezent na urodziny.,We will give her a present on her birthday.,1207448,Ptr,249057,CK
-wakacje,holiday,Wakacje skończyły się za szybko.,The vacation came to an end all too soon.,540118,Bilberry,19812,CK
-podróż,journey,Podróż na zachód była ciężka.,The trip west was hard.,989499,zipangu,806841,Source_VOA
-zdrowie,health,Niepokoję się o twoje zdrowie.,I am anxious about your health.,361830,zipangu,70729,CM
-szczęście,happiness / luck,"Miał szczęście, że złapał pociąg.",He had the luck to catch the train.,365571,zipangu,293890,unknown
-strach,fear,Zobaczyłem w jego oczach strach.,I saw fear in his eyes.,3520413,Siganiv,2199034,Hybrid
-duży,big,Ten pokój nie jest duży.,That room is not very large.,526947,jadzka,67832,Zifre
-mały,small,Mój pokój jest bardzo mały.,My room is very small.,351479,zipangu,251779,CK
-dobry,good,Jestem dobry w piłce nożnej.,I'm good at football.,364558,zipangu,11605077,sundown
-zły,bad / angry,Dlatego jestem zły na niego.,That is why I am angry with him.,366195,zipangu,42973,CM
-nowy,new,Samochód mojego ojca jest nowy.,My father's car is new.,692528,Flieg,318891,jakov
-stary,old,Jego stary kot wciąż żyje.,His old cat is still alive.,362563,zipangu,287293,CK
-młody,young,"On jest młody, ale doświadczony.","He is young, but experienced.",547308,Bilberry,299095,unknown
-długi,long,Lekarz zalecił mi długi urlop.,The doctor advised me to take a long holiday.,369099,zipangu,27963,CK
-krótki,short,Czas życia motyla jest krótki.,The life span of a butterfly is short.,2120135,liori,1874077,CK
-wysoki,tall / high,Jest wysoki jak mój ojciec.,He is as tall as my father.,525076,Pacio,297982,CK
-niski,low / short,Jestem bardzo niski.,I'm very short.,3857199,jeedrek,2355816,CK
-gorący,hot,"To był gorący, letni dzień.",It was a hot summer day.,2292704,Mar,2292655,Hybrid
-zimny,cold,Zimny wiatr wieje z nad morza.,The cold wind is blowing from the sea.,3410164,konrad509,326058,CK
-ciepły,warm / hot,Tam dostaniesz ciepły posiłek.,You'll get a hot meal there.,10695919,tokzyk,10696168,tokzyk
-piękny,beautiful,To był naprawdę piękny dzień.,It was a really beautiful day.,363125,zipangu,44586,CK
-brzydki,ugly,Nie jestem brzydki. Jestem przystojny.,I'm not ugly. I'm handsome.,12905109,Stanislawspruss,12899310,Ergulis
-szczęśliwy,happy,"Nie martw się, bądź szczęśliwy!","Don't worry, be happy!",526785,Pacio,1800,Swift
-smutny,sad,"Nie sprawiaj, żebym był smutny.",Don't make me sad.,3093197,jeedrek,2619176,Hybrid
-zmęczony,tired,"Byłem zmęczony, ale pracowałem dalej.","Tired out, I carried on working.",369093,zipangu,261402,unknown
-głodny,hungry,Byłem głodny po długim marszu.,I felt hungry after the long walk.,356916,zipangu,278094,CK
-chory,ill,Byłem chory w zeszłym tygodniu.,I was sick last week.,9684534,aurchykr,6532242,CK
-zdrowy,healthy,"Gdybym był zdrowy, byłbym szczęśliwy.","If I were healthy, I would be happy.",442727,esperanto,810106,TomSFox
-tani,cheap,Bilet na metro jest tani.,The ticket for the subway is cheap.,11338578,carlosalberto,11338556,carlosalberto
-drogi,expensive / dear,W klasie zostawiono drogi aparat.,There was an expensive camera left in the classroom.,363639,zipangu,19036,gin
-łatwy,easy,Jest bardzo łatwy w użyciu.,It's very easy to use.,1571138,zipangu,1571130,Spamster
-trudny,difficult,"Angielski to trudny język, prawda?","English is a difficult language, isn't it?",670378,zipangu,13637772,araneo
-ważny,important,Ten problem nie jest ważny.,That problem isn't important.,1348900,Ollie1337,1008849,AOCinJAPAN
-wolny,free / slow,Czy jesteś wolny jutro wieczorem?,Are you free tomorrow evening?,574996,Bilberry,323232,CK
-szybki,fast,Bokser powinien mieć szybki refleks.,Boxers need quick reflexes.,1110176,sansa,33589,CM
-ciężki,heavy,Ten stół jest bardzo ciężki.,This table is very heavy.,4657043,emi,12933891,sundown
-czysty,clean,Mój pokój jest zawsze czysty.,My room is always clean.,8916714,nusia2302,3825715,CK
-brudny,dirty,Twój samochód jest bardzo brudny.,Your car is really dirty.,11581833,polski_ren,8057306,CK
-pusty,empty,Ten hotel wydaje się pusty.,This hotel seems to be empty.,8529675,MCcommand,3426307,CK
-pełny,full,Mój żołądek jest pełny.,My stomach's full.,565268,Bilberry,433865,CK
-otwarty,open,Jestem szeroko otwarty na propozycje.,I'm wide open for suggestions.,2289971,Wessnosa,1891159,CK
-zamknięty,closed,Tamten sklep jest dziś zamknięty.,That shop is closed today.,826339,zipangu,13029782,araneo
-biały,white,Na dachu jest biały gołąb.,There's a white dove on the roof.,363770,zipangu,1499943,RoyTek
-czarny,black,Miała na sobie czarny kapelusz.,She was wearing a black hat.,350020,zipangu,2111,CK
-czerwony,red,Dach mojego domu jest czerwony.,The roof of my house is red.,415292,zipangu,250493,CM
-zielony,green,Zielony to mój ulubiony kolor.,Green is my favorite color.,1111422,Deasmond,1084744,thecooltrain
-niebieski,blue,Miała ubrany ciemno niebieski szalik.,She wore a dark blue scarf.,538937,Bilberry,316134,CK
-żółty,yellow,Podoba mi się żółty kolor.,I like the colour yellow.,3718790,nusia2302,2739584,catcher
-pierwszy,first,To mój pierwszy lot samolotem.,That was the first time I got on a plane.,366550,zipangu,366338,exodream
-ostatni,last,Spóźnił się na ostatni pociąg.,He missed the last train.,366169,zipangu,296751,CK
-następny,next,Następny raz mocniej się przyłożę.,I'll try harder next time.,592015,Bilberry,418861,CK
-ciekawy,interesting,Ta historia ilustruje ciekawy fakt.,The story shows us an interesting fact.,3497163,Bilberry,43285,orcrist
-miły,nice,Podziękowałem mu za miły prezent.,I thanked him for the nice present.,533963,sapper,260307,CK
-smaczny,tasty,Ten chleb jest bardzo smaczny.,This bread is very delicious.,1627982,terenide,60629,CK
-bogaty,rich,"To jasne, że jest bogaty.",It's clear that he's rich.,458236,gregloby,453660,CK
-biedny,poor,Co jeśli jestem biedny?,What if I am poor?,1349035,Ollie1337,318531,CM
-cichy,quiet,Dlaczego jesteś taki cichy?,Why are you so quiet?,10577058,tokzyk,2259912,_undertoad
-głośny,loud,"Proszę, nie bądź taki głośny.","Don't be so noisy, please.",570453,Bilberry,38875,CK
-jasny,bright,Pokój jest bardzo jasny.,The room is very bright.,3099742,jeedrek,2628677,CK
-ciemny,dark,Ten pokój jest za ciemny.,This room is too dark.,1179742,Ptr,680631,Source_VOA
-mokry,wet,Koc jest nadal mokry.,The blanket is still wet.,4144997,xilv,4144844,CK
-gotowy,ready,Powinieneś być gotowy na najgorsze.,You should be ready for the worst.,1581443,Tutim,16123,Swift
-bezpieczny,safe,"Dobrze widzieć, że jesteś bezpieczny.",I'm glad to see you're safe.,3787861,jeedrek,2543600,CK
-prawdziwy,real,Czy to prawdziwy jedwab?,Is this real silk?,12239967,polski_ren,2959289,sharptoothed
-inny,different / other,Mam inny aparat niż ty.,My camera is different from yours.,369254,zipangu,250290,CK
-być,to be,Powinna tu być około południa.,She should be here around midday.,349001,zipangu,13442590,sundown
-mieć,to have,Wolę mieć kota niż psa.,I would rather have a cat than a dog.,502280,mwgamera,501567,darinmex
-iść,to go (on foot),Powinniśmy iść za jego przykładem.,We should follow his example.,353994,zipangu,22712,CK
-jechać,to go (by vehicle),Naprawdę chcesz jechać całą noc?,Are you seriously thinking about driving all night?,957125,zipangu,953113,CK
-jeść,to eat,Szparagi można jeść nawet zimą.,You can still get asparagus in the winter.,359157,zipangu,279611,CK
-pić,to drink,Niebezpiecznie jest pić za dużo.,It is dangerous to drink too much.,367679,zipangu,67686,CK
-robić,to do / to make,"Już nie wiem, co robić.",I don't know what to do anymore.,350101,zipangu,1443,Zifre
-mówić,to speak / to say,Mogę mówić wyłącznie za siebie.,I can only speak for myself.,354039,zipangu,258244,CK
-widzieć,to see,On znów chce nas widzieć.,He wants to see us again.,366139,zipangu,297352,CK
-wiedzieć,to know (a fact),"Chciałbym wiedzieć, jak to uruchomić.",I wish I could figure out how to make this work.,970724,zipangu,953737,CK
-chcieć,to want,Czemu ktoś miałby tego chcieć?,Why would anyone else want this?,3992289,jeedrek,2997207,CK
-móc,to be able to,Chciałbym móc to zrobić lepiej.,I wish I could do that better.,8708265,nusia2302,6260612,CK
-musieć,to have to,Chciałbym nie musieć już tego robić.,I wish we didn't have to do this any longer.,970979,zipangu,953749,CK
-lubić,to like,Trudno cię nie lubić.,It's hard not to like you.,10484334,hecko,3912843,CK
-kochać,to love,Będę cię kochać na zawsze.,I'll love you forever.,560875,Bilberry,237684,CK
-kupować,to buy,Nie chcę kupować niczego więcej.,I don't want to buy anything else.,5227958,Tomash,3733477,CK
-pracować,to work,"Nie mamy wyjścia, musimy pracować.",We have no alternative but to work.,351988,zipangu,280196,CK
-czytać,to read,Dobre okulary pomogą ci czytać.,A good pair of glasses will help you to read.,355827,zipangu,30079,sundown
-pisać,to write,Nie chcę pisać tym długopisem.,I don't want to write with this pen.,733642,Mateusz,668412,Eldad
-słuchać,to listen,Ona woli słuchać niż mówić.,She would rather listen to others than talk herself.,524353,newton,314611,CK
-patrzeć,to look,"Uwielbiam patrzeć, jak zachodzi słońce.",I love to watch the sun set.,12470337,katix824,10602832,CK
-myśleć,to think,Masz podstawy by tak myśleć?,Do you have any grounds for thinking so?,528192,darooo,49753,CM
-rozumieć,to understand,Jak mam to rozumieć?,How am I supposed to understand that?,4438801,Luanne,4425742,Ooneykcall
-mieszkać,to live,Chciałbym mieszkać blisko twojego domu.,I'd like to live near your house.,3425902,konrad509,1401128,CK
-spać,to sleep,Zamknij okno zanim pójdziesz spać.,Lock the window before going to bed.,396776,lukesh,268913,Zifre
-grać,to play,Nauczę cię grać w szachy.,I'll teach you how to play chess.,355898,zipangu,2712942,CK
-czekać,to wait,Nie mogę czekać na ciebie.,I can't wait for you.,574978,Bilberry,237702,CK
-pytać,to ask,Jak możesz o to pytać?,Why would you ask that?,6554135,arie,1886443,CK
-odpowiadać,to answer,Nie musisz odpowiadać na to pytanie.,You don't have to answer this question.,970994,zipangu,70082,CK
-dawać,to give,Nie musisz mi niczego dawać.,You don't have to give me anything.,10667937,igxr,3110439,CK
-brać,to take,Policja nie powinna brać łapówek.,Police shouldn't take bribes.,557376,Bilberry,497121,CK
-znać,to know (a person),On nie może znać prawdy.,He is not able to know the truth.,350773,zipangu,488192,saasmath
-pamiętać,to remember,"Muszę pamiętać, by kupić jutro tę książkę.",I have to remember to buy this book tomorrow.,359825,zipangu,674351,yessoos
-zapomnieć,to forget,Chciałbym o tym wszystkim zapomnieć.,I'd like to forget it all.,6156550,arie,5216734,CK
-pomagać,to help,Ona nie będzie pomagać biednym.,She will not help poor people.,11749878,mojeanin,8911185,mialiesperantistas
-szukać,to look for,Czy pomógłbyś mi szukać moich kluczy?,Would you help me look for my keys?,558231,Bilberry,63777,CK
-znaleźć,to find,Nie mogę znaleźć mojego bagażu.,I can't find my luggage.,440591,zipangu,436481,lukaszpp
-zacząć,to begin,Nie możemy zacząć od nowa?,Can't we start again?,3637514,Katubeltza,3636395,CK
-wracać,to return,Musisz natychmiast wracać do domu.,You need to get home right now.,2563895,zipangu,3387687,CK
-wychodzić,to go out,Nie powinieneś wychodzić od razu.,You shouldn't leave at once.,632780,Bilberry,52154,unknown
-wchodzić,to go in,Nie wolno wchodzić do pokoju.,You must not enter the room.,3865314,jeedrek,44235,CK
-siedzieć,to sit,Chcę siedzieć w pierwszym rzędzie.,I want to sit in the front row.,4952786,aleksandraeska,4499624,CK
-stać,to stand,Brytyjczycy zwykli stać w kolejkach.,British people are used to standing in queues.,7457346,qmak,26130,Dejo
-leżeć,to lie,Nie chcę już więcej leżeć.,I don't want to lie any more.,4179255,jeedrek,1543905,sundown
-biegać,to run,Proszę nie biegać w sali.,Please don't run in the classroom.,793140,damc,482046,CK
-pływać,to swim,Zawsze chciałem się nauczyć pływać.,I've always wanted to learn how to swim.,975045,zipangu,953875,CK
-tańczyć,to dance,Gdzie nauczyłeś się tak tańczyć?,Where did you learn to dance like this?,2150124,jeedrek,2060741,CK
-śpiewać,to sing,Mężczyzna wstał i zaczął śpiewać.,The man stood up and began to sing.,530578,Bilberry,46037,CK
-gotować,to cook,One nie umie dobrze gotować.,She can't cook well.,392983,kertoip,310921,CK
-płacić,to pay,Czynsz proszę płacić z góry.,Pay your rent in advance.,364230,zipangu,319625,CK
-podróżować,to travel,On lubi podróżować za granicę.,He likes to travel abroad.,2145474,jeedrek,294682,CK
-odpoczywać,to rest,"Jesteś chory, musisz odpoczywać.",You're sick. You have to rest.,525160,Pacio,2092,Swift
-potrzebować,to need,Nie będę potrzebować żadnej pomocy.,I'm not going to need any help.,3778915,jeedrek,3735396,CK
-pokazać,to show,"O, proszę mi to pokazać!",Oh! Show it to me please.,349492,zipangu,19142,sacredceltic
-jeden,one,Jeden z dwóch musi odejść.,One of the two has to go.,366581,zipangu,1277295,Eldad
-dwa,two,Dostałem dwa bilety od kolegi.,I received two tickets from a friend.,358717,zipangu,13804878,Oktopusek
-trzy,three,On ma trzy starsze siostry.,He has three older sisters.,578751,Bilberry,468061,CK
-cztery,four,Na świecie są cztery oceany.,There are four oceans in the world.,355246,zipangu,271121,unknown
-pięć,five,Ta skrzynka zawiera pięć jabłek.,This box contains five apples.,348645,zipangu,57519,papabear
-sześć,six,Podzieliła ciasto na sześć części.,She divided the cake into six pieces.,352449,zipangu,311097,CK
-siedem,seven,To zdanie zawiera siedem słów.,This sentence consists of seven words.,547320,Bilberry,547037,FeuDRenais
-osiem,eight,Dziesięć odjąć dwa daje osiem.,Two from ten leaves eight.,722129,zipangu,73473,CK
-dziewięć,nine,Ile to dziewięć minus sześć?,How many is nine minus six?,524734,Decius,519105,blay_paul
-dziesięć,ten,Sprzedałem to za dziesięć dolarów.,I sold it for ten dollars.,358011,zipangu,41929,CK
-sto,one hundred,On ma najwyżej sto dolarów.,He has a hundred dollars at most.,364158,zipangu,290381,CK
-tysiąc,one thousand,Już mówiłem mu to tysiąc razy.,I've already told him this a thousand times.,4145051,xilv,4141406,mervert1
-bardzo,very,To jabłko jest bardzo czerwone.,This apple is very red.,352653,zipangu,60350,CK
-tutaj,here,On już tutaj nie pracuje.,He doesn't work here any more.,359319,zipangu,11966096,sundown
-tam,there,Hiroko siedziała tam zupełnie sama.,Hiroko sat there all alone.,366126,zipangu,240849,CN
-teraz,now,Jakie filmy są teraz grane?,What movies are playing now?,361650,zipangu,65919,unknown
-dzisiaj,today,Prognoza na dzisiaj się sprawdziła.,Today's weather forecast proved right.,352413,zipangu,242621,sundown
-jutro,tomorrow,"Myślisz, że jutro będzie ładnie?",Do you think tomorrow will be nice?,354013,zipangu,12105943,sundown
-wczoraj,yesterday,Moja ulubiona drużna wczoraj przegrała.,My favorite team lost yesterday.,457398,gregloby,456421,lukaszpp
-zawsze,always,Ona zawsze chodzi swoimi ścieżkami.,She always gets her own way.,355763,zipangu,310447,CK
-nigdy,never,On nigdy nie traci nadziei.,He never loses hope.,348731,zipangu,430183,witbrock
-często,often,On często jeździ za granicę.,He often travels to foreign countries.,355984,zipangu,293271,CK
-czasem,sometimes,Mój pies czasem je trawę.,My dog sometimes eats grass.,996897,zipangu,954186,CK
-dobrze,well / fine,"Zakładam, że dobrze znasz fakty.",I take it that you are fully acquainted with the facts.,351551,zipangu,16001,Swift
-źle,badly,"No, nie było tak źle.","Well, it wasn't all that bad.",364143,zipangu,39328,minshirui
-szybko,quickly,Jak szybko jedzie ten pociąg?,How fast does this train run?,368432,zipangu,56482,CK
-wolno,slowly,Mój dziadek mówi bardzo wolno.,My grandfather speaks very slowly.,3302752,dibdin,1362466,CK
-blisko,near,Chciałbym byś była blisko mnie.,I wish you were close to me.,529073,Dany74PL,17922,wwkudu
-daleko,far,Jak daleko stąd do muzeum?,How far is it from here to the museum?,352703,zipangu,62066,CK
-razem,together,Zdecydujmy razem dokąd pójść najpierw.,Let's decide together where to go first.,528928,Dany74PL,32800,Dejo
-znowu,again,Czy jutro znowu będzie gorąco?,Will it be hot again tomorrow?,540600,zipangu,323252,CK
-naprawdę,really,Ja naprawdę wierzę w duchy.,I do believe in ghosts.,541562,Bilberry,262069,unknown
-trochę,a little,Trochę mnie boli w boku.,I have a slight pain in my side.,357698,zipangu,326586,CK
-dużo,a lot,Pomarańcze mają dużo witaminy C.,Oranges are rich in vitamin C.,355803,zipangu,64783,CK
-mało,few / little,Tej zimy mieliśmy mało śniegu.,We have had little snow this winter.,367631,zipangu,243106,CM
-jeszcze,still / yet,Daj mi jeszcze jedną szansę.,Give me another chance.,358889,zipangu,31491,CK
-już,already,"Och, nie mamy już cukru.","Oh, we're out of sugar.",354026,zipangu,5367073,Mateon1
-tylko,only,To zajmie tylko kilka minut.,It only takes a few minutes.,1169941,perry,33057,CK
-właśnie,just / exactly,Dlatego właśnie mogę tworzyć muzykę.,That's exactly why I can create music.,357045,zipangu,8160831,TheNightAvl
-oczywiście,of course,"Oczywiście możesz zrobić, co chcesz.","You can do whatever you want to do, of course.",2664604,Hikaru,2591684,CK
-niestety,unfortunately,Niestety złamał nogę w wypadku.,"Unfortunately, he got his leg broken in the accident.",393330,kertoip,318584,orcrist
-dlaczego,why,Dlaczego do mnie nie zadzwoniłeś?,Why didn't you call me up?,395336,kertoip,279268,CK
-kiedy,when,"Nie wiem, kiedy on przyjdzie.",I don't know when he's coming.,353132,zipangu,2425565,CM
-gdzie,where,Gdzie jest najbliższe centrum handlowe?,Where's the nearest shopping mall?,357288,zipangu,27271,CK
-kto,who,Kto jest twoim ulubionym piosenkarzem?,Who is your favourite singer?,353980,zipangu,5241605,cinqhiboux
-ile,how much / how many,Ile jajek jest w kuchni?,How many eggs are there in the kitchen?,393006,kertoip,275409,Eldad
-nic,nothing,Nie masz nic do roboty?,Don't you have work to do?,364152,zipangu,2288880,CK
-wszystko,everything,U mnie wszystko w porządku.,I am well.,352980,zipangu,574624,Zac2333
-coś,something,Pożycz mi coś do cięcia.,Lend me something with which to cut this.,348685,zipangu,25248,Luornu
-ktoś,someone,Ktoś wołał mnie po imieniu.,Someone was calling my name.,360980,zipangu,276157,CK
-dzień dobry,good morning / hello,Dzień dobry! Poproszę kawę.,Good morning! A coffee please.,,,,
-dobry wieczór,good evening,Dobry wieczór! Miło mi.,Good evening! Nice to meet you.,,,,
-do widzenia,goodbye,Do widzenia! Miłego dnia.,Goodbye! Have a nice day.,,,,
-do zobaczenia,see you,Do zobaczenia jutro!,See you tomorrow!,,,,
-rozumiem,I understand,Rozumiem trochę po polsku.,I understand a little Polish.,,,,
-mówię,I speak,Mówię po angielsku.,I speak English.,,,,
-wieczorem,in the evening,Wieczorem oglądam film.,I watch a film in the evening.,,,,
-uczyć się,to learn,Uczę się polskiego.,I'm learning Polish.,,,,
+polish,english,example,example_english,polish_sentence_id,polish_author,english_sentence_id,english_author,gender,forms
+cześć,hi / bye,Cześć! Jak się masz?,Hi! How are you?,5379472,Mateon1,30316,Zifre,,
+dziękuję,thank you,"Nie, dziękuję, tylko się rozglądam.","No, thank you. I'm just looking.",456990,gregloby,66813,CK,,
+proszę,please / here you are,"Proszę, na przyszłość bardziej uważaj.",Please take more care in the future.,348713,zipangu,267493,CM,,
+przepraszam,sorry / excuse me,"Przepraszam, ale nie mam zegarka.",I'm sorry I don't have my watch with me.,745495,zipangu,269530,CM,,
+dobranoc,good night,Mogę cię pocałować na dobranoc?,May I kiss you goodnight?,10464310,Shounen,6568785,Hybrid,,
+tak,yes,Tak. Nie. Może. Nie wiem.,Yes. No. Maybe. I don't know.,2681090,Koen,841407,riccioberto,,
+nie,no / not,"Zwyczajnie nie wiem, co powiedzieć...",I simply don't know what to say...,348657,zipangu,693485,Eldad,,
+człowiek,person,Człowiek nie przeżyje bez powietrza.,Man cannot live without air.,946854,zipangu,427994,witbrock,m,
+kobieta,woman,Ta kobieta ma dwie torby.,That woman's got two bags.,959001,zipangu,958932,CM,f,
+mężczyzna,man,"Oto mężczyzna, na którego czekałam.",This is the man for whom I have been waiting.,529383,scamuro,71727,unknown,m,
+dziecko,child,To dziecko jeszcze nie chodzi.,The baby is not capable of walking yet.,352947,zipangu,272377,vertigo93,n,
+rodzina,family,Jak się miewa twoja rodzina?,How is your family?,362444,zipangu,24081,CM,f,
+matka,mother,Jak się ma Twoja matka?,How is your mother?,534069,orzechowski,70949,CK,f,
+mama,mum,Moja mama zrobiła mi sweter.,My mother made me a sweater.,484537,ignacy130,484058,CK,f,
+ojciec,father,Mój ojciec jest nieco staromodny.,My father is a bit old-fashioned.,348706,zipangu,319278,CK,m,
+tata,dad,Jak się miewa twój tata?,How is your dad?,961004,zipangu,953331,CK,m,
+syn,son,Jego syn ma osiem lat.,His son is eight years old.,872708,auditlog,287051,CK,m,
+córka,daughter,Jej starsza córka jest mężatką.,Her older daughter is married.,577776,Bilberry,467955,CK,f,
+brat,brother,Jestem starszy niż twój brat.,I'm older than your brother.,353183,zipangu,252798,CK,m,
+siostra,sister,Moja siostra ma trzy lata.,My sister is three years old.,591353,buari,1803057,CM,f,
+mąż,husband,Twój mąż jest w domu?,Is your husband at home?,2139140,liori,1192252,mookeee,m,
+żona,wife,Moja żona chciała adoptować dziecko.,My wife wanted to adopt a child.,362023,zipangu,244157,CK,f,
+przyjaciel,friend,Mój przyjaciel ma siedemnaście lat.,My friend is seventeen years old.,357886,zipangu,761865,Zifre,m,
+chłopiec,boy,Chłopiec rzucił kamieniem w psa.,The boy threw a stone at the dog.,410735,zipangu,268006,CK,m,
+dziewczyna,girl / girlfriend,Kim jest dziewczyna na zdjęciu?,Who is the girl in this picture?,365442,zipangu,58788,CC,f,
+nauczyciel,teacher,Jak nazywa się jego nauczyciel?,What's his teacher's name?,4438990,Luanne,4401606,AlanF_US,m,
+lekarz,doctor,Lekarz jest z następnym pacjentem.,The doctor is with another patient.,3782964,jeedrek,2540026,CK,m,
+uczeń,pupil,Uczeń został ukarany za ściąganie.,The student was punished for cheating.,745302,laszchamachla,48917,CK,m,
+student,student,Każdy student ma szafkę.,Each student has a locker.,585120,Bilberry,37488,CK,m,
+sąsiad,neighbour,To nasz bezpośredni sąsiad.,He is our next door neighbor.,357001,zipangu,298200,Jesse,m,
+pan,Mr / sir / gentleman,"Pan wie, kim oni są?",Do you know who they are?,353942,zipangu,56304,CK,m,
+pani,Mrs / madam / lady,"Proszę, zamów tej pani taksówkę.",Please call this lady a taxi.,525584,Stark,61058,unknown,f,
+ręka,hand / arm,Moja prawa ręka jest zdrętwiała.,My right hand is numb.,600126,Bilberry,27064,CK,f,
+noga,leg / foot,Ciągle boli mnie noga.,My legs still hurt.,1090700,hebrajska,250648,CK,f,
+głowa,head,Przeziębiłem się i boli mnie głowa.,I've caught a cold and my head hurts.,1182804,Ptr,319776,blay_paul,f,
+oko,eye,Piłka uderzyła ją w oko.,The ball hit her in the eye.,360271,zipangu,33680,CK,n,
+ucho,ear,Ucho mnie swędzi.,My ear is itching.,2679343,Koen,332214,TRANG,n,
+twarz,face,Ona ma bardzo ładną twarz.,She has a very pretty face.,456934,gregloby,456693,lukaszpp,f,
+serce,heart,Jego serce przepełniło się radością.,His heart filled with joy.,3992493,jeedrek,286795,CM,n,
+ciało,body,Boli mnie całe ciało.,My whole body hurts.,1188563,hebrajska,7923942,shekitten,n,
+nos,nose,Słoń ma długi nos.,An elephant has a long nose.,611635,simaqian,268258,CK,m,
+dom,house / home,Czasami śni mi się dom.,I sometimes dream of home.,348743,zipangu,258153,CK,m,
+mieszkanie,flat,Dzielę mieszkanie z moim bratem.,I'm sharing my flat with my brother.,593350,buari,592634,wondersz1,n,
+pokój,room,Pokój był przesycony zapachem perfum.,The room was pervaded with the scent of perfume.,358922,zipangu,319569,unknown,m,
+kuchnia,kitchen,Kuchnia jest na trzecim piętrze.,The kitchen is on the third floor.,7185212,arie,6397047,deniko,f,
+okno,window,Obciążyli mnie za stłuczone okno.,They charged me for the broken window.,393292,kertoip,274187,CK,n,
+drzwi,door,Drzwi do biura są żółte.,The door of the office is yellow.,415235,zipangu,397029,CM,pl,
+stół,table,Ten stół to bezcenny zabytek.,This table is a priceless antique.,2680411,Koen,60868,CK,m,
+krzesło,chair,To krzesło jest bardzo wygodne.,This chair is very comfortable.,352133,zipangu,61330,CK,n,
+łóżko,bed,To łóżko wydaje się solidne.,This bed looks solid.,529431,zipangu,60547,CM,n,
+ściana,wall,Ściana jest częściowo pokryta bluszczem.,The wall is partly covered with ivy.,3863042,jeedrek,44086,CK,f,
+łazienka,bathroom,Łazienka jest na końcu korytarza.,The bathroom is at the end of the hall.,3648581,nusia2302,35263,CK,f,
+ogród,garden,Ten ogród najładniej wygląda wiosną.,The garden is at its best in spring.,351393,zipangu,44962,sundown,m,
+chleb,bread,Bardziej lubię ryż niż chleb.,I like rice more than I like bread.,1626222,zipangu,1626135,CM,m,
+woda,water,Woda jest niezbędna do życia.,Water is essential to life.,524920,Pacio,270818,CK,f,
+mleko,milk,"Mleko lubię bardziej, niż sok.",I like milk more than juice.,554245,lukaszpp,436749,lukaszpp,n,
+kawa,coffee,Ta kawa jest zbyt gorzka.,This coffee is too bitter.,363103,zipangu,61138,CK,f,
+herbata,tea,Ta herbata jest zbyt gorzka.,This tea is too bitter.,2302796,liori,1064226,CK,f,
+sok,juice,Wycisnął sok z kilku pomarańcz.,She squeezed the juice from several oranges.,349497,zipangu,315284,CK,m,
+masło,butter,Rozsmarowała masło na chlebie.,She spread the butter on the bread.,527389,wojw5,312011,CK,n,
+ser,cheese,Lubię masło bardziej niż ser.,I like butter better than cheese.,3041708,jeedrek,255001,CK,m,
+jajko,egg,Kura zniosła jajko dziś rano.,The chicken laid an egg this morning.,369192,zipangu,35864,CK,n,
+jabłko,apple,Chłopak ma jabłko w kieszeni.,The boy has an apple in his pocket.,352651,zipangu,46385,CK,n,
+zupa,soup,Do ryżu pasuje zupa miso.,Rice is good with miso soup.,760265,zipangu,54339,CK,f,
+mięso,meat,Mięso jeszcze jest nie gotowe.,The meat's not ready yet.,594041,simaqian,462816,lukaszpp,n,
+ryba,fish,"Sądzę, że to ryba słodkowodna.",I believe this fish is a freshwater fish.,357268,zipangu,55776,CK,f,
+ciasto,cake,Podziel ciasto na was oboje.,Divide the cake between you two.,366560,zipangu,62653,CK,n,
+owoc,fruit,Jaki jest twój ulubiony owoc?,What's your favorite fruit?,2248092,mayahueli,906765,CK,m,
+warzywo,vegetable,Jak się nazywa to warzywo po angielsku?,What do you call this vegetable in English?,360129,zipangu,56634,CK,n,
+cukier,sugar,On rozpuścił cukier w kawie.,He dissolved some sugar in his coffee.,1589310,TopMan,289813,unknown,m,
+sól,salt,Sól jest sprzedawana na kilogramy.,Salt is sold by weight.,1465657,Pandista,25749,CK,f,
+piwo,beer,Poszedłem na piwo z przyjaciółmi.,I went to drink a beer with friends.,350061,zipangu,2409,Zifre,n,
+wino,wine,Będziesz pić wino zamiast mleka?,Will you drink wine instead of milk?,1352211,Ollie1337,19475,shekitten,n,
+obiad,lunch / dinner,"Kiedy jadłem obiad, zadzwonił telefon.","As I was having lunch, the phone rang.",416749,zipangu,246937,CK,m,
+śniadanie,breakfast,On często je tutaj śniadanie.,He often eats breakfast there.,587579,Bilberry,290089,CK,n,
+kolacja,supper,Kolacja powinna być już gotowa.,Dinner is probably ready by now.,959537,zipangu,953180,CK,f,
+jedzenie,food,Podają tutaj bardzo dobre jedzenie.,They serve excellent food here.,631646,Bilberry,61969,CK,n,
+miasto,city / town,Kiedyś było to piękne miasto.,It was once a beautiful city.,352762,zipangu,12098304,sundown,n,
+wieś,village,Jak nazywa się ta wieś?,What is the name of this village?,7787661,Balamax,7787643,Balamax,f,
+ulica,street,Ulica biegnie wzdłuż rzeki.,The street runs along the river.,3326235,Hikaru,44979,orcrist,f,
+sklep,shop,To najtańszy sklep w mieście.,This is the cheapest store in town.,355679,zipangu,57866,CK,m,
+szkoła,school,Szkoła spaliła się na popiół.,The schoolhouse was burnt to ashes.,2246857,mayahueli,240895,sundown,f,
+praca,work / job,Ta praca spełnia moje oczekiwania.,This job fulfils my expectations.,742577,zipangu,59129,sundown,f,
+biuro,office,Nietrudno było znaleźć jego biuro.,Finding his office was easy.,859041,zipangu,853932,piksea,n,
+szpital,hospital,Kiedyś w tym budynku był szpital.,Formerly this building was a hospital.,366928,zipangu,272166,unknown,m,
+kościół,church,Za moim domem jest kościół.,There is a church at the back of my house.,766153,zipangu,1600012,unknown,m,
+park,park,Koło mojego domu jest park.,There is a park near my house.,358946,zipangu,250499,CK,m,
+dworzec,station,Gdzie jest dworzec kolejowy?,Where is the train station?,676842,yessoos,638544,CM,m,
+lotnisko,airport,Gdzie znajdę autobus na lotnisko?,Where do I get an airport bus?,2405778,procroco,18200,AlanF_US,n,
+restauracja,restaurant,Restauracja znajduje się na parterze.,The restaurant is on the ground floor.,940965,lukaszpp,462900,lukaszpp,f,
+hotel,hotel,To najgorszy hotel w mieście.,This is the worst hotel in town.,357714,zipangu,55503,CK,m,
+bank,bank,Musimy poprosić bank o pożyczkę.,We must ask the bank for the loan.,364589,zipangu,18442,Dejo,m,
+poczta,post office,Poczta jest w środku miasta.,The post office is located in the center of the town.,359771,zipangu,324552,CK,f,
+morze,sea,Morze jest spokojne.,The sea is calm.,6305585,fau,1901580,Spamster,n,
+góra,mountain,Ta góra jest pokryta śniegiem.,That mountain is covered with snow.,601343,buari,68359,CK,f,
+las,forest,Wystarczy iskra żeby podpalić las.,A spark would be enough to burn a forest.,7119812,qmak,2756695,mervert1,m,
+rzeka,river,Każdej wiosny rzeka tu wylewa.,Every spring the river floods here.,1353521,Ollie1337,266925,CK,f,
+jezioro,lake,Jak głębokie jest to jezioro?,How deep is this lake?,352229,zipangu,59358,CK,n,
+kraj,country,Cały kraj o tym mówi.,The whole country talks about it.,2378410,Piteris,2378413,Piteris,m,
+świat,world,Czym byłby świat bez kobiet?,What would the world be without women?,353141,zipangu,1699,Swift,m,
+plaża,beach,Ta plaża to raj dla surferów.,This beach is a paradise for surfers.,540108,Bilberry,60622,CK,f,
+samochód,car,Nowy samochód należy do niej.,This new car belongs to her.,365605,zipangu,674499,yessoos,m,
+autobus,bus,Autobus odjeżdża co dziesięć minut.,The bus leaves every ten minutes.,362826,zipangu,35332,CK,m,
+pociąg,train,"Myślę, że pociąg zaraz przyjedzie.",I think the train will arrive soon.,362488,zipangu,12113344,sundown,m,
+samolot,plane,Samolot wyleciał dokładnie o dziewiątej.,The plane took off at exactly nine o'clock.,3866118,jeedrek,44360,CK,m,
+rower,bicycle,Ojciec kupił mi nowy rower.,Father bought me a new bicycle.,359176,zipangu,319206,CN,m,
+droga,road / way,Droga powoli schodziła w dół.,The road descends slowly.,363187,zipangu,280415,unknown,f,
+bilet,ticket,Weźmy bilet bez oznaczonej daty.,Let's get an open ticket.,351986,zipangu,20520,CK,m,
+statek,ship,Ładują ropę naftową na statek.,They are loading oil into the ship.,571108,Bilberry,306987,CK,m,
+dzień,day,Cały dzień grałem w tenisa.,I played tennis all day.,348678,zipangu,528449,fanty,m,
+noc,night,A może zostaniesz na noc?,"Would you stay tonight, perhaps?",366547,zipangu,674417,yessoos,f,
+tydzień,week,Przez tydzień był w szpitalu.,He was in hospital for a week.,352450,zipangu,10748536,sundown,m,
+miesiąc,month,Grudzień to ostatni miesiąc roku.,December is the last month of the year.,532165,Wimmer,266506,CM,m,
+rok,year,Przyszły rok jest rokiem wyborczym.,Next year is an election year.,997615,zipangu,954201,CK,m,
+godzina,hour,Upłynęła mniej więcej jedna godzina.,About an hour has elapsed.,11678628,qmak,9980440,Amastan,f,
+minuta,minute,Jedna minuta ma sześćdziesiąt sekund.,One minute has sixty seconds.,11581597,polski_ren,1416883,CK,f,
+czas,time,"Nie wiem, czy mam czas.",I don't know if I have the time.,349416,zipangu,1292,Ramses,m,
+rano,in the morning,Ona bierze prysznic co rano.,She showers every morning.,357206,zipangu,317076,CK,,
+wieczór,evening,"Dobry wieczór, na ile osób?",Good evening. How many are in your party?,364268,zipangu,65818,CM,m,
+lato,summer,Lato jeszcze się nie skończyło.,Summer isn't over yet!,2216993,Mar,988184,riccioberto,n,
+zima,winter,Chyba zima zawitała na dobre.,It looks like winter is here to stay.,987538,zipangu,954041,CK,f,
+wiosna,spring,Wiosna to moja ulubiona pora roku.,Spring is my favourite season.,921430,zipangu,1164116,Chrikaru,f,
+jesień,autumn,Jesień była długa i łagodna.,The autumn was long and mild.,6534438,arie,942292,spockofvulcan,f,
+poniedziałek,Monday,W poniedziałek jest święto państwowe.,Monday is a bank holiday.,4327983,Rudzielec,4321303,monahxo,m,
+wtorek,Tuesday,Dziś jest wtorek.,Today is Tuesday.,2967754,Mateusz,3256311,AlanF_US,m,
+środa,Wednesday,"Dzisiaj jest środa, prawda?","Today is Wednesday, isn't it?",6067452,qmak,8589967,sundown,f,
+czwartek,Thursday,W czwartek wybieramy się na basen.,"Thursday, we will go to a swimming pool.",1357150,times,1359557,starzykj,m,
+piątek,Friday,On woli pojechać w piątek.,He'd prefer to go on Friday.,1060675,Karola,794460,sundown,m,
+sobota,Saturday,"Zapomniałem, że dzisiaj jest sobota.",I forgot that today was Saturday.,3629738,Katubeltza,3626822,MTC,f,
+niedziela,Sunday,Niedziela to ostatni dzień tygodnia.,Sunday is the last day of the week.,356536,zipangu,281873,Zifre,f,
+słońce,sun,Słońce zaraz zajdzie na zachodzie.,The sun is about to sink in the west.,362929,zipangu,275063,unknown,n,
+deszcz,rain,Deszcz zmienił się w śnieg.,The rain changed into snow.,533939,sapper,26696,CK,m,
+śnieg,snow,"Kiedy się obudziłem, padał śnieg.",I awoke to find it snowing.,352107,zipangu,323695,Zifre,m,
+wiatr,wind,Samotny żaglowiec płynie pod wiatr.,A lone sailboat is sailing against the wind.,357053,zipangu,929988,zipangu,m,
+pogoda,weather,Pogoda szaleje w tym roku.,The weather has been unusual this year.,365418,zipangu,243171,CK,f,
+niebo,sky,Wiesz dlaczego niebo jest niebieskie?,Do you know the reason why the sky looks blue?,451086,gregloby,18340,Zifre,n,
+drzewo,tree,Niedźwiedź może wejść na drzewo.,A bear can climb a tree.,352910,zipangu,18079,CK,n,
+kwiat,flower,"Ten kwiat jest piękny, nieprawdaż?","This flower is beautiful, isn't it?",623120,orzechowski,60050,CK,m,
+pies,dog,Pies rzadko gryzie nie atakowany.,A dog seldom bites unless it is attacked.,349572,zipangu,239193,CK,m,
+kot,cat,Nasz kot jest w kuchni.,Our cat is in the kitchen.,359226,zipangu,65516,CK,m,
+ptak,bird,Jak nazywa się ten ptak?,What's the name of this bird?,364012,zipangu,555279,CM,m,
+koń,horse,Koń umie biec bardzo szybko.,A horse can run very fast.,352904,zipangu,282380,sacredceltic,m,
+książka,book,Ta książka wydaje się ciekawa.,This book seems interesting.,351557,zipangu,372418,ilayde,f,
+telefon,phone,Kilka minut później zadzwonił telefon.,A few minutes later the telephone rang.,354056,zipangu,271070,sundown,m,
+komputer,computer,Modem był wbudowany w komputer.,The modem was integrated into the computer.,360467,zipangu,6029384,Huskion,m,
+gazeta,newspaper,Ta gazeta jest za darmo.,This newspaper is free.,1925935,zipangu,329684,fcbond,f,
+list,letter,Możesz mi wysłać ten list?,Can you mail this letter for me?,350821,zipangu,838759,Scott,m,
+torba,bag,To nie jest moja torba.,This isn't my bag.,2679339,Koen,55621,CK,f,
+klucz,key,Poproszę mój klucz do pokoju.,"My room key, please.",458433,lukaszpp,456325,lukaszpp,m,
+pieniądze,money,"Zbierają pieniądze, by kupić dom.",They are saving their money for the purchase of a house.,459884,zipangu,306243,CK,pl,
+zegarek,watch,Twój zegarek jest na biurku.,Your watch is on the desk.,348625,zipangu,70616,CK,m,
+zdjęcie,photo,Czy mógłbym dostać twoje zdjęcie.,I would like your picture.,598894,Bilberry,17089,CK,n,
+ubranie,clothes,Miałem na sobie najlepsze ubranie.,I wore my best clothes.,360035,zipangu,674259,yessoos,n,
+buty,shoes,Wydaje dużo pieniędzy na buty.,She spends a lot of money on shoes.,364646,zipangu,313349,CK,pl,
+koszula,shirt,Podoba mi się twoja koszula.,I like your shirt.,3857621,jeedrek,1887541,CK,f,
+życie,life,Jego życie jest w niebezpieczeństwie.,His life is in danger.,356954,zipangu,304059,CK,n,
+miłość,love,Miłość jest z natury ślepa.,Love is by nature blind.,1587800,Bilberry,326276,rul,f,
+problem,problem,Ten problem stanowi prawdziwe wyzwanie.,This problem is a real challenge.,365100,zipangu,56713,CK,m,
+pytanie,question,Pytanie brzmi: co robić dalej?,What to do next is the question.,597701,simaqian,264181,Eldad,n,
+odpowiedź,answer,Ucieczka to nie jest odpowiedź.,Running away isn't the answer.,999302,zipangu,954257,CK,f,
+pomysł,idea,Sam pomysł nie jest zły.,The idea is not in itself a bad one.,705262,zipangu,47973,sundown,m,
+imię,first name,To nie jest moje imię.,That's not my name.,2097217,Wessnosa,1897806,CK,n,
+nazwisko,surname,Jego nazwisko często mi umyka.,His name often escapes me.,353162,zipangu,10782302,sundown,n,
+słowo,word,Dobiera każde słowo z rozwagą.,He chose every word with care.,525092,Pacio,296114,CK,n,
+język,language,Szwecja ma swój własny język.,Sweden has its own language.,353961,zipangu,460295,jeanne,m,
+muzyka,music,Moja ulubiona muzyka to pop.,My favourite genre of music is pop.,353984,zipangu,1214922,eadbannon,f,
+film,film,Ten film zebrał mieszane recenzje.,The movie received mixed reviews.,442910,zipangu,49564,CK,m,
+gra,game,Ta gra jest prosta.,This game is easy.,3649651,Siganiv,2714604,CK,f,
+sen,sleep / dream,Miałem straszny sen ostatniej nocy.,I had a dreadful dream last night.,789122,damc,30149,Eldad,m,
+prezent,gift,"Zapomniał, że kupił jej prezent.",He forgot that he bought her a present.,531045,cps,530863,contour,m,
+urodziny,birthday,Damy jej prezent na urodziny.,We will give her a present on her birthday.,1207448,Ptr,249057,CK,pl,
+wakacje,holiday,Wakacje skończyły się za szybko.,The vacation came to an end all too soon.,540118,Bilberry,19812,CK,pl,
+podróż,journey,Podróż na zachód była ciężka.,The trip west was hard.,989499,zipangu,806841,Source_VOA,f,
+zdrowie,health,Niepokoję się o twoje zdrowie.,I am anxious about your health.,361830,zipangu,70729,CM,n,
+szczęście,happiness / luck,"Miał szczęście, że złapał pociąg.",He had the luck to catch the train.,365571,zipangu,293890,unknown,n,
+strach,fear,Zobaczyłem w jego oczach strach.,I saw fear in his eyes.,3520413,Siganiv,2199034,Hybrid,m,
+duży,big,Ten pokój nie jest duży.,That room is not very large.,526947,jadzka,67832,Zifre,,f. duża
+mały,small,Mój pokój jest bardzo mały.,My room is very small.,351479,zipangu,251779,CK,,f. mała
+dobry,good,Jestem dobry w piłce nożnej.,I'm good at football.,364558,zipangu,11605077,sundown,,f. dobra
+zły,bad / angry,Dlatego jestem zły na niego.,That is why I am angry with him.,366195,zipangu,42973,CM,,f. zła
+nowy,new,Samochód mojego ojca jest nowy.,My father's car is new.,692528,Flieg,318891,jakov,,f. nowa
+stary,old,Jego stary kot wciąż żyje.,His old cat is still alive.,362563,zipangu,287293,CK,,f. stara
+młody,young,"On jest młody, ale doświadczony.","He is young, but experienced.",547308,Bilberry,299095,unknown,,f. młoda
+długi,long,Lekarz zalecił mi długi urlop.,The doctor advised me to take a long holiday.,369099,zipangu,27963,CK,,f. długa
+krótki,short,Czas życia motyla jest krótki.,The life span of a butterfly is short.,2120135,liori,1874077,CK,,f. krótka
+wysoki,tall / high,Jest wysoki jak mój ojciec.,He is as tall as my father.,525076,Pacio,297982,CK,,f. wysoka
+niski,low / short,Jestem bardzo niski.,I'm very short.,3857199,jeedrek,2355816,CK,,f. niska
+gorący,hot,"To był gorący, letni dzień.",It was a hot summer day.,2292704,Mar,2292655,Hybrid,,f. gorąca
+zimny,cold,Zimny wiatr wieje z nad morza.,The cold wind is blowing from the sea.,3410164,konrad509,326058,CK,,f. zimna
+ciepły,warm / hot,Tam dostaniesz ciepły posiłek.,You'll get a hot meal there.,10695919,tokzyk,10696168,tokzyk,,f. ciepła
+piękny,beautiful,To był naprawdę piękny dzień.,It was a really beautiful day.,363125,zipangu,44586,CK,,f. piękna
+brzydki,ugly,Nie jestem brzydki. Jestem przystojny.,I'm not ugly. I'm handsome.,12905109,Stanislawspruss,12899310,Ergulis,,f. brzydka
+szczęśliwy,happy,"Nie martw się, bądź szczęśliwy!","Don't worry, be happy!",526785,Pacio,1800,Swift,,f. szczęśliwa
+smutny,sad,"Nie sprawiaj, żebym był smutny.",Don't make me sad.,3093197,jeedrek,2619176,Hybrid,,f. smutna
+zmęczony,tired,"Byłem zmęczony, ale pracowałem dalej.","Tired out, I carried on working.",369093,zipangu,261402,unknown,,f. zmęczona
+głodny,hungry,Byłem głodny po długim marszu.,I felt hungry after the long walk.,356916,zipangu,278094,CK,,f. głodna
+chory,ill,Byłem chory w zeszłym tygodniu.,I was sick last week.,9684534,aurchykr,6532242,CK,,f. chora
+zdrowy,healthy,"Gdybym był zdrowy, byłbym szczęśliwy.","If I were healthy, I would be happy.",442727,esperanto,810106,TomSFox,,f. zdrowa
+tani,cheap,Bilet na metro jest tani.,The ticket for the subway is cheap.,11338578,carlosalberto,11338556,carlosalberto,,f. tania
+drogi,expensive / dear,W klasie zostawiono drogi aparat.,There was an expensive camera left in the classroom.,363639,zipangu,19036,gin,,f. droga
+łatwy,easy,Jest bardzo łatwy w użyciu.,It's very easy to use.,1571138,zipangu,1571130,Spamster,,f. łatwa
+trudny,difficult,"Angielski to trudny język, prawda?","English is a difficult language, isn't it?",670378,zipangu,13637772,araneo,,f. trudna
+ważny,important,Ten problem nie jest ważny.,That problem isn't important.,1348900,Ollie1337,1008849,AOCinJAPAN,,f. ważna
+wolny,free / slow,Czy jesteś wolny jutro wieczorem?,Are you free tomorrow evening?,574996,Bilberry,323232,CK,,f. wolna
+szybki,fast,Bokser powinien mieć szybki refleks.,Boxers need quick reflexes.,1110176,sansa,33589,CM,,f. szybka
+ciężki,heavy,Ten stół jest bardzo ciężki.,This table is very heavy.,4657043,emi,12933891,sundown,,f. ciężka
+czysty,clean,Mój pokój jest zawsze czysty.,My room is always clean.,8916714,nusia2302,3825715,CK,,f. czysta
+brudny,dirty,Twój samochód jest bardzo brudny.,Your car is really dirty.,11581833,polski_ren,8057306,CK,,f. brudna
+pusty,empty,Ten hotel wydaje się pusty.,This hotel seems to be empty.,8529675,MCcommand,3426307,CK,,f. pusta
+pełny,full,Mój żołądek jest pełny.,My stomach's full.,565268,Bilberry,433865,CK,,f. pełna
+otwarty,open,Jestem szeroko otwarty na propozycje.,I'm wide open for suggestions.,2289971,Wessnosa,1891159,CK,,f. otwarta
+zamknięty,closed,Tamten sklep jest dziś zamknięty.,That shop is closed today.,826339,zipangu,13029782,araneo,,f. zamknięta
+biały,white,Na dachu jest biały gołąb.,There's a white dove on the roof.,363770,zipangu,1499943,RoyTek,,f. biała
+czarny,black,Miała na sobie czarny kapelusz.,She was wearing a black hat.,350020,zipangu,2111,CK,,f. czarna
+czerwony,red,Dach mojego domu jest czerwony.,The roof of my house is red.,415292,zipangu,250493,CM,,f. czerwona
+zielony,green,Zielony to mój ulubiony kolor.,Green is my favorite color.,1111422,Deasmond,1084744,thecooltrain,,f. zielona
+niebieski,blue,Miała ubrany ciemno niebieski szalik.,She wore a dark blue scarf.,538937,Bilberry,316134,CK,,f. niebieska
+żółty,yellow,Podoba mi się żółty kolor.,I like the colour yellow.,3718790,nusia2302,2739584,catcher,,f. żółta
+pierwszy,first,To mój pierwszy lot samolotem.,That was the first time I got on a plane.,366550,zipangu,366338,exodream,,f. pierwsza
+ostatni,last,Spóźnił się na ostatni pociąg.,He missed the last train.,366169,zipangu,296751,CK,,f. ostatnia
+następny,next,Następny raz mocniej się przyłożę.,I'll try harder next time.,592015,Bilberry,418861,CK,,f. następna
+ciekawy,interesting,Ta historia ilustruje ciekawy fakt.,The story shows us an interesting fact.,3497163,Bilberry,43285,orcrist,,f. ciekawa
+miły,nice,Podziękowałem mu za miły prezent.,I thanked him for the nice present.,533963,sapper,260307,CK,,f. miła
+smaczny,tasty,Ten chleb jest bardzo smaczny.,This bread is very delicious.,1627982,terenide,60629,CK,,f. smaczna
+bogaty,rich,"To jasne, że jest bogaty.",It's clear that he's rich.,458236,gregloby,453660,CK,,f. bogata
+biedny,poor,Co jeśli jestem biedny?,What if I am poor?,1349035,Ollie1337,318531,CM,,f. biedna
+cichy,quiet,Dlaczego jesteś taki cichy?,Why are you so quiet?,10577058,tokzyk,2259912,_undertoad,,f. cicha
+głośny,loud,"Proszę, nie bądź taki głośny.","Don't be so noisy, please.",570453,Bilberry,38875,CK,,f. głośna
+jasny,bright,Pokój jest bardzo jasny.,The room is very bright.,3099742,jeedrek,2628677,CK,,f. jasna
+ciemny,dark,Ten pokój jest za ciemny.,This room is too dark.,1179742,Ptr,680631,Source_VOA,,f. ciemna
+mokry,wet,Koc jest nadal mokry.,The blanket is still wet.,4144997,xilv,4144844,CK,,f. mokra
+gotowy,ready,Powinieneś być gotowy na najgorsze.,You should be ready for the worst.,1581443,Tutim,16123,Swift,,f. gotowa
+bezpieczny,safe,"Dobrze widzieć, że jesteś bezpieczny.",I'm glad to see you're safe.,3787861,jeedrek,2543600,CK,,f. bezpieczna
+prawdziwy,real,Czy to prawdziwy jedwab?,Is this real silk?,12239967,polski_ren,2959289,sharptoothed,,f. prawdziwa
+inny,different / other,Mam inny aparat niż ty.,My camera is different from yours.,369254,zipangu,250290,CK,,f. inna
+być,to be,Powinna tu być około południa.,She should be here around midday.,349001,zipangu,13442590,sundown,,jestem
+mieć,to have,Wolę mieć kota niż psa.,I would rather have a cat than a dog.,502280,mwgamera,501567,darinmex,,mam
+iść,to go (on foot),Powinniśmy iść za jego przykładem.,We should follow his example.,353994,zipangu,22712,CK,,idę
+jechać,to go (by vehicle),Naprawdę chcesz jechać całą noc?,Are you seriously thinking about driving all night?,957125,zipangu,953113,CK,,jadę
+jeść,to eat,Szparagi można jeść nawet zimą.,You can still get asparagus in the winter.,359157,zipangu,279611,CK,,jem
+pić,to drink,Niebezpiecznie jest pić za dużo.,It is dangerous to drink too much.,367679,zipangu,67686,CK,,piję
+robić,to do / to make,"Już nie wiem, co robić.",I don't know what to do anymore.,350101,zipangu,1443,Zifre,,robię
+mówić,to speak / to say,Mogę mówić wyłącznie za siebie.,I can only speak for myself.,354039,zipangu,258244,CK,,mówię
+widzieć,to see,On znów chce nas widzieć.,He wants to see us again.,366139,zipangu,297352,CK,,widzę
+wiedzieć,to know (a fact),"Chciałbym wiedzieć, jak to uruchomić.",I wish I could figure out how to make this work.,970724,zipangu,953737,CK,,wiem
+chcieć,to want,Czemu ktoś miałby tego chcieć?,Why would anyone else want this?,3992289,jeedrek,2997207,CK,,chcę
+móc,to be able to,Chciałbym móc to zrobić lepiej.,I wish I could do that better.,8708265,nusia2302,6260612,CK,,mogę
+musieć,to have to,Chciałbym nie musieć już tego robić.,I wish we didn't have to do this any longer.,970979,zipangu,953749,CK,,muszę
+lubić,to like,Trudno cię nie lubić.,It's hard not to like you.,10484334,hecko,3912843,CK,,lubię
+kochać,to love,Będę cię kochać na zawsze.,I'll love you forever.,560875,Bilberry,237684,CK,,kocham
+kupować,to buy,Nie chcę kupować niczego więcej.,I don't want to buy anything else.,5227958,Tomash,3733477,CK,,kupuję
+pracować,to work,"Nie mamy wyjścia, musimy pracować.",We have no alternative but to work.,351988,zipangu,280196,CK,,pracuję
+czytać,to read,Dobre okulary pomogą ci czytać.,A good pair of glasses will help you to read.,355827,zipangu,30079,sundown,,czytam
+pisać,to write,Nie chcę pisać tym długopisem.,I don't want to write with this pen.,733642,Mateusz,668412,Eldad,,piszę
+słuchać,to listen,Ona woli słuchać niż mówić.,She would rather listen to others than talk herself.,524353,newton,314611,CK,,słucham
+patrzeć,to look,"Uwielbiam patrzeć, jak zachodzi słońce.",I love to watch the sun set.,12470337,katix824,10602832,CK,,patrzę
+myśleć,to think,Masz podstawy by tak myśleć?,Do you have any grounds for thinking so?,528192,darooo,49753,CM,,myślę
+rozumieć,to understand,Jak mam to rozumieć?,How am I supposed to understand that?,4438801,Luanne,4425742,Ooneykcall,,rozumiem
+mieszkać,to live,Chciałbym mieszkać blisko twojego domu.,I'd like to live near your house.,3425902,konrad509,1401128,CK,,mieszkam
+spać,to sleep,Zamknij okno zanim pójdziesz spać.,Lock the window before going to bed.,396776,lukesh,268913,Zifre,,śpię
+grać,to play,Nauczę cię grać w szachy.,I'll teach you how to play chess.,355898,zipangu,2712942,CK,,gram
+czekać,to wait,Nie mogę czekać na ciebie.,I can't wait for you.,574978,Bilberry,237702,CK,,czekam
+pytać,to ask,Jak możesz o to pytać?,Why would you ask that?,6554135,arie,1886443,CK,,pytam
+odpowiadać,to answer,Nie musisz odpowiadać na to pytanie.,You don't have to answer this question.,970994,zipangu,70082,CK,,odpowiadam
+dawać,to give,Nie musisz mi niczego dawać.,You don't have to give me anything.,10667937,igxr,3110439,CK,,daję
+brać,to take,Policja nie powinna brać łapówek.,Police shouldn't take bribes.,557376,Bilberry,497121,CK,,biorę
+znać,to know (a person),On nie może znać prawdy.,He is not able to know the truth.,350773,zipangu,488192,saasmath,,znam
+pamiętać,to remember,"Muszę pamiętać, by kupić jutro tę książkę.",I have to remember to buy this book tomorrow.,359825,zipangu,674351,yessoos,,pamiętam
+zapomnieć,to forget,Chciałbym o tym wszystkim zapomnieć.,I'd like to forget it all.,6156550,arie,5216734,CK,,pf. zapomnę
+pomagać,to help,Ona nie będzie pomagać biednym.,She will not help poor people.,11749878,mojeanin,8911185,mialiesperantistas,,pomagam
+szukać,to look for,Czy pomógłbyś mi szukać moich kluczy?,Would you help me look for my keys?,558231,Bilberry,63777,CK,,szukam
+znaleźć,to find,Nie mogę znaleźć mojego bagażu.,I can't find my luggage.,440591,zipangu,436481,lukaszpp,,pf. znajdę
+zacząć,to begin,Nie możemy zacząć od nowa?,Can't we start again?,3637514,Katubeltza,3636395,CK,,pf. zacznę
+wracać,to return,Musisz natychmiast wracać do domu.,You need to get home right now.,2563895,zipangu,3387687,CK,,wracam
+wychodzić,to go out,Nie powinieneś wychodzić od razu.,You shouldn't leave at once.,632780,Bilberry,52154,unknown,,wychodzę
+wchodzić,to go in,Nie wolno wchodzić do pokoju.,You must not enter the room.,3865314,jeedrek,44235,CK,,wchodzę
+siedzieć,to sit,Chcę siedzieć w pierwszym rzędzie.,I want to sit in the front row.,4952786,aleksandraeska,4499624,CK,,siedzę
+stać,to stand,Brytyjczycy zwykli stać w kolejkach.,British people are used to standing in queues.,7457346,qmak,26130,Dejo,,stoję
+leżeć,to lie,Nie chcę już więcej leżeć.,I don't want to lie any more.,4179255,jeedrek,1543905,sundown,,leżę
+biegać,to run,Proszę nie biegać w sali.,Please don't run in the classroom.,793140,damc,482046,CK,,biegam
+pływać,to swim,Zawsze chciałem się nauczyć pływać.,I've always wanted to learn how to swim.,975045,zipangu,953875,CK,,pływam
+tańczyć,to dance,Gdzie nauczyłeś się tak tańczyć?,Where did you learn to dance like this?,2150124,jeedrek,2060741,CK,,tańczę
+śpiewać,to sing,Mężczyzna wstał i zaczął śpiewać.,The man stood up and began to sing.,530578,Bilberry,46037,CK,,śpiewam
+gotować,to cook,One nie umie dobrze gotować.,She can't cook well.,392983,kertoip,310921,CK,,gotuję
+płacić,to pay,Czynsz proszę płacić z góry.,Pay your rent in advance.,364230,zipangu,319625,CK,,płacę
+podróżować,to travel,On lubi podróżować za granicę.,He likes to travel abroad.,2145474,jeedrek,294682,CK,,podróżuję
+odpoczywać,to rest,"Jesteś chory, musisz odpoczywać.",You're sick. You have to rest.,525160,Pacio,2092,Swift,,odpoczywam
+potrzebować,to need,Nie będę potrzebować żadnej pomocy.,I'm not going to need any help.,3778915,jeedrek,3735396,CK,,potrzebuję
+pokazać,to show,"O, proszę mi to pokazać!",Oh! Show it to me please.,349492,zipangu,19142,sacredceltic,,pf. pokażę
+jeden,one,Jeden z dwóch musi odejść.,One of the two has to go.,366581,zipangu,1277295,Eldad,,
+dwa,two,Dostałem dwa bilety od kolegi.,I received two tickets from a friend.,358717,zipangu,13804878,Oktopusek,,
+trzy,three,On ma trzy starsze siostry.,He has three older sisters.,578751,Bilberry,468061,CK,,
+cztery,four,Na świecie są cztery oceany.,There are four oceans in the world.,355246,zipangu,271121,unknown,,
+pięć,five,Ta skrzynka zawiera pięć jabłek.,This box contains five apples.,348645,zipangu,57519,papabear,,
+sześć,six,Podzieliła ciasto na sześć części.,She divided the cake into six pieces.,352449,zipangu,311097,CK,,
+siedem,seven,To zdanie zawiera siedem słów.,This sentence consists of seven words.,547320,Bilberry,547037,FeuDRenais,,
+osiem,eight,Dziesięć odjąć dwa daje osiem.,Two from ten leaves eight.,722129,zipangu,73473,CK,,
+dziewięć,nine,Ile to dziewięć minus sześć?,How many is nine minus six?,524734,Decius,519105,blay_paul,,
+dziesięć,ten,Sprzedałem to za dziesięć dolarów.,I sold it for ten dollars.,358011,zipangu,41929,CK,,
+sto,one hundred,On ma najwyżej sto dolarów.,He has a hundred dollars at most.,364158,zipangu,290381,CK,,
+tysiąc,one thousand,Już mówiłem mu to tysiąc razy.,I've already told him this a thousand times.,4145051,xilv,4141406,mervert1,,
+bardzo,very,To jabłko jest bardzo czerwone.,This apple is very red.,352653,zipangu,60350,CK,,
+tutaj,here,On już tutaj nie pracuje.,He doesn't work here any more.,359319,zipangu,11966096,sundown,,
+tam,there,Hiroko siedziała tam zupełnie sama.,Hiroko sat there all alone.,366126,zipangu,240849,CN,,
+teraz,now,Jakie filmy są teraz grane?,What movies are playing now?,361650,zipangu,65919,unknown,,
+dzisiaj,today,Prognoza na dzisiaj się sprawdziła.,Today's weather forecast proved right.,352413,zipangu,242621,sundown,,
+jutro,tomorrow,"Myślisz, że jutro będzie ładnie?",Do you think tomorrow will be nice?,354013,zipangu,12105943,sundown,,
+wczoraj,yesterday,Moja ulubiona drużna wczoraj przegrała.,My favorite team lost yesterday.,457398,gregloby,456421,lukaszpp,,
+zawsze,always,Ona zawsze chodzi swoimi ścieżkami.,She always gets her own way.,355763,zipangu,310447,CK,,
+nigdy,never,On nigdy nie traci nadziei.,He never loses hope.,348731,zipangu,430183,witbrock,,
+często,often,On często jeździ za granicę.,He often travels to foreign countries.,355984,zipangu,293271,CK,,
+czasem,sometimes,Mój pies czasem je trawę.,My dog sometimes eats grass.,996897,zipangu,954186,CK,,
+dobrze,well / fine,"Zakładam, że dobrze znasz fakty.",I take it that you are fully acquainted with the facts.,351551,zipangu,16001,Swift,,
+źle,badly,"No, nie było tak źle.","Well, it wasn't all that bad.",364143,zipangu,39328,minshirui,,
+szybko,quickly,Jak szybko jedzie ten pociąg?,How fast does this train run?,368432,zipangu,56482,CK,,
+wolno,slowly,Mój dziadek mówi bardzo wolno.,My grandfather speaks very slowly.,3302752,dibdin,1362466,CK,,
+blisko,near,Chciałbym byś była blisko mnie.,I wish you were close to me.,529073,Dany74PL,17922,wwkudu,,
+daleko,far,Jak daleko stąd do muzeum?,How far is it from here to the museum?,352703,zipangu,62066,CK,,
+razem,together,Zdecydujmy razem dokąd pójść najpierw.,Let's decide together where to go first.,528928,Dany74PL,32800,Dejo,,
+znowu,again,Czy jutro znowu będzie gorąco?,Will it be hot again tomorrow?,540600,zipangu,323252,CK,,
+naprawdę,really,Ja naprawdę wierzę w duchy.,I do believe in ghosts.,541562,Bilberry,262069,unknown,,
+trochę,a little,Trochę mnie boli w boku.,I have a slight pain in my side.,357698,zipangu,326586,CK,,
+dużo,a lot,Pomarańcze mają dużo witaminy C.,Oranges are rich in vitamin C.,355803,zipangu,64783,CK,,
+mało,few / little,Tej zimy mieliśmy mało śniegu.,We have had little snow this winter.,367631,zipangu,243106,CM,,
+jeszcze,still / yet,Daj mi jeszcze jedną szansę.,Give me another chance.,358889,zipangu,31491,CK,,
+już,already,"Och, nie mamy już cukru.","Oh, we're out of sugar.",354026,zipangu,5367073,Mateon1,,
+tylko,only,To zajmie tylko kilka minut.,It only takes a few minutes.,1169941,perry,33057,CK,,
+właśnie,just / exactly,Dlatego właśnie mogę tworzyć muzykę.,That's exactly why I can create music.,357045,zipangu,8160831,TheNightAvl,,
+oczywiście,of course,"Oczywiście możesz zrobić, co chcesz.","You can do whatever you want to do, of course.",2664604,Hikaru,2591684,CK,,
+niestety,unfortunately,Niestety złamał nogę w wypadku.,"Unfortunately, he got his leg broken in the accident.",393330,kertoip,318584,orcrist,,
+dlaczego,why,Dlaczego do mnie nie zadzwoniłeś?,Why didn't you call me up?,395336,kertoip,279268,CK,,
+kiedy,when,"Nie wiem, kiedy on przyjdzie.",I don't know when he's coming.,353132,zipangu,2425565,CM,,
+gdzie,where,Gdzie jest najbliższe centrum handlowe?,Where's the nearest shopping mall?,357288,zipangu,27271,CK,,
+kto,who,Kto jest twoim ulubionym piosenkarzem?,Who is your favourite singer?,353980,zipangu,5241605,cinqhiboux,,
+ile,how much / how many,Ile jajek jest w kuchni?,How many eggs are there in the kitchen?,393006,kertoip,275409,Eldad,,
+nic,nothing,Nie masz nic do roboty?,Don't you have work to do?,364152,zipangu,2288880,CK,,
+wszystko,everything,U mnie wszystko w porządku.,I am well.,352980,zipangu,574624,Zac2333,,
+coś,something,Pożycz mi coś do cięcia.,Lend me something with which to cut this.,348685,zipangu,25248,Luornu,,
+ktoś,someone,Ktoś wołał mnie po imieniu.,Someone was calling my name.,360980,zipangu,276157,CK,,
+dzień dobry,good morning / hello,Dzień dobry! Poproszę kawę.,Good morning! A coffee please.,,,,,,
+dobry wieczór,good evening,Dobry wieczór! Miło mi.,Good evening! Nice to meet you.,,,,,,
+do widzenia,goodbye,Do widzenia! Miłego dnia.,Goodbye! Have a nice day.,,,,,,
+do zobaczenia,see you,Do zobaczenia jutro!,See you tomorrow!,,,,,,
+wieczorem,in the evening,Wieczorem oglądam film.,I watch a film in the evening.,,,,,,
+uczyć się,to learn,Uczę się polskiego.,I'm learning Polish.,,,,,,uczę się
