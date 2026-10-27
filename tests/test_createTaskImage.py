@@ -1,5 +1,5 @@
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
 import pytest
@@ -196,3 +196,54 @@ def test_recovery_after_a_stale_screen_redraws():
     policy.on_failure(OSError(), NOW + timedelta(hours=3))
 
     assert policy.on_success(tasks, NOW + timedelta(hours=4))[0] == "tasks"
+
+
+def _rows_by_column(tasks, **drawer_args):
+    """Which x each task's row is drawn at, keyed by title."""
+    drawn = {}
+    drawer = TaskDrawer(FONT, **drawer_args)
+    drawer._draw_row = lambda task, lines, meta, y, text_x, line_height, x0=None, x1=None: drawn.update({task.title: x0})
+    drawer.create_task_image(tasks)
+    return drawn
+
+
+def test_weekly_items_go_in_the_right_column_and_daily_items_in_the_left():
+    today = datetime.now().date()
+    tasks = [Task("daily", today), Task("weekly", today, weekly=True)]
+
+    columns = _rows_by_column(tasks)
+
+    assert columns["daily"] < 648 / 2 < columns["weekly"]
+
+
+def test_without_weekly_items_the_list_stays_full_width():
+    today = datetime.now().date()
+
+    assert _rows_by_column([Task("daily", today)]) == {"daily": DEFAULT_MARGINS.left}
+
+
+def test_two_columns_can_be_forced_so_an_empty_week_still_shows_both():
+    drawn = []
+    drawer = TaskDrawer(FONT, two_columns=True)
+    drawer._draw_message = lambda heading, *args: drawn.append(heading)
+
+    drawer.create_task_image([])
+
+    assert drawn == []
+
+
+def test_weekly_items_are_not_filtered_by_their_date_in_the_drawer():
+    # The fetcher already chose this week's; the drawer must not drop a Weekly Item due later in the week.
+    later = datetime.now().date() + timedelta(days=3)
+
+    assert "later" in _rows_by_column([Task("later", later, weekly=True)])
+
+
+def test_overdue_wins_over_the_time_in_the_daily_meta():
+    today = datetime.now().date()
+    overdue = Task("a", today - timedelta(days=2), scheduled_time=time(9, 30))
+    timed = Task("b", today, scheduled_time=time(9, 30))
+
+    assert TaskDrawer._daily_meta(overdue) == "2d overdue"
+    assert TaskDrawer._daily_meta(timed) == "09:30"
+    assert TaskDrawer._daily_meta(Task("c", today)) == ""
