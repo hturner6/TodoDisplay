@@ -21,7 +21,8 @@ def save_token(token, env_file=ENV_FILE):
     else:
         lines.append(entry)
     temp = env_file.with_name(env_file.name + ".tmp")
-    fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    temp.unlink(missing_ok=True)  # a leftover file would keep its old, possibly looser, mode
+    fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd, "w") as handle:
         handle.write("\n".join(lines) + "\n")
     os.replace(temp, env_file)
@@ -44,8 +45,13 @@ def verify_api_key(authorization_code, env_file=ENV_FILE):
                              auth=(client_id, client_secret))
     if response.ok:
         resp_json = response.json()
-        save_token(resp_json.get("access_token"), env_file)
-        expires = date.today() + timedelta(seconds=resp_json.get("expires_in", 0))
-        print(f"Saved ACCESS_TOKEN to {env_file}; it expires {expires}. Restart the service to use it.")
+        token = resp_json.get("access_token")
+        if not token:
+            print("Error verifying API key: the response had no access token; .env left unchanged")
+            return
+        save_token(token, env_file)
+        expires_in = resp_json.get("expires_in")
+        expiry = f"it expires {date.today() + timedelta(seconds=expires_in)}" if expires_in else "its expiry is unknown"
+        print(f"Saved ACCESS_TOKEN to {env_file}; {expiry}. Restart the service to use it.")
     else:
         print("Error verifying API key:", response.text)

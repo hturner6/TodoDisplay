@@ -77,3 +77,35 @@ def test_a_failed_exchange_leaves_the_file_alone(token_response, tmp_path):
     apiTokenVerifier.verify_api_key("code", env_file=env)
 
     assert env.read_text() == "ACCESS_TOKEN=old\n"
+
+
+def test_a_response_without_a_token_leaves_the_file_alone(token_response, tmp_path, capsys):
+    token_response.json = lambda: {"token_type": "bearer", "expires_in": 15552000}
+    env = tmp_path / ".env"
+    env.write_text("ACCESS_TOKEN=old\n")
+
+    apiTokenVerifier.verify_api_key("code", env_file=env)
+
+    assert env.read_text() == "ACCESS_TOKEN=old\n"
+    assert "no access token" in capsys.readouterr().out.lower()
+
+
+def test_a_response_without_an_expiry_does_not_invent_one(token_response, tmp_path, capsys):
+    token_response.json = lambda: {"access_token": SECRET}
+    env = tmp_path / ".env"
+
+    apiTokenVerifier.verify_api_key("code", env_file=env)
+
+    assert env.read_text() == f"ACCESS_TOKEN={SECRET}\n"
+    assert str(date.today()) not in capsys.readouterr().out
+
+
+def test_a_stale_loose_temp_file_does_not_loosen_the_env_file(token_response, tmp_path):
+    env = tmp_path / ".env"
+    stale = tmp_path / ".env.tmp"
+    stale.write_text("")
+    stale.chmod(0o644)
+
+    apiTokenVerifier.verify_api_key("code", env_file=env)
+
+    assert stat.S_IMODE(os.stat(env).st_mode) == 0o600
