@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -12,6 +12,7 @@ from taskFetcher.weather import Weather
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
 FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/Inter-Bold.ttf")
+BANNER_FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/Newsreader-SemiBoldItalic.ttf")
 
 
 def test_parse_margins_reads_top_right_bottom_left():
@@ -49,6 +50,16 @@ def test_a_stale_screen_says_so_in_the_footer():
         return sum(1 for value in image.crop(footer).get_flattened_data() if value == 0)
 
     assert black_pixels(stale) > black_pixels(normal)
+
+
+def test_no_date_heading_overhangs_the_left_margin():
+    # The italic banner's capitals lean out past their origin: every weekday and month must still stay in.
+    margins = DEFAULT_MARGINS
+    drawer = TaskDrawer(FONT, banner_font_path=BANNER_FONT)
+
+    for offset in range(0, 366, 2):
+        image = drawer.create_task_image([], today=datetime(2026, 1, 1).date() + timedelta(days=offset))
+        assert image.point(lambda value: 255 - value).getbbox()[0] >= margins.left
 
 
 def test_the_drawer_does_not_decide_staleness_from_the_clock():
