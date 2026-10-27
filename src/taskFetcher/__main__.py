@@ -1,31 +1,15 @@
 import argparse
-import os
 import json
 from dotenv import load_dotenv
-from taskFetcher.tickTick.apiTokenVerifier import verify_api_key
+from taskFetcher.tickTick.apiTokenVerifier import authorize_url, verify_api_key
 from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from models.task import TaskEncoder
 from taskFetcher.todoApp.todoAppFetcher import fetch_todoapp_tasks
 
-# TODO: Remove hardcoded values
 def create_Url():
-    client_id = os.getenv('CLIENT_ID')
-    authorize_url = 'https://ticktick.com/oauth/authorize'
-    redirect_uri = 'https://localhost:3000'
-    scope = 'tasks:read'
-    state = 'test'
-
-    authorization_url = (
-        f"{authorize_url}?client_id={client_id}"
-        f"&scope={scope.replace(' ', '%20')}"
-        f"&state={state}"
-        f"&redirect_uri={redirect_uri}"
-        f"&response_type=code"
-    )
-
-    print('Open this URL in your browser to authorize the application:');
-    print(authorization_url);
+    print('Open this URL in your browser to authorize the application:')
+    print(authorize_url())
 
 # TODO: use redirect url to grab the 'code' query param value
 

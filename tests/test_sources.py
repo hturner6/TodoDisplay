@@ -31,13 +31,26 @@ def test_an_unknown_env_source_is_an_error_naming_the_choices():
 
 
 def test_each_source_uses_its_own_fetcher(monkeypatch):
+    monkeypatch.setenv("TICKTICK_PROJECT_ID", "p1")
     monkeypatch.setattr(sources, "fetch_todoapp_tasks", lambda: ["from todoapp"])
     monkeypatch.setattr(sources, "get_project_data", lambda project_id: {"project": project_id})
     monkeypatch.setattr(sources, "parse_project_tasks", lambda data: ["from ticktick", data["project"]])
 
     assert sources.fetch_tasks("todoapp") == ["from todoapp"]
-    assert sources.fetch_tasks("ticktick") == ["from ticktick", sources.TICKTICK_PROJECT_ID]
+    assert sources.fetch_tasks("ticktick") == ["from ticktick", "p1"]
 
 
 def test_only_todoapp_always_uses_two_columns():
     assert sources.uses_columns("todoapp") and not sources.uses_columns("ticktick")
+
+
+def test_ticktick_project_defaults_to_the_one_in_use():
+    assert sources.ticktick_project_id(env={}) == "687164e8fb06fe7e7a3d621a"
+
+
+def test_env_setting_picks_the_ticktick_project():
+    assert sources.ticktick_project_id(env={"TICKTICK_PROJECT_ID": "abc123"}) == "abc123"
+
+
+def test_blank_env_setting_falls_back_to_the_default():
+    assert sources.ticktick_project_id(env={"TICKTICK_PROJECT_ID": " "}) == "687164e8fb06fe7e7a3d621a"
