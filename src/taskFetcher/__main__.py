@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from taskFetcher.tickTick.apiTokenVerifier import authorize_url, verify_api_key
 from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
-from models.task import TaskEncoder
 from taskDisplay.screenLayout import select
 from taskFetcher.todoApp.todoAppSource import TodoAppSource
 
