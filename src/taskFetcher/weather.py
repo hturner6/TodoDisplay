@@ -3,8 +3,9 @@ from datetime import datetime, timedelta
 import requests
 
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
-# The forecast is asked for at most this often, whether or not the last ask worked.
+# The forecast is asked for at most this often after a good answer, and after this long after a failed one.
 REFRESH_AFTER = timedelta(hours=1)
+RETRY_AFTER = timedelta(minutes=10)
 # A failing request keeps showing the last good weather this long, then hides it.
 SHOW_FOR = timedelta(hours=3)
 TIMEOUT_SECONDS = 10
@@ -55,6 +56,7 @@ class WeatherService:
         }
         self._get = get
         self._asked_at = None
+        self._last_ask_worked = False
         self._weather = None
         self._fetched_at = None
 
@@ -70,12 +72,15 @@ class WeatherService:
             raise ValueError("WEATHER_LATITUDE and WEATHER_LONGITUDE must be numbers") from None
 
     def current(self, now: datetime):
-        if self._asked_at is None or now - self._asked_at >= REFRESH_AFTER:
+        wait = REFRESH_AFTER if self._last_ask_worked else RETRY_AFTER
+        if self._asked_at is None or now - self._asked_at >= wait:
             self._asked_at = now
             try:
                 self._weather = self._fetch()
                 self._fetched_at = now
+                self._last_ask_worked = True
             except Exception as error:
+                self._last_ask_worked = False
                 print(f"Could not fetch the weather: {type(error).__name__}")
         if self._weather is None or now - self._fetched_at >= SHOW_FOR:
             return None
