@@ -24,6 +24,8 @@ The display draws in pure 1-bit black and white (the panel has no greys) in Deja
 
 To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker that names the cause (e.g. "STALE - Cannot reach TodoApp - last update 09:30"); if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TodoApp or TickTick) is shown. The driver has no partial refresh, so every update is a full one.
 
+**Quiet hours.** The `--run` loop neither fetches nor draws overnight (default 23:00 to 06:00), leaving the last picture on the panel, which keeps it without power. The first refresh after the window always redraws. Set `QUIET_HOURS="HH:MM-HH:MM"` in `src/taskFetcher/.env` to change the window, or `QUIET_HOURS=off` to disable it. A one-off `--task` (and `./refresh.sh`) ignores quiet hours.
+
 ## Running on the Pi (systemd)
 
 The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere, and compare it with `systemctl cat TodoDisplay` on the Pi.
