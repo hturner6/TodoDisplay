@@ -70,17 +70,32 @@ def test_weeks_run_monday_to_sunday():
     assert week_bounds(date(2026, 11, 1)) == (date(2026, 10, 26), date(2026, 11, 1))
 
 
-def test_selection_keeps_todays_daily_items_and_this_weeks_weekly_items():
+def test_selection_keeps_daily_items_up_to_today_and_this_weeks_weekly_items():
     tasks = parse_todo_items([
         item("today", WEDNESDAY),
-        item("yesterday", date(2026, 10, 27)),
+        item("overdue", date(2026, 10, 27)),
+        item("tomorrow", date(2026, 10, 29)),
         item("this week", date(2026, 10, 30), daily=False),
         item("sunday", date(2026, 11, 1), daily=False),
         item("last week", date(2026, 10, 25), daily=False),
         item("next week", date(2026, 11, 2), daily=False),
     ])
 
-    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["today", "this week", "sunday"]
+    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["overdue", "today", "this week", "sunday"]
+
+
+@pytest.mark.parametrize("state", ["isDone", "isCancelled", "isMoved"])
+def test_finished_daily_items_from_past_days_are_not_shown(state):
+    tasks = parse_todo_items([item("old", date(2026, 10, 20), state=state), item("today", WEDNESDAY, state=state)])
+
+    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["today"]
+
+
+def test_overdue_daily_items_come_before_todays_whatever_their_time():
+    tasks = parse_todo_items([item("today early", WEDNESDAY, scheduledTime="07:00"),
+                              item("old late", date(2026, 10, 20), scheduledTime="22:00")])
+
+    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["old late", "today early"]
 
 
 def test_daily_items_sort_by_time_with_untimed_last():

@@ -70,10 +70,15 @@ def week_bounds(today):
 
 
 def select_for_display(tasks, today):
-    """Today's Daily Items (by time, untimed last) then this week's Weekly Items (by date)."""
+    """Overdue and today's Daily Items, then this week's Weekly Items (by date).
+
+    Overdue Daily Items are only those still to do; finished, cancelled or moved ones are done
+    with. Daily Items sort by date, then time (untimed last).
+    """
     monday, sunday = week_bounds(today)
-    daily = [t for t in tasks if not t.weekly and t.due_date == today]
+    daily = [t for t in tasks if not t.weekly
+             and (t.due_date == today or (t.due_date < today and t.status == Task.TODO))]
     weekly = [t for t in tasks if t.weekly and monday <= t.due_date <= sunday]
-    daily.sort(key=lambda t: (t.scheduled_time is None, t.scheduled_time or time.min, t.title))
+    daily.sort(key=lambda t: (t.due_date, t.scheduled_time is None, t.scheduled_time or time.min, t.title))
     weekly.sort(key=lambda t: (t.due_date, t.title))
     return daily + weekly
