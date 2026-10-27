@@ -27,3 +27,13 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 ## Forcing a refresh on the Pi
 
 The service only redraws every 30 minutes. To redraw now, run `./refresh.sh` on the Pi (add `--clear` to wipe the screen first and remove ghosting). It stops the `TodoDisplay` service while drawing, since the service holds the display's GPIO, and starts it again afterwards.
+
+## Connecting the Pi to TodoApp (read-only)
+
+The Pi reads TodoApp data from Firestore with a dedicated service account that has only the `Cloud Datastore Viewer` role, because the app's security rules also let members write. Run the guided setup from the repo root on your laptop:
+
+```
+./scripts/setup-todoapp-access.sh
+```
+
+It walks you through finding the project id and user id, creating the service account and its JSON key, copying the key to the Pi (`~/.config/tododisplay/`, mode 600, outside the checkout) and setting `TODOAPP_PROJECT_ID`, `TODOAPP_SPACE_ID` and `TODOAPP_KEY_FILE` in `src/taskFetcher/.env` on both machines. Never commit the key or those values; the repo is public.
