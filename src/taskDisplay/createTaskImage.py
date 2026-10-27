@@ -229,12 +229,18 @@ class TaskDrawer():
     @staticmethod
     def _daily_meta(task: Task) -> str:
         """Overdue wins over the time, because a late item matters more than when it was due."""
-        overdue = task.short_due_label() if task.due_date < datetime.now().date() else ""
-        return overdue or (task.scheduled_time.strftime("%H:%M") if task.scheduled_time else "")
+        # "late", not "overdue": the label shares the first line with the title, and a longer
+        # one forces a word that would otherwise fit to be broken in two.
+        days_late = Task.days_elapsed(task.due_date, datetime.now().date())
+        if days_late > 0:
+            return f"{days_late}d late"
+        return task.scheduled_time.strftime("%H:%M") if task.scheduled_time else ""
 
     @staticmethod
     def _weekly_meta(task: Task) -> str:
-        return task.due_date.strftime("%a")
+        # A Weekly Item belongs to the week, not a day (TodoApp stores it on the week's Monday),
+        # so a day label would mislead and cost title width.
+        return ""
 
     def _draw_rows(self, tasks: list[Task], top: int, footer_top: int,
                    x0: int = None, x1: int = None, meta_for=None):

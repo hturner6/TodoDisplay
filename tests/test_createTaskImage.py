@@ -239,11 +239,42 @@ def test_weekly_items_are_not_filtered_by_their_date_in_the_drawer():
     assert "later" in _rows_by_column([Task("later", later, weekly=True)])
 
 
-def test_overdue_wins_over_the_time_in_the_daily_meta():
+def test_late_wins_over_the_time_in_the_daily_meta():
     today = datetime.now().date()
     overdue = Task("a", today - timedelta(days=2), scheduled_time=time(9, 30))
     timed = Task("b", today, scheduled_time=time(9, 30))
 
-    assert TaskDrawer._daily_meta(overdue) == "2d overdue"
+    assert TaskDrawer._daily_meta(overdue) == "2d late"
     assert TaskDrawer._daily_meta(timed) == "09:30"
     assert TaskDrawer._daily_meta(Task("c", today)) == ""
+
+
+def test_a_task_changing_state_redraws_the_screen():
+    today = datetime.now().date()
+    now = datetime(2026, 10, 27, 12, 0)
+    policy = RefreshPolicy("todoapp")
+    policy.on_success([Task("a", today)], now)
+
+    assert policy.on_success([Task("a", today, status=Task.DONE)], now + timedelta(minutes=30)) is not None
+
+
+def test_a_change_of_time_or_week_redraws_the_screen():
+    today = datetime.now().date()
+    now = datetime(2026, 10, 27, 12, 0)
+    policy = RefreshPolicy("todoapp")
+    policy.on_success([Task("a", today)], now)
+
+    assert policy.on_success([Task("a", today, scheduled_time=time(9, 0))], now) is not None
+    assert policy.on_success([Task("a", today, scheduled_time=time(9, 0), weekly=True)], now) is not None
+    assert policy.on_success([Task("a", today, scheduled_time=time(9, 0), weekly=True)], now) is None
+
+
+def test_todoapp_errors_name_todoapp_and_never_show_the_error_text():
+    class Rejected(Exception):
+        response = type("Response", (), {"status_code": 400})()
+
+    assert describe_error(Rejected("secret detail"), "todoapp")[0] == "Sign-in failed"
+    assert describe_error(RuntimeError("Missing in .env: TODOAPP_KEY_FILE"), "todoapp")[0] == "TodoApp not set up"
+    assert describe_error(ConnectionError("boom"), "todoapp")[0] == "Cannot reach TodoApp"
+    for error in (Rejected("secret detail"), RuntimeError("secret detail")):
+        assert "secret detail" not in " ".join(describe_error(error, "todoapp"))
