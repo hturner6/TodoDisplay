@@ -1,4 +1,4 @@
-from datetime import date, time, timedelta
+from datetime import date, time
 from models.task import Task
 
 STATES = {
@@ -61,24 +61,3 @@ def parse_todo_item(document):
 def parse_todo_items(documents):
     tasks = (parse_todo_item(document) for document in documents)
     return [task for task in tasks if task is not None]
-
-
-def week_bounds(today):
-    """Monday and Sunday of the week containing today."""
-    monday = today - timedelta(days=today.weekday())
-    return monday, monday + timedelta(days=6)
-
-
-def select_for_display(tasks, today):
-    """Overdue and today's Daily Items, then this week's Weekly Items (by date).
-
-    Overdue Daily Items are only those still to do; finished, cancelled or moved ones are done
-    with. Daily Items sort by date, then time (untimed last).
-    """
-    monday, sunday = week_bounds(today)
-    daily = [t for t in tasks if not t.weekly
-             and (t.due_date == today or (t.due_date < today and t.status == Task.TODO))]
-    weekly = [t for t in tasks if t.weekly and monday <= t.due_date <= sunday]
-    daily.sort(key=lambda t: (t.due_date, t.scheduled_time is None, t.scheduled_time or time.min, t.title))
-    weekly.sort(key=lambda t: (t.due_date, t.title))
-    return daily + weekly

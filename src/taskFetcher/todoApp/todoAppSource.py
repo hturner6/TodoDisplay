@@ -1,15 +1,14 @@
 import os
-from datetime import date
 from taskFetcher.taskSource import TaskSource, http_status
 from taskFetcher.todoApp.auth import get_access_token
 from taskFetcher.todoApp.firestoreClient import list_documents
-from taskFetcher.todoApp.todoItemParser import parse_todo_items, select_for_display
+from taskFetcher.todoApp.todoItemParser import parse_todo_items
 
 REQUIRED = ('TODOAPP_PROJECT_ID', 'TODOAPP_SPACE_ID', 'TODOAPP_KEY_FILE')
 
 
 class TodoAppSource(TaskSource):
-    """Today's Daily Items and this week's Weekly Items, read with the read-only service account."""
+    """Every Daily and Weekly Item, read with the read-only service account. The screen chooses which to show."""
     name = "todoapp"
     # Daily and Weekly Items sit side by side, so this source's screen is always two columns.
     two_columns = True
@@ -26,7 +25,7 @@ class TodoAppSource(TaskSource):
         token = get_access_token(self._settings['TODOAPP_KEY_FILE'])
         documents = list_documents(self._settings['TODOAPP_PROJECT_ID'], self._settings['TODOAPP_SPACE_ID'],
                                    'todoItems', token)
-        return select_for_display(parse_todo_items(documents), date.today())
+        return parse_todo_items(documents)
 
     def describe_error(self, error: Exception) -> tuple[str, str]:
         if isinstance(error, RuntimeError):

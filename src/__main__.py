@@ -19,7 +19,7 @@ policy = None
 ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
 
 def make_drawer(source):
-    return TaskDrawer(fontPath, margins=margins(), two_columns=True if source.two_columns else None)
+    return TaskDrawer(fontPath, margins=margins(), two_columns=source.two_columns)
 
 def margins():
     """Frame-safe margins, overridable with DISPLAY_MARGINS="top,right,bottom,left" (pixels)."""
@@ -58,7 +58,7 @@ def task_image(source):
 
     taskDrawer = make_drawer(source)
     if action[0] == "tasks":
-        image = taskDrawer.create_task_image(action[1], updated_at=action[2])
+        image = taskDrawer.create_task_image(action[1], updated_at=action[2], stale=action[3])
     else:
         image = taskDrawer.create_message_image(action[1], action[2], updated_at=action[3])
     display_image(image)

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from models.task import Task
+from taskDisplay.screenLayout import select
 from taskFetcher.taskSource import TaskSource
 
 # An unchanged screen is redrawn at least this often, so its 'Updated HH:MM' footer stays honest.
@@ -12,7 +13,7 @@ class RefreshPolicy:
     """Decides when the e-paper panel is worth redrawing, to limit ghosting and wear.
 
     Each decision returns None (leave the screen alone) or a tuple describing what to draw:
-    ("tasks", tasks, updated_at) or ("message", heading, detail, updated_at).
+    ("tasks", tasks, updated_at, stale) or ("message", heading, detail, updated_at).
     """
 
     def __init__(self, source: TaskSource):
@@ -24,9 +25,12 @@ class RefreshPolicy:
         self.shown_failure = None
 
     def on_success(self, tasks: list[Task], now: datetime):
-        # Everything the screen shows: a task ticked off or moved to another time must redraw.
-        signature = (now.date(), tuple((task.title, task.due_date, task.status, task.priority,
-                                        task.scheduled_time, task.weekly) for task in tasks))
+        # Everything the screen shows: a task ticked off or moved to another time must redraw, but a
+        # change to a Task that is not on the screen must not.
+        selected = select(tasks, now.date())
+        signature = (now.date(), tuple(tuple((task.title, task.due_date, task.status, task.priority,
+                                              task.scheduled_time, task.weekly) for task in group)
+                                       for group in selected))
         self.last_tasks = tasks
         self.last_success = now
         self.shown_failure = None
@@ -34,7 +38,7 @@ class RefreshPolicy:
             return None
         self.signature = signature
         self.drawn_at = now
-        return ("tasks", tasks, now)
+        return ("tasks", tasks, now, False)
 
     def on_failure(self, error: Exception, now: datetime):
         if self.last_tasks is None:
@@ -49,4 +53,4 @@ class RefreshPolicy:
         self.shown_failure = "stale"
         self.signature = None
         self.drawn_at = now
-        return ("tasks", self.last_tasks, self.last_success)
+        return ("tasks", self.last_tasks, self.last_success, True)
