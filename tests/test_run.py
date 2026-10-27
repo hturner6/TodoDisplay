@@ -71,3 +71,13 @@ def test_a_failed_scheduled_refresh_does_not_end_the_run_loop(monkeypatch):
     with pytest.raises(StopLoop):
         app.task_run(30, "todoapp")
     assert len(calls) == 2
+
+
+def test_running_with_no_arguments_names_options_that_exist(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["__main__.py"])
+
+    app.main()
+
+    out = capsys.readouterr().out
+    assert "--image" not in out
+    assert "--run" in out and "--task" in out and "--preview" in out
