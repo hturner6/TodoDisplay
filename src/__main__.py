@@ -9,16 +9,17 @@ from models.task import Task
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, TaskDrawer, parse_margins
 from taskDisplay.refreshPolicy import RefreshPolicy
 from taskDisplay.preview import open_file, save_preview
-from taskDisplay.previewTasks import SCENARIOS, fake_tasks
-from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, fetch_tasks, resolve_source, uses_columns
+from taskDisplay.previewTasks import SCENARIOS, FakeSource
+from taskFetcher.envFiles import permission_warnings
+from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, resolve_source
 from screenDisplay.draw_bmp import display_image, clear_display
 
 fontPath = "./src/screenDisplay/fonts/DejaVuSans-Bold.ttf"
-policy = RefreshPolicy()
+policy = None
 ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
 
 def make_drawer(source):
-    return TaskDrawer(fontPath, margins=margins(), two_columns=True if uses_columns(source) else None)
+    return TaskDrawer(fontPath, margins=margins(), two_columns=True if source.two_columns else None)
 
 def margins():
     """Frame-safe margins, overridable with DISPLAY_MARGINS="top,right,bottom,left" (pixels)."""
@@ -33,7 +34,7 @@ def refresh_safely(source):
         print(f"Refresh failed, will retry: {type(error).__name__}")
 
 def task_run(refresh_interval_minutes, source):
-    print(f"Running TodoDisplay every {refresh_interval_minutes} minutes, tasks from {source}")
+    print(f"Running TodoDisplay every {refresh_interval_minutes} minutes, tasks from {source.name}")
     refresh_safely(source)
     schedule.every(refresh_interval_minutes).minutes.do(refresh_safely, source)
 
@@ -45,7 +46,7 @@ def task_run(refresh_interval_minutes, source):
 def task_image(source):
     now = datetime.now()
     try:
-        tasks = fetch_tasks(source)
+        tasks = source.fetch()
         action = policy.on_success(tasks, now)
     except Exception as error:
         print(f"Could not fetch tasks: {type(error).__name__}")
@@ -63,18 +64,14 @@ def task_image(source):
     display_image(image)
 
 def task_test(source):
-    image = make_drawer(source).create_task_image(fetch_tasks(source))
+    image = make_drawer(source).create_task_image(source.fetch())
     image.show()
 
 def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False):
     if fake:
-        tasks = fake_tasks(fake)
-        # Sample tasks preview the two-column layout the TodoApp source uses.
-        drawer = make_drawer("todoapp")
-    else:
-        tasks = fetch_tasks(source)
-        drawer = make_drawer(source)
-    image = drawer.create_task_image(tasks)
+        source = FakeSource(fake)
+    drawer = make_drawer(source)
+    image = drawer.create_task_image(source.fetch())
     save_preview(image, path, simulate_panel, safe_area=drawer.margins if safe_area else None)
     print(f"Preview saved to {path}")
     if open_after:
@@ -96,6 +93,8 @@ def main():
     parser.add_argument('--safe-area', action='store_true', help='With --preview, outline the frame-safe area in red')
     args = parser.parse_args()
     load_dotenv(ENV_FILE)
+    for warning in permission_warnings([ENV_FILE, os.getenv("TODOAPP_KEY_FILE")]):
+        print(warning)
     global policy
     try:
         source = resolve_source(args.source)

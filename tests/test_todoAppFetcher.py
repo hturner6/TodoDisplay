@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from models.task import Task
 from taskFetcher.todoApp import auth
 from taskFetcher.todoApp.firestoreClient import list_documents
-from taskFetcher.todoApp.todoAppFetcher import fetch_todoapp_tasks
+from taskFetcher.todoApp.todoAppSource import TodoAppSource
 from taskFetcher.todoApp.todoItemParser import parse_todo_item, parse_todo_items, select_for_display, week_bounds
 
 WEDNESDAY = date(2026, 10, 28)  # week is Mon 26 Oct to Sun 1 Nov
@@ -135,7 +135,7 @@ def test_an_empty_collection_has_no_documents_key():
 
 def test_fetch_reports_missing_configuration():
     with pytest.raises(RuntimeError, match="TODOAPP_KEY_FILE"):
-        fetch_todoapp_tasks(env={"TODOAPP_PROJECT_ID": "p", "TODOAPP_SPACE_ID": "s"})
+        TodoAppSource(env={"TODOAPP_PROJECT_ID": "p", "TODOAPP_SPACE_ID": "s"}).fetch()
 
 
 @pytest.mark.skipif(shutil.which("openssl") is None, reason="needs openssl")

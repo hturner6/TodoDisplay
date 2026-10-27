@@ -1,5 +1,6 @@
 from datetime import datetime, time, timedelta
 from models.task import Task
+from taskFetcher.taskSource import TaskSource
 
 
 def _today():
@@ -78,3 +79,18 @@ SCENARIOS = {
 
 def fake_tasks(scenario: str) -> list[Task]:
     return SCENARIOS[scenario]()
+
+
+class FakeSource(TaskSource):
+    """Sample tasks for --preview --fake, laid out like the TodoApp source. Not a real source: --source cannot pick it."""
+    name = "fake"
+    two_columns = True
+
+    def __init__(self, scenario: str):
+        self._scenario = scenario
+
+    def fetch(self):
+        return fake_tasks(self._scenario)
+
+    def describe_error(self, error: Exception) -> tuple[str, str]:
+        return "Sample tasks failed", "This source cannot fail"
