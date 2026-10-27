@@ -26,7 +26,7 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 
 ## Running on the Pi (systemd)
 
-The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere.
+The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere, and compare it with `systemctl cat TodoDisplay` on the Pi.
 
 ```
 sudo cp deploy/TodoDisplay.service /etc/systemd/system/
@@ -47,7 +47,7 @@ sudo systemctl start TodoDisplay
 
 ## Renewing the TickTick token
 
-Only needed while using `--source ticktick`. The token lasts about 180 days, and a 401 from the API (the screen shows "Sign-in expired") means it has expired. The current one runs out around late April 2027. From `src/` on the Pi:
+Only needed while using `--source ticktick`. The token lasts about 180 days, and a 401 from the API (the screen shows "Sign-in expired") means it has expired. The current one runs out around late April 2027 (`--verify` prints the new date each time you renew). `CLIENT_ID` and `CLIENT_SECRET` must already be set in `src/taskFetcher/.env`. From `src/` on the Pi:
 
 ```
 ../.venv/bin/python -m taskFetcher --user           # prints the authorize URL; open it and approve
@@ -55,7 +55,7 @@ Only needed while using `--source ticktick`. The token lasts about 180 days, and
 sudo systemctl restart TodoDisplay
 ```
 
-`--verify` writes the new `ACCESS_TOKEN` into `src/taskFetcher/.env` (mode 600) and prints only its expiry date. `TICKTICK_PROJECT_ID` and `TICKTICK_REDIRECT_URI` can also be set in that file; see `.env.sample`.
+`--verify` writes the new `ACCESS_TOKEN` into `src/taskFetcher/.env` (mode 600) and prints the file path and the expiry date, never the token. Type the code into the terminal; never paste it into chat or an issue. `TICKTICK_PROJECT_ID` and `TICKTICK_REDIRECT_URI` can also be set in that file; see `.env.sample`.
 
 ## Forcing a refresh on the Pi
 
