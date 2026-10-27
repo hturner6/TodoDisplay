@@ -94,7 +94,7 @@ class TaskDrawer():
     def _draw_header(self, today: date, week_strip: bool = True) -> int:
         """Draws the date heading and week strip, and returns the y where the content can start."""
         y = self.margins.top
-        self.draw.text((self.left, y), today.strftime("%A %-d %B"), font=self.titleFont, fill=BLACK)
+        self._draw_text_inside((self.left, y), today.strftime("%A %-d %B"), self.titleFont)
         y += TITLE_SIZE + 14
 
         if week_strip:
@@ -134,6 +134,11 @@ class TaskDrawer():
             text_width = self.smallFont.getlength(label)
             self.draw.text((self.right - text_width, top + 2), label, font=self.smallFont, fill=BLACK)
         return top
+
+    def _draw_text_inside(self, xy, text: str, font, fill=BLACK):
+        """Draws text so no ink starts left of x: an italic capital or a "j" can lean out past its origin."""
+        x, y = xy
+        self.draw.text((x - min(0, font.getbbox(text)[0]), y), text, font=font, fill=fill)
 
     def _label_width(self, text: str, font) -> float:
         return sum(font.getlength(character) + LABEL_TRACKING * font.size for character in text) - LABEL_TRACKING * font.size
