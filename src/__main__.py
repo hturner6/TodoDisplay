@@ -6,6 +6,7 @@ from pathlib import Path
 import time
 import schedule
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, TaskDrawer, parse_margins
+from taskDisplay.wordOfTheDay import load_words
 from taskDisplay.quietHours import QuietHours
 from taskDisplay.refresh import DrawTasks, Refresher
 from taskDisplay.preview import open_file, save_preview
@@ -18,6 +19,7 @@ from screenDisplay.draw_bmp import EPaperPanel
 # Inter for the text, with Newsreader italic for the date banner alone, as in the TodoApp.
 fontPath = "./src/screenDisplay/fonts/Inter-Bold.ttf"
 bannerFontPath = "./src/screenDisplay/fonts/Newsreader-SemiBoldItalic.ttf"
+WORDS_FILE = Path(__file__).resolve().parent / "taskDisplay" / "polishWords.csv"
 # Screens --preview --fake can show beyond the task scenarios.
 PREVIEW_SCREENS = ["stale", "error"]
 # The screen is left alone overnight; QUIET_HOURS="off" turns that off.
@@ -26,7 +28,11 @@ ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
 
 def make_drawer(source):
     return TaskDrawer(fontPath, margins=margins(), two_columns=source.two_columns,
-                      banner_font_path=bannerFontPath)
+                      banner_font_path=bannerFontPath, words=words())
+
+def words():
+    """The Polish word list for the word of the day, or none when WORD_OF_THE_DAY=off."""
+    return [] if os.getenv("WORD_OF_THE_DAY", "").strip().lower() == "off" else load_words(WORDS_FILE)
 
 def margins():
     """Frame-safe margins, overridable with DISPLAY_MARGINS="top,right,bottom,left" (pixels)."""

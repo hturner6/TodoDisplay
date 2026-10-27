@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from models.task import Task
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, Margins, TaskDrawer, parse_margins
+from taskDisplay.wordOfTheDay import Word, load_words
 from taskFetcher.weather import Weather
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
@@ -154,3 +155,68 @@ def test_the_widest_weather_stays_inside_the_margins_and_clear_of_the_date(weath
     date_right = without.crop(band).point(lambda value: 255 - value).getbbox()[2]
     added = ImageChops.difference(image.crop(band), without.crop(band)).getbbox()
     assert added[0] > date_right
+
+
+# --- Polish word of the day ----------------------------------------------------------------------
+
+WORDS = load_words(Path(__file__).resolve().parent.parent / "src/taskDisplay/polishWords.csv")
+SOME_DAY = datetime(2026, 10, 27).date()
+
+
+FEW_TASKS = [Task("Buy milk", SOME_DAY), Task("Call the dentist", SOME_DAY)]
+
+
+def test_the_word_of_the_day_is_drawn_above_the_footer_when_there_is_room():
+    with_word = TaskDrawer(FONT, words=WORDS).create_task_image(FEW_TASKS, today=SOME_DAY)
+    without = TaskDrawer(FONT).create_task_image(FEW_TASKS, today=SOME_DAY)
+
+    assert with_word.tobytes() != without.tobytes()
+
+
+@pytest.mark.parametrize("scenario", ["few", "many"])
+def test_the_word_never_costs_a_task_its_place(scenario):
+    # These scenarios fill the screen once the word takes its room, so the word is left out.
+    drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
+    plain = TaskDrawer(FONT, two_columns=True)
+
+    assert drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY).tobytes() == \
+        plain.create_task_image(fake_tasks(scenario), today=SOME_DAY).tobytes()
+
+
+def test_a_different_day_shows_a_different_word():
+    drawer = TaskDrawer(FONT, words=WORDS)
+
+    assert drawer.create_task_image(FEW_TASKS, today=SOME_DAY).tobytes() != \
+        drawer.create_task_image(FEW_TASKS, today=SOME_DAY + timedelta(days=1)).tobytes()
+
+
+def test_every_word_fits_inside_the_margins():
+    margins = DEFAULT_MARGINS
+    drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
+
+    for offset in range(len(WORDS)):
+        image = drawer.create_task_image(FEW_TASKS, today=SOME_DAY + timedelta(days=offset))
+        left, top, right, bottom = image.point(lambda value: 255 - value).getbbox()
+        assert left >= margins.left and right <= image.width - margins.right
+        assert bottom <= image.height - margins.bottom
+
+
+def test_a_stale_screen_has_no_word_because_its_footer_has_a_notice_to_show():
+    updated = datetime(2026, 10, 26, 9, 0)
+    with_words = TaskDrawer(FONT, words=WORDS).create_task_image([], updated_at=updated, stale=True, today=SOME_DAY)
+    without = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True, today=SOME_DAY)
+
+    assert with_words.tobytes() == without.tobytes()
+
+
+def test_a_full_screen_notice_has_no_word():
+    with_words = TaskDrawer(FONT, words=WORDS).create_message_image("Cannot reach TodoApp", today=SOME_DAY)
+
+    assert with_words.tobytes() == TaskDrawer(FONT).create_message_image("Cannot reach TodoApp", today=SOME_DAY).tobytes()
+
+
+def test_a_word_too_wide_for_the_screen_is_cut_short_not_drawn_off_it():
+    wide = Word("x" * 40, "y" * 40, "z" * 120, "w" * 120)
+    image = TaskDrawer(FONT, words=[wide]).create_task_image(FEW_TASKS, today=SOME_DAY)
+
+    assert image.point(lambda value: 255 - value).getbbox()[2] <= image.width - DEFAULT_MARGINS.right
