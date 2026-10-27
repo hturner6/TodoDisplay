@@ -37,3 +37,13 @@ The Pi reads TodoApp data from Firestore with a dedicated service account that h
 ```
 
 It walks you through finding the project id and user id, creating the service account and its JSON key, copying the key to the Pi (`~/.config/tododisplay/`, mode 600, outside the checkout) and setting `TODOAPP_PROJECT_ID`, `TODOAPP_SPACE_ID` and `TODOAPP_KEY_FILE` in `src/taskFetcher/.env` on both machines. Never commit the key or those values; the repo is public.
+
+## Trying the TodoApp fetcher
+
+Once the Pi (or laptop) has the `TODOAPP_*` values in `src/taskFetcher/.env`, list what the display would show: today's Daily Items, then this week's (Monday to Sunday) Weekly Items.
+
+```
+cd src && ../.venv/bin/python -m taskFetcher --todoapp
+```
+
+It signs in with `openssl`, which Raspberry Pi OS includes, so no extra Python packages are needed.

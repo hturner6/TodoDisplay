@@ -6,6 +6,7 @@ from taskFetcher.tickTick.apiTokenVerifier import verify_api_key
 from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from models.task import TaskEncoder
+from taskFetcher.todoApp.todoAppFetcher import fetch_todoapp_tasks
 
 # TODO: Remove hardcoded values
 def create_Url():
@@ -34,6 +35,7 @@ def main():
     parser.add_argument('--verify', type=str, help='Verifies the specified token')
     parser.add_argument('--list', action='store_true', help='Lists all projects')
     parser.add_argument('--tasks', type=str, help='Lists all the specified project\'s tasks')
+    parser.add_argument('--todoapp', action='store_true', help='Lists today\'s Daily Items and this week\'s Weekly Items from TodoApp')
     args = parser.parse_args()
     load_dotenv()
 
@@ -48,6 +50,9 @@ def main():
         project_data = get_project_data(args.tasks)
         parsed_tasks = parse_project_tasks(project_data)
         print(parsed_tasks)
+    if args.todoapp:
+        for task in fetch_todoapp_tasks():
+            print(f"{'week' if task.weekly else 'day '} {task.due_date} {task.scheduled_time or '     '} [{task.status}]{' !' if task.priority else ''} {task.title}")
 
 if __name__ == "__main__":
     main()
