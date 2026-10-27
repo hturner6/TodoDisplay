@@ -3,22 +3,19 @@ from models.task import Task
 
 def parse_project_tasks(project_json):
     tasks = project_json.get('tasks', [])
-    columns = project_json.get('columns', [])
     project_name = project_json.get('project', {}).get('name', 'Unknown')
     print(f"{len(tasks)} tasks in project {project_name}:")
-    columns_map = {column['id']: column['name'] for column in columns}
     parsedTasks = []
 
     for task in tasks:
-        parsed_task = parse_task(task, columns_map)
+        parsed_task = parse_task(task)
         parsedTasks.append(parsed_task)
     return parsedTasks
 
-def parse_task(task_json, columns_map):
+def parse_task(task_json):
     return Task(
         title=task_json.get('title'),
         due_date=parse_due_date(task_json.get('dueDate')),
-        category=columns_map.get(task_json.get('columnId'), 'No Category'),
     )
 
 def parse_due_date(due_date):
