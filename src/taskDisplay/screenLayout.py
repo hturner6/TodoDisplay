@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import date, time, timedelta
 from typing import NamedTuple
 from models.task import Task
+from taskDisplay.timeFormat import format_time
 
 # Text sizes the rows are measured in, and the spacing around them, in pixels.
 TASK_SIZE = 27
@@ -146,7 +147,7 @@ def daily_meta(task: Task, today: date) -> str:
     days_late = (today - task.due_date).days
     if days_late > 0:
         return f"{days_late}d late"
-    return task.scheduled_time.strftime("%H:%M") if task.scheduled_time else ""
+    return format_time(task.scheduled_time) if task.scheduled_time else ""
 
 
 def list_meta(task: Task, today: date) -> str:

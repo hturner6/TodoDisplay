@@ -2,6 +2,7 @@ from collections import namedtuple
 from datetime import date, datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 from models.task import Task
+from taskDisplay.timeFormat import format_time
 from taskDisplay.screenLayout import (GLYPH_COLUMN, LINE_HEIGHT, META_SIZE, ROW_PADDING, TASK_SIZE, Column, Row,
                                       build_layout)
 
@@ -16,6 +17,7 @@ WHITE = 255
 TITLE_SIZE = 38
 SMALL_SIZE = 19
 
+LABEL_TRACKING = 0.14  # of the font size, for the uppercase labels (the TodoApp's one label style)
 COLUMN_GAP = 24
 DAILY_SHARE = 0.56  # of the content width; Daily Items carry a time, Weekly Items only a day
 
@@ -28,13 +30,16 @@ def parse_margins(text: str) -> Margins:
 
 class TaskDrawer():
     def __init__(self, fontPath, width=648, height=480, margins: Margins = DEFAULT_MARGINS,
-                 two_columns: bool = False):
+                 two_columns: bool = False, banner_font_path=None):
         self.width = width
         self.height = height
         self.margins = margins
         # Today's Daily Items beside this week's Weekly Items, or a single list of Daily Items.
         self.two_columns = two_columns
-        self.titleFont = ImageFont.truetype(fontPath, TITLE_SIZE)
+        # The TodoApp's type: one sans family, with an italic serif for the banner alone. The banner
+        # falls back to the task font, so one path is enough.
+        self.titleFont = ImageFont.truetype(banner_font_path or fontPath, TITLE_SIZE)
+        self.headingFont = ImageFont.truetype(fontPath, TITLE_SIZE)
         self.taskFont = ImageFont.truetype(fontPath, TASK_SIZE)
         self.metaFont = ImageFont.truetype(fontPath, META_SIZE)
         self.smallFont = ImageFont.truetype(fontPath, SMALL_SIZE)
@@ -99,13 +104,13 @@ class TaskDrawer():
             for offset in range(7):
                 day = monday + timedelta(days=offset)
                 x0 = self.left + offset * cell_width
-                label = day.strftime("%a")
+                label = day.strftime("%a").upper()
                 is_today = day == today
                 if is_today:
                     self.draw.rectangle((x0, y, x0 + cell_width - 4, y + strip_height), fill=BLACK)
-                text_width = self.metaFont.getlength(label)
-                self.draw.text((x0 + (cell_width - 4 - text_width) / 2, y + 5), label,
-                               font=self.metaFont, fill=WHITE if is_today else BLACK)
+                text_width = self._label_width(label, self.metaFont)
+                self._draw_label((x0 + (cell_width - 4 - text_width) / 2, y + 5), label,
+                                 fill=WHITE if is_today else BLACK)
             y += strip_height + 12
 
         self.draw.line((self.left, y, self.right, y), fill=BLACK, width=3)
@@ -119,16 +124,26 @@ class TaskDrawer():
 
         updated_at = updated_at or datetime.now()
         if stale:
-            label = f"STALE - last update {updated_at.strftime('%H:%M')}"
+            label = f"STALE - last update {format_time(updated_at)}"
             text_width = self.smallFont.getlength(label)
             x0 = self.right - text_width - 12
             self.draw.rectangle((x0, top, self.right, self.bottom), fill=BLACK)
             self.draw.text((x0 + 6, top + 2), label, font=self.smallFont, fill=WHITE)
         else:
-            label = f"Updated {updated_at.strftime('%H:%M')}"
+            label = f"Updated {format_time(updated_at)}"
             text_width = self.smallFont.getlength(label)
             self.draw.text((self.right - text_width, top + 2), label, font=self.smallFont, fill=BLACK)
         return top
+
+    def _label_width(self, text: str, font) -> float:
+        return sum(font.getlength(character) + LABEL_TRACKING * font.size for character in text) - LABEL_TRACKING * font.size
+
+    def _draw_label(self, xy, text: str, fill=BLACK):
+        """Uppercase label text, letter-spaced as the TodoApp does."""
+        x, y = xy
+        for character in text:
+            self.draw.text((x, y), character, font=self.metaFont, fill=fill)
+            x += self.metaFont.getlength(character) + LABEL_TRACKING * self.metaFont.size
 
     # --- rows ----------------------------------------------------------------------------------
 
@@ -142,7 +157,7 @@ class TaskDrawer():
 
     def _draw_column(self, column: Column, top: int, rows_top: int, x0: int, x1: int):
         if column.heading:
-            self.draw.text((x0, top + 6), column.heading, font=self.metaFont, fill=BLACK)
+            self._draw_label((x0, top + 6), column.heading)
             self.draw.line((x0, rows_top - 4, x1, rows_top - 4), fill=BLACK, width=1)
         if not column.rows:
             for i, line in enumerate(column.empty):
@@ -190,6 +205,11 @@ class TaskDrawer():
             d.line((cx + 5, cy, cx - 4, cy + r), fill=BLACK, width=4)
         elif row.status == Task.NOTE:
             d.line((cx - 7, cy, cx + 7, cy), fill=BLACK, width=4)
+        elif row.status == Task.CANCELLED:
+            # A struck dot. The TodoApp fades the dot; the panel has no greys, so it is a ring instead.
+            r = 6
+            d.ellipse((cx - r, cy - r, cx + r, cy + r), outline=BLACK, width=2)
+            d.line((cx - 9, cy, cx + 9, cy), fill=BLACK, width=2)
         else:
             r = 6
             d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=BLACK)
@@ -202,10 +222,10 @@ class TaskDrawer():
     # --- messages ------------------------------------------------------------------------------
 
     def _draw_message(self, heading: str, detail: str, top: int, bottom: int):
-        heading_width = self.titleFont.getlength(heading)
+        heading_width = self.headingFont.getlength(heading)
         block_height = TITLE_SIZE + (TASK_SIZE + 12 if detail else 0)
         y = top + (bottom - top - block_height) / 2
-        self.draw.text(((self.width - heading_width) / 2, y), heading, font=self.titleFont, fill=BLACK)
+        self.draw.text(((self.width - heading_width) / 2, y), heading, font=self.headingFont, fill=BLACK)
         if detail:
             detail_width = self.taskFont.getlength(detail)
             self.draw.text(((self.width - detail_width) / 2, y + TITLE_SIZE + 12), detail,

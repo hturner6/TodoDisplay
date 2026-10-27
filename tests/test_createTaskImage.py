@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from taskDisplay.createTaskImage import Margins, TaskDrawer, parse_margins
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
-FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/DejaVuSans-Bold.ttf")
+FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/Inter-Bold.ttf")
 
 
 def test_parse_margins_reads_top_right_bottom_left():

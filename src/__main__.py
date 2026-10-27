@@ -12,11 +12,14 @@ from taskFetcher.envFiles import permission_warnings
 from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, resolve_source
 from screenDisplay.draw_bmp import EPaperPanel
 
-fontPath = "./src/screenDisplay/fonts/DejaVuSans-Bold.ttf"
+# Inter for the text, with Newsreader italic for the date banner alone, as in the TodoApp.
+fontPath = "./src/screenDisplay/fonts/Inter-Bold.ttf"
+bannerFontPath = "./src/screenDisplay/fonts/Newsreader-SemiBoldItalic.ttf"
 ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
 
 def make_drawer(source):
-    return TaskDrawer(fontPath, margins=margins(), two_columns=source.two_columns)
+    return TaskDrawer(fontPath, margins=margins(), two_columns=source.two_columns,
+                      banner_font_path=bannerFontPath)
 
 def margins():
     """Frame-safe margins, overridable with DISPLAY_MARGINS="top,right,bottom,left" (pixels)."""
