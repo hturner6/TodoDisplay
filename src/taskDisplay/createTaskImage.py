@@ -1,5 +1,6 @@
 from collections import namedtuple
 import math
+import re
 from datetime import date, datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 from models.task import Task
@@ -23,7 +24,8 @@ SMALL_SIZE = 19
 LABEL_TRACKING = 0.14  # of the font size, for the uppercase labels (the TodoApp's one label style)
 WEATHER_GLYPH = 34  # width of a weather glyph
 WEATHER_GAP = 8  # between the glyph and the temperature
-WORD_BLOCK_HEIGHT = META_SIZE + SMALL_SIZE + 18  # the example, its translation and their padding, above the footer row
+SUBSCRIPT_SIZE = 17  # the gender after a noun, in brackets
+WORD_BLOCK_HEIGHT = META_SIZE + SMALL_SIZE + 21  # the example, its translation and their padding, above the footer row
 WORD_GAP = 14  # between the word and its meaning, and before 'Updated'
 COLUMN_GAP = 24
 DAILY_SHARE = 0.56  # of the content width; Daily Items carry a time, Weekly Items only a day
@@ -57,6 +59,7 @@ class TaskDrawer():
         self.taskFont = ImageFont.truetype(fontPath, TASK_SIZE)
         self.metaFont = ImageFont.truetype(fontPath, META_SIZE)
         self.smallFont = ImageFont.truetype(fontPath, SMALL_SIZE)
+        self.subscriptFont = ImageFont.truetype(fontPath, SUBSCRIPT_SIZE)
         self.left = margins.left
         self.right = width - margins.right - 1
         self.bottom = height - margins.bottom
@@ -90,14 +93,16 @@ class TaskDrawer():
 
         layout = fit(footer_top)
         content_bottom = footer_top
-        # A stale footer already has a notice to show, so it gets no word. Tasks come first: the
-        # word is only drawn when it costs no task its place.
+        # A stale footer already has a notice to show, so it gets no word. Otherwise the word and its
+        # meaning always sit on the footer row, which is reserved anyway; tasks come first, so the
+        # example sentence above it is only drawn when it costs no task its place.
         word = None if stale else word_for(today, self.words)
         if word:
-            with_word = fit(footer_top - WORD_BLOCK_HEIGHT)
-            if _hidden(with_word) == _hidden(layout):
-                layout = with_word
-                content_bottom = self._draw_word(word, footer_top, updated_at)
+            self._draw_word_line(word, footer_top, updated_at)
+            with_example = fit(footer_top - WORD_BLOCK_HEIGHT)
+            if _hidden(with_example) == _hidden(layout):
+                layout = with_example
+                content_bottom = self._draw_word_example(word, footer_top)
 
         if layout.message:
             self._draw_message(layout.message.heading, layout.message.detail, top, content_bottom)
@@ -199,29 +204,45 @@ class TaskDrawer():
             d.polygon([(cx + 3, y - 1), (cx - 5, y + 7), (cx, y + 7), (cx - 3, y + 15), (cx + 6, y + 5), (cx + 1, y + 5)],
                       fill=BLACK)
 
-    def _draw_word(self, word: Word, footer_top: int, updated_at: datetime = None) -> int:
-        """Draws the Polish word of the day and returns the y where the content above it must end.
+    def _cut(self, font, text: str, width: float) -> str:
+        """The text on one line, ending in an ellipsis if it is wider than width."""
+        return wrap_text(font.getlength, text, [max(width, 0)], 1)[0] if text else ""
 
-        The word and its meaning share the footer's row, to the left of 'Updated HH:MM'; the example
-        sentence and its translation sit on the two lines above, under a hairline.
-        """
-        def cut(font, text, width):
-            return wrap_text(font.getlength, text, [max(width, 0)], 1)[0] if text else ""
-
+    def _draw_word_line(self, word: Word, footer_top: int, updated_at: datetime = None):
+        """The word, its gender as a subscript, and its meaning and forms, on the footer's row left of 'Updated'."""
         updated = f"Updated {format_time(updated_at or datetime.now())}"
         row_right = self.right - self.smallFont.getlength(updated) - WORD_GAP * 2
-        polish = cut(self.metaFont, word.polish, row_right - self.left)
-        used = self.metaFont.getlength(polish) + WORD_GAP
-        english = cut(self.smallFont, word.english, row_right - self.left - used)
+        polish = self._cut(self.metaFont, word.polish, row_right - self.left)
+        used = self.metaFont.getlength(polish)
         self._draw_text_inside((self.left, footer_top), polish, self.metaFont)
-        self.draw.text((self.left + used, footer_top + 2), english, font=self.smallFont, fill=BLACK)
+        if word.gender:
+            gender = f"({word.gender})"
+            self.draw.text((self.left + used + 3, footer_top + 5), gender, font=self.subscriptFont, fill=BLACK)
+            used += 3 + self.subscriptFont.getlength(gender)
+        used += WORD_GAP
+        meaning = word.english + (f"  \u00b7  {word.forms}" if word.forms else "")
+        meaning = self._cut(self.smallFont, meaning, row_right - self.left - used)
+        self.draw.text((self.left + used, footer_top + 2), meaning, font=self.smallFont, fill=BLACK)
 
+    def _draw_word_example(self, word: Word, footer_top: int) -> int:
+        """The example sentence, with the word underlined, and its translation, above the footer row.
+
+        Returns the y where the content above must end.
+        """
         width = self.right - self.left
         rule_y = footer_top - WORD_BLOCK_HEIGHT
         example_y = rule_y + 8
-        translation_y = example_y + META_SIZE + 4
-        self._draw_text_inside((self.left, example_y), cut(self.metaFont, word.example, width), self.metaFont)
-        self._draw_text_inside((self.left, translation_y), cut(self.smallFont, word.example_english, width),
+        translation_y = example_y + META_SIZE + 7
+        example = self._cut(self.metaFont, word.example, width)
+        self._draw_text_inside((self.left, example_y), example, self.metaFont)
+        found = re.search(rf"(?<!\w){re.escape(word.polish)}(?!\w)", example, re.IGNORECASE)
+        if found:
+            # It is the word as it stands in the sentence, which may be in another position than the list's.
+            x0 = self.left + self.metaFont.getlength(example[:found.start()])
+            x1 = x0 + self.metaFont.getlength(found.group())
+            underline_y = example_y + META_SIZE + 3
+            self.draw.line((x0, underline_y, x1, underline_y), fill=BLACK, width=2)
+        self._draw_text_inside((self.left, translation_y), self._cut(self.smallFont, word.example_english, width),
                                self.smallFont)
         self.draw.line((self.left, rule_y, self.right, rule_y), fill=BLACK, width=1)
         return rule_y

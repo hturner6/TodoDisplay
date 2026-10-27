@@ -166,21 +166,44 @@ SOME_DAY = datetime(2026, 10, 27).date()
 FEW_TASKS = [Task("Buy milk", SOME_DAY), Task("Call the dentist", SOME_DAY)]
 
 
-def test_the_word_of_the_day_is_drawn_above_the_footer_when_there_is_room():
-    with_word = TaskDrawer(FONT, words=WORDS).create_task_image(FEW_TASKS, today=SOME_DAY)
-    without = TaskDrawer(FONT).create_task_image(FEW_TASKS, today=SOME_DAY)
+def above_the_footer(image):
+    """Everything above the footer row, where tasks and the example block would be drawn."""
+    return image.crop((0, 0, image.width, 415)).tobytes()
 
-    assert with_word.tobytes() != without.tobytes()
+
+def footer_row(image):
+    return image.crop((0, 415, image.width, image.height)).tobytes()
 
 
 @pytest.mark.parametrize("scenario", ["few", "many"])
-def test_the_word_never_costs_a_task_its_place(scenario):
-    # These scenarios fill the screen once the word takes its room, so the word is left out.
+def test_on_a_full_screen_the_word_is_still_shown_in_the_footer_row_and_costs_no_task(scenario):
     drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
     plain = TaskDrawer(FONT, two_columns=True)
+    with_word = drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY)
+    without = plain.create_task_image(fake_tasks(scenario), today=SOME_DAY)
 
-    assert drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY).tobytes() == \
-        plain.create_task_image(fake_tasks(scenario), today=SOME_DAY).tobytes()
+    assert footer_row(with_word) != footer_row(without)
+    assert above_the_footer(with_word) == above_the_footer(without)
+
+
+def test_when_there_is_room_the_example_is_drawn_above_the_footer_too():
+    with_word = TaskDrawer(FONT, words=WORDS).create_task_image(FEW_TASKS, today=SOME_DAY)
+    without = TaskDrawer(FONT).create_task_image(FEW_TASKS, today=SOME_DAY)
+
+    assert footer_row(with_word) != footer_row(without)
+    assert above_the_footer(with_word) != above_the_footer(without)
+
+
+@pytest.mark.parametrize("scenario", ["few", "many"])
+def test_every_word_fits_inside_the_margins_on_a_full_screen_too(scenario):
+    margins = DEFAULT_MARGINS
+    drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
+
+    for offset in range(0, len(WORDS), 3):
+        image = drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY + timedelta(days=offset))
+        left, top, right, bottom = image.point(lambda value: 255 - value).getbbox()
+        assert left >= margins.left and right <= image.width - margins.right
+        assert bottom <= image.height - margins.bottom
 
 
 def test_a_different_day_shows_a_different_word():
@@ -217,6 +240,51 @@ def test_a_full_screen_notice_has_no_word():
 
 def test_a_word_too_wide_for_the_screen_is_cut_short_not_drawn_off_it():
     wide = Word("x" * 40, "y" * 40, "z" * 120, "w" * 120)
+    image = TaskDrawer(FONT, words=[wide]).create_task_image(FEW_TASKS, today=SOME_DAY)
+
+    assert image.point(lambda value: 255 - value).getbbox()[2] <= image.width - DEFAULT_MARGINS.right
+
+
+# --- word details: gender, forms and the underlined word ----------------------------------------------
+
+def word_line(image):
+    return image.crop((0, 420, image.width // 2, image.height)).tobytes()
+
+
+def test_the_gender_is_drawn_after_the_word_and_a_verb_form_after_the_meaning():
+    plain = Word("kot", "cat", "Kot śpi tutaj.", "The cat sleeps here.")
+    gendered = Word("kot", "cat", "Kot śpi tutaj.", "The cat sleeps here.", gender="m")
+    with_form = Word("kot", "cat", "Kot śpi tutaj.", "The cat sleeps here.", forms="kota")
+
+    images = [word_line(TaskDrawer(FONT, words=[w]).create_task_image(FEW_TASKS, today=SOME_DAY))
+              for w in (plain, gendered, with_form)]
+
+    assert len(set(images)) == 3
+
+
+def test_the_gender_sits_lower_than_the_word_like_a_subscript():
+    def lowest_ink(word):
+        image = TaskDrawer(FONT, words=[word]).create_task_image([], today=SOME_DAY)
+        row = image.crop((DEFAULT_MARGINS.left, 440, DEFAULT_MARGINS.left + 40, image.height)).point(lambda v: 255 - v)
+        return row.getbbox()[3]
+
+    assert lowest_ink(Word("ok", "eye", "Ok.", "Ok.", gender="f")) > lowest_ink(Word("ok", "eye", "Ok.", "Ok."))
+
+
+def test_the_word_is_underlined_in_its_example_sentence():
+    def example_ink(word):
+        image = TaskDrawer(FONT, words=[word]).create_task_image([], today=SOME_DAY)
+        band = image.crop((0, 340, image.width, 400)).point(lambda v: 255 - v)
+        return sum(1 for v in band.get_flattened_data() if v)
+
+    found = Word("kot", "cat", "Wielki kot śpi tutaj.", "The big cat sleeps here.")
+    absent = Word("pies", "dog", "Wielki kot śpi tutaj.", "The big cat sleeps here.")
+
+    assert example_ink(found) - example_ink(absent) >= 20
+
+
+def test_a_long_word_line_is_cut_not_drawn_into_updated():
+    wide = Word("x" * 30, "y" * 30, "Ok.", "Ok.", gender="pl", forms="z" * 40)
     image = TaskDrawer(FONT, words=[wide]).create_task_image(FEW_TASKS, today=SOME_DAY)
 
     assert image.point(lambda value: 255 - value).getbbox()[2] <= image.width - DEFAULT_MARGINS.right
