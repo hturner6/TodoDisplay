@@ -6,6 +6,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from models.task import Task
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, Margins, TaskDrawer, parse_margins
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
@@ -47,6 +48,22 @@ def test_a_stale_screen_says_so_in_the_footer():
         return sum(1 for value in image.crop(footer).get_flattened_data() if value == 0)
 
     assert black_pixels(stale) > black_pixels(normal)
+
+
+def test_a_priority_task_has_a_heavy_asterisk_in_the_gutter_left_of_its_bullet():
+    today = datetime(2026, 10, 26).date()
+    left = DEFAULT_MARGINS.left
+
+    def gutter_pixels(task):
+        image = TaskDrawer(FONT).create_task_image([task], today=today)
+        gutter = image.crop((left, 0, left + 22, image.height))
+        return sum(1 for value in gutter.get_flattened_data() if value == 0)
+
+    plain = gutter_pixels(Task("Pay rent", today))
+    priority = gutter_pixels(Task("Pay rent", today, priority=True))
+
+    # The first, small asterisk added 86 pixels; it was too faint on the real panel.
+    assert priority - plain >= 130
 
 
 def test_a_stale_screen_names_the_cause_in_the_footer():

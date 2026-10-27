@@ -173,14 +173,14 @@ class TaskDrawer():
             self.draw.text((x1 - meta_width, y + ROW_PADDING + 4), row.meta, font=self.metaFont, fill=BLACK)
 
         glyph_cy = y + ROW_PADDING + LINE_HEIGHT // 2
-        self._draw_glyph(row, x0 + 24, glyph_cy)
+        if row.priority:
+            self._draw_asterisk(x0 + 10, glyph_cy)
+        self._draw_glyph(row, x0 + 32, glyph_cy)
 
     # --- glyphs: fixed-size shapes, so they look the same whatever the font ---------------------
 
     def _draw_glyph(self, row: Row, cx: int, cy: int):
         d = self.draw
-        if row.priority:
-            self._draw_asterisk(cx - 18, cy)
         if row.status == Task.DONE:
             r = 7
             d.line((cx - r, cy - r, cx + r, cy + r), fill=BLACK, width=4)
@@ -196,9 +196,11 @@ class TaskDrawer():
             d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=BLACK)
 
     def _draw_asterisk(self, cx: int, cy: int):
-        r = 6
-        for dx, dy in ((r, 0), (0, r), (r * 0.7, r * 0.7), (r * 0.7, -r * 0.7)):
-            self.draw.line((cx - dx, cy - dy, cx + dx, cy + dy), fill=BLACK, width=2)
+        """The TodoApp's Priority mark: a vertical stroke and two diagonals, in the gutter left of the bullet."""
+        r = 8
+        dx, dy = r * 0.87, r * 0.5
+        for x, y in ((0, r), (dx, dy), (dx, -dy)):
+            self.draw.line((cx - x, cy - y, cx + x, cy + y), fill=BLACK, width=4)
 
     # --- messages ------------------------------------------------------------------------------
 
