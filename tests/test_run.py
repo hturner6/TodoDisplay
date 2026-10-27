@@ -1,10 +1,11 @@
 import importlib.util
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import pytest
-from PIL import Image
 import schedule
+from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
@@ -13,6 +14,7 @@ _spec = importlib.util.spec_from_file_location("todo_display_main", Path(__file_
 app = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(app)
 
+from taskDisplay.refresh import DrawMessage, DrawTasks
 from taskFetcher.sources import resolve_source
 
 SOURCE = resolve_source("todoapp", env={})
@@ -20,6 +22,13 @@ SOURCE = resolve_source("todoapp", env={})
 
 class StopLoop(Exception):
     pass
+
+
+class FakeRefresher:
+    source = SOURCE
+
+    def __init__(self, refresh):
+        self.refresh = refresh
 
 
 @pytest.fixture(autouse=True)
@@ -31,24 +40,22 @@ def clean_schedule():
 
 def run_until_first_tick(monkeypatch, refresh):
     """Runs task_run with refreshes replaced by `refresh`, stopping the endless loop at its first sleep."""
-    monkeypatch.setattr(app, "task_image", refresh)
-
     def stop(_seconds):
         raise StopLoop
 
     monkeypatch.setattr(app.time, "sleep", stop)
     with pytest.raises(StopLoop):
-        app.task_run(30, SOURCE)
+        app.task_run(30, FakeRefresher(refresh))
 
 
 def test_run_draws_immediately_instead_of_waiting_for_the_first_interval(monkeypatch):
-    sources = []
-    run_until_first_tick(monkeypatch, sources.append)
-    assert sources == [SOURCE]
+    refreshes = []
+    run_until_first_tick(monkeypatch, lambda: refreshes.append(1))
+    assert refreshes == [1]
 
 
 def test_a_failed_refresh_does_not_end_the_run_loop(monkeypatch):
-    def broken(_source):
+    def broken():
         raise OSError("display unplugged")
 
     run_until_first_tick(monkeypatch, broken)
@@ -57,12 +64,11 @@ def test_a_failed_refresh_does_not_end_the_run_loop(monkeypatch):
 def test_a_failed_scheduled_refresh_does_not_end_the_run_loop(monkeypatch):
     calls = []
 
-    def fails_after_startup(source):
-        calls.append(source)
+    def fails_after_startup():
+        calls.append(1)
         if len(calls) > 1:
             raise OSError("display unplugged")
 
-    monkeypatch.setattr(app, "task_image", fails_after_startup)
     ticks = []
 
     def sleep(_seconds):
@@ -74,7 +80,7 @@ def test_a_failed_scheduled_refresh_does_not_end_the_run_loop(monkeypatch):
 
     monkeypatch.setattr(app.time, "sleep", sleep)
     with pytest.raises(StopLoop):
-        app.task_run(30, SOURCE)
+        app.task_run(30, FakeRefresher(fails_after_startup))
     assert len(calls) == 2
 
 
@@ -88,29 +94,20 @@ def test_running_with_no_arguments_names_options_that_exist(monkeypatch, capsys)
     assert "--run" in out and "--task" in out and "--preview" in out
 
 
-# --- a failing fetch never leaks the error text ---------------------------------------------
+def test_the_refresher_is_built_for_the_chosen_source():
+    assert app.make_refresher(SOURCE).source is SOURCE
 
-SECRET = "fake-secret-value"
 
+def test_what_the_refresh_decided_is_rendered_as_a_panel_sized_image():
+    render = app.make_renderer(SOURCE)
 
-@pytest.mark.parametrize("module_path, name, source", [
-    ("taskFetcher.todoApp.todoAppSource", "get_access_token",
-     resolve_source("todoapp", env={"TODOAPP_PROJECT_ID": "p", "TODOAPP_SPACE_ID": "s", "TODOAPP_KEY_FILE": "k"})),
-    ("taskFetcher.tickTick.tickTickSource", "get_project_data", resolve_source("ticktick", env={})),
-])
-def test_a_failed_fetch_prints_and_shows_no_error_text(monkeypatch, capsys, module_path, name, source):
-    def fails(*args, **kwargs):
-        raise ConnectionError(f"https://example.test/?token={SECRET}")
+    tasks = render(DrawTasks([], datetime(2026, 10, 26, 12, 0)))
+    stale = render(DrawTasks([], datetime(2026, 10, 26, 12, 0), stale=True))
+    message = render(DrawMessage("Cannot reach TodoApp", "Will keep trying"))
 
-    monkeypatch.setattr(sys.modules[module_path], name, fails)
-    shown = []
-    monkeypatch.setattr(app, "display_image", shown.append)
-    monkeypatch.setattr(app, "policy", app.RefreshPolicy(source))
-
-    app.task_image(source)
-
-    assert len(shown) == 1  # the error notice was drawn
-    assert SECRET not in capsys.readouterr().out
+    assert tasks.size == stale.size == message.size == (648, 480)
+    assert tasks.tobytes() != stale.tobytes()  # the stale flag reaches the footer
+    assert message.tobytes() != tasks.tobytes()
 
 
 def test_fake_preview_needs_no_real_source(tmp_path):

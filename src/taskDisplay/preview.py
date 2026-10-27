@@ -10,7 +10,7 @@ def save_preview(image: Image.Image, path: str, simulate_panel: bool = True, saf
     """Writes the image to a PNG without touching the display or GPIO.
 
     With simulate_panel, the image goes through the same resize and 1-bit conversion that
-    display_image applies, so the PNG shows what the panel will draw. With safe_area (Margins), a red
+    EPaperPanel.show applies, so the PNG shows what the panel will draw. With safe_area (Margins), a red
     rectangle marks the area the picture frame leaves visible.
     """
     if simulate_panel:
