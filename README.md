@@ -18,7 +18,7 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 
 ## Layout and frame margins
 
-The display draws in pure 1-bit black and white (the panel has no greys) in DejaVu Sans Bold, with a date header, a week strip, ruled task rows (priority rows get a heavy bar on the left edge) and an 'Updated HH:MM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
+The display draws in pure 1-bit black and white (the panel has no greys) in DejaVu Sans Bold, with a date header, a week strip, ruled task rows (a priority row has a heavy asterisk before its bullet, as in the TodoApp) and an 'Updated HH:MM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
 
 ## When the screen is redrawn
 

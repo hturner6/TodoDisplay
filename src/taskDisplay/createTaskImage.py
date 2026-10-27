@@ -16,7 +16,6 @@ WHITE = 255
 TITLE_SIZE = 38
 SMALL_SIZE = 19
 
-PRIORITY_BAR = 6  # width of the bar marking a priority row
 COLUMN_GAP = 24
 DAILY_SHARE = 0.56  # of the content width; Daily Items carry a time, Weekly Items only a day
 
@@ -172,11 +171,10 @@ class TaskDrawer():
             meta_width = self.metaFont.getlength(row.meta)
             self.draw.text((x1 - meta_width, y + ROW_PADDING + 4), row.meta, font=self.metaFont, fill=BLACK)
 
-        if row.priority:
-            # A heavy bar down the row's left edge: it reads from across a room, which a small mark does not.
-            self.draw.rectangle((x0, y + 3, x0 + PRIORITY_BAR - 1, y + row.height - 4), fill=BLACK)
         glyph_cy = y + ROW_PADDING + LINE_HEIGHT // 2
-        self._draw_glyph(row, x0 + 24, glyph_cy)
+        if row.priority:
+            self._draw_asterisk(x0 + 10, glyph_cy)
+        self._draw_glyph(row, x0 + 32, glyph_cy)
 
     # --- glyphs: fixed-size shapes, so they look the same whatever the font ---------------------
 
@@ -195,6 +193,13 @@ class TaskDrawer():
         else:
             r = 6
             d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=BLACK)
+
+    def _draw_asterisk(self, cx: int, cy: int):
+        """The TodoApp's Priority mark: a vertical stroke and two diagonals, in the gutter left of the bullet."""
+        r = 8
+        dx, dy = r * 0.87, r * 0.5
+        for x, y in ((0, r), (dx, dy), (dx, -dy)):
+            self.draw.line((cx - x, cy - y, cx + x, cy + y), fill=BLACK, width=4)
 
     # --- messages ------------------------------------------------------------------------------
 
