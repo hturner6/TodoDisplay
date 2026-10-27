@@ -7,6 +7,7 @@ from PIL import ImageChops
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
+from models.task import Task
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, Margins, TaskDrawer, parse_margins
 from taskFetcher.weather import Weather
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
@@ -60,6 +61,40 @@ def test_no_date_heading_overhangs_the_left_margin():
     for offset in range(0, 366, 2):
         image = drawer.create_task_image([], today=datetime(2026, 1, 1).date() + timedelta(days=offset))
         assert image.point(lambda value: 255 - value).getbbox()[0] >= margins.left
+
+
+def test_a_priority_task_has_a_heavy_asterisk_in_the_gutter_left_of_its_bullet():
+    today = datetime(2026, 10, 26).date()
+    left = DEFAULT_MARGINS.left
+
+    def gutter_pixels(task):
+        image = TaskDrawer(FONT).create_task_image([task], today=today)
+        gutter = image.crop((left, 0, left + 22, image.height))
+        return sum(1 for value in gutter.get_flattened_data() if value == 0)
+
+    plain = gutter_pixels(Task("Pay rent", today))
+    priority = gutter_pixels(Task("Pay rent", today, priority=True))
+
+    # The first, small asterisk added 86 pixels; it was too faint on the real panel.
+    assert priority - plain >= 130
+
+
+def test_a_stale_screen_names_the_cause_in_the_footer():
+    updated = datetime(2026, 10, 26, 9, 0)
+    expired = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True, reason="Sign-in expired")
+    offline = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True, reason="No network")
+    plain = TaskDrawer(FONT).create_task_image([], updated_at=updated, stale=True)
+
+    assert len({expired.tobytes(), offline.tobytes(), plain.tobytes()}) == 3
+
+
+def test_a_stale_footer_with_a_cause_stays_inside_the_margins():
+    margins = DEFAULT_MARGINS
+    image = TaskDrawer(FONT).create_task_image(
+        [], updated_at=datetime(2026, 10, 26, 9, 0), stale=True, reason="Cannot reach TodoApp")
+
+    left, _, right, _ = image.point(lambda value: 255 - value).getbbox()
+    assert left >= margins.left and right <= image.width - margins.right
 
 
 def test_the_drawer_does_not_decide_staleness_from_the_clock():

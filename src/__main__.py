@@ -1,10 +1,12 @@
 from dotenv import load_dotenv
 import argparse
+from datetime import datetime, timedelta
 import os
 from pathlib import Path
 import time
 import schedule
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, TaskDrawer, parse_margins
+from taskDisplay.quietHours import QuietHours
 from taskDisplay.refresh import DrawTasks, Refresher
 from taskDisplay.preview import open_file, save_preview
 from taskDisplay.previewTasks import SCENARIOS, FakeSource
@@ -16,6 +18,10 @@ from screenDisplay.draw_bmp import EPaperPanel
 # Inter for the text, with Newsreader italic for the date banner alone, as in the TodoApp.
 fontPath = "./src/screenDisplay/fonts/Inter-Bold.ttf"
 bannerFontPath = "./src/screenDisplay/fonts/Newsreader-SemiBoldItalic.ttf"
+# Screens --preview --fake can show beyond the task scenarios.
+PREVIEW_SCREENS = ["stale", "error"]
+# The screen is left alone overnight; QUIET_HOURS="off" turns that off.
+DEFAULT_QUIET_HOURS = "23:00-06:00"
 ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
 
 def make_drawer(source):
@@ -32,12 +38,16 @@ def make_renderer(source):
     def render(action):
         drawer = make_drawer(source)
         if isinstance(action, DrawTasks):
-            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale, weather=action.weather)
+            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale,
+                                            reason=action.reason, weather=action.weather)
         return drawer.create_message_image(action.heading, action.detail)
     return render
 
-def make_refresher(source):
-    return Refresher(source, make_renderer(source), EPaperPanel(), weather=WeatherService.from_env(os.environ))
+def make_refresher(source, overnight_quiet=False):
+    """overnight_quiet leaves the screen alone during QUIET_HOURS; a one-off --task always refreshes."""
+    quiet_hours = QuietHours.from_config(os.getenv("QUIET_HOURS") or DEFAULT_QUIET_HOURS) if overnight_quiet else None
+    return Refresher(source, make_renderer(source), EPaperPanel(), quiet_hours=quiet_hours,
+                     weather=WeatherService.from_env(os.environ))
 
 def refresh_safely(refresher):
     """One refresh that can never end the run loop: a failure is logged and the next interval tries again."""
@@ -62,9 +72,16 @@ def task_test(source):
 
 def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False, weather=None):
     if fake:
-        source = FakeSource(fake)
+        source = FakeSource(fake if fake in SCENARIOS else "few")
     drawer = make_drawer(source)
-    image = drawer.create_task_image(source.fetch(), weather=Weather(14, weather) if weather else None)
+    if fake == "error":
+        image = drawer.create_message_image(*source.describe_error(OSError()))
+    elif fake == "stale":
+        stale_since = datetime.now() - timedelta(hours=3)
+        image = drawer.create_task_image(source.fetch(), updated_at=stale_since, stale=True,
+                                         reason=source.describe_error(OSError())[0])
+    else:
+        image = drawer.create_task_image(source.fetch(), weather=Weather(14, weather) if weather else None)
     save_preview(image, path, simulate_panel, safe_area=drawer.margins if safe_area else None)
     print(f"Preview saved to {path}")
     if open_after:
@@ -80,7 +97,8 @@ def main():
     parser.add_argument('--run', type=int, help='Runs the task display with a specified interval (in minutes)')
     parser.add_argument('--preview', nargs='?', const='previews/preview.png', metavar='PATH',
                         help='Saves the task image to a PNG (default previews/preview.png) without using the display')
-    parser.add_argument('--fake', choices=sorted(SCENARIOS), help='With --preview, use sample tasks instead of fetching')
+    parser.add_argument('--fake', choices=sorted(SCENARIOS) + PREVIEW_SCREENS,
+                        help='With --preview, use sample tasks instead of fetching; stale and error show those screens')
     parser.add_argument('--weather', choices=CONDITIONS, help='With --preview, show sample weather of this kind')
     parser.add_argument('--no-open', action='store_true', help='With --preview, do not open the PNG afterwards')
     parser.add_argument('--raw', action='store_true', help='With --preview, skip the black/white panel simulation')
@@ -98,7 +116,7 @@ def main():
         task_preview(args.preview, source, fake=args.fake, simulate_panel=not args.raw, open_after=not args.no_open,
                      safe_area=args.safe_area, weather=args.weather)
     elif args.run:
-        task_run(args.run, make_refresher(source))
+        task_run(args.run, make_refresher(source, overnight_quiet=True))
     elif args.task:
         make_refresher(source).refresh()
     elif args.clear:

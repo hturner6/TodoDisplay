@@ -16,6 +16,7 @@ class DrawTasks:
     tasks: list[Task]
     updated_at: datetime
     stale: bool = False  # the data is old because refreshing keeps failing
+    reason: str = ""  # why it keeps failing, e.g. "Sign-in expired"; only when stale
     weather: Weather | None = None
 
 
@@ -69,7 +70,8 @@ class RefreshPolicy:
         self.shown_failure = "stale"
         self.signature = None
         self.drawn_at = now
-        return DrawTasks(self.last_tasks, self.last_success, stale=True)
+        reason, _ = self.source.describe_error(error)
+        return DrawTasks(self.last_tasks, self.last_success, stale=True, reason=reason)
 
 
 class Refresher:
@@ -79,8 +81,9 @@ class Refresher:
     is handled here, through the policy; anything else (such as the panel failing) is raised.
     """
 
-    def __init__(self, source: TaskSource, render, panel, weather=None):
+    def __init__(self, source: TaskSource, render, panel, quiet_hours=None, weather=None):
         self.source = source
+        self._quiet_hours = quiet_hours
         self._weather = weather
         self._render = render
         self._panel = panel
@@ -88,6 +91,9 @@ class Refresher:
 
     def refresh(self, now: datetime = None):
         now = now or datetime.now()
+        if self._quiet_hours and self._quiet_hours.contains(now.time()):
+            print("Quiet hours, screen left as it is")
+            return
         try:
             action = self._policy.on_success(self.source.fetch(), now, self._current_weather(now))
         except Exception as error:
