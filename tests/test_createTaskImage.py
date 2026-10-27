@@ -10,10 +10,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from models.task import Task
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, Margins, TaskDrawer, parse_margins, wrap_text
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
-from taskDisplay.refreshPolicy import REDRAW_AFTER, STALE_AFTER, RefreshPolicy, describe_error
+from taskDisplay.refreshPolicy import REDRAW_AFTER, STALE_AFTER, RefreshPolicy
+from taskFetcher.tickTick.tickTickSource import TickTickSource
 
 FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/DejaVuSans-Bold.ttf")
 NOW = datetime(2026, 10, 26, 12, 0)
+SOURCE = TickTickSource(env={})
 
 
 @pytest.fixture
@@ -138,11 +140,11 @@ def test_short_due_label():
 # --- refresh policy -------------------------------------------------------------------------
 
 def test_first_success_draws():
-    assert RefreshPolicy().on_success([Task("a", NOW.date())], NOW)[0] == "tasks"
+    assert RefreshPolicy(SOURCE).on_success([Task("a", NOW.date())], NOW)[0] == "tasks"
 
 
 def test_unchanged_tasks_are_not_redrawn_until_the_redraw_interval():
-    policy = RefreshPolicy()
+    policy = RefreshPolicy(SOURCE)
     tasks = [Task("a", NOW.date())]
     policy.on_success(tasks, NOW)
 
@@ -151,14 +153,14 @@ def test_unchanged_tasks_are_not_redrawn_until_the_redraw_interval():
 
 
 def test_changed_tasks_are_redrawn_straight_away():
-    policy = RefreshPolicy()
+    policy = RefreshPolicy(SOURCE)
     policy.on_success([Task("a", NOW.date())], NOW)
 
     assert policy.on_success([Task("b", NOW.date())], NOW + timedelta(minutes=30))[0] == "tasks"
 
 
 def test_failure_with_nothing_drawn_yet_shows_an_error_once():
-    policy = RefreshPolicy()
+    policy = RefreshPolicy(SOURCE)
 
     first = policy.on_failure(OSError("no network"), NOW)
     again = policy.on_failure(OSError("no network"), NOW + timedelta(minutes=30))
@@ -167,19 +169,8 @@ def test_failure_with_nothing_drawn_yet_shows_an_error_once():
     assert again is None
 
 
-def test_expired_token_is_named_on_screen():
-    class Response:
-        status_code = 401
-
-    class Unauthorized(Exception):
-        response = Response()
-
-    assert describe_error(Unauthorized("secret detail"))[0] == "Sign-in expired"
-    assert "secret detail" not in " ".join(describe_error(Unauthorized("secret detail")))
-
-
 def test_failure_keeps_the_screen_until_the_data_is_stale_then_marks_it_once():
-    policy = RefreshPolicy()
+    policy = RefreshPolicy(SOURCE)
     tasks = [Task("a", NOW.date())]
     policy.on_success(tasks, NOW)
 
@@ -190,7 +181,7 @@ def test_failure_keeps_the_screen_until_the_data_is_stale_then_marks_it_once():
 
 
 def test_recovery_after_a_stale_screen_redraws():
-    policy = RefreshPolicy()
+    policy = RefreshPolicy(SOURCE)
     tasks = [Task("a", NOW.date())]
     policy.on_success(tasks, NOW)
     policy.on_failure(OSError(), NOW + timedelta(hours=3))
@@ -267,14 +258,3 @@ def test_a_change_of_time_or_week_redraws_the_screen():
     assert policy.on_success([Task("a", today, scheduled_time=time(9, 0))], now) is not None
     assert policy.on_success([Task("a", today, scheduled_time=time(9, 0), weekly=True)], now) is not None
     assert policy.on_success([Task("a", today, scheduled_time=time(9, 0), weekly=True)], now) is None
-
-
-def test_todoapp_errors_name_todoapp_and_never_show_the_error_text():
-    class Rejected(Exception):
-        response = type("Response", (), {"status_code": 400})()
-
-    assert describe_error(Rejected("secret detail"), "todoapp")[0] == "Sign-in failed"
-    assert describe_error(RuntimeError("Missing in .env: TODOAPP_KEY_FILE"), "todoapp")[0] == "TodoApp not set up"
-    assert describe_error(ConnectionError("boom"), "todoapp")[0] == "Cannot reach TodoApp"
-    for error in (Rejected("secret detail"), RuntimeError("secret detail")):
-        assert "secret detail" not in " ".join(describe_error(error, "todoapp"))

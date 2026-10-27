@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from PIL import Image
 import schedule
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
@@ -11,6 +12,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 _spec = importlib.util.spec_from_file_location("todo_display_main", Path(__file__).resolve().parent.parent / "src" / "__main__.py")
 app = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(app)
+
+from taskFetcher.sources import resolve_source
+
+SOURCE = resolve_source("todoapp", env={})
 
 
 class StopLoop(Exception):
@@ -33,13 +38,13 @@ def run_until_first_tick(monkeypatch, refresh):
 
     monkeypatch.setattr(app.time, "sleep", stop)
     with pytest.raises(StopLoop):
-        app.task_run(30, "todoapp")
+        app.task_run(30, SOURCE)
 
 
 def test_run_draws_immediately_instead_of_waiting_for_the_first_interval(monkeypatch):
     sources = []
     run_until_first_tick(monkeypatch, sources.append)
-    assert sources == ["todoapp"]
+    assert sources == [SOURCE]
 
 
 def test_a_failed_refresh_does_not_end_the_run_loop(monkeypatch):
@@ -69,7 +74,7 @@ def test_a_failed_scheduled_refresh_does_not_end_the_run_loop(monkeypatch):
 
     monkeypatch.setattr(app.time, "sleep", sleep)
     with pytest.raises(StopLoop):
-        app.task_run(30, "todoapp")
+        app.task_run(30, SOURCE)
     assert len(calls) == 2
 
 
@@ -81,3 +86,36 @@ def test_running_with_no_arguments_names_options_that_exist(monkeypatch, capsys)
     out = capsys.readouterr().out
     assert "--image" not in out
     assert "--run" in out and "--task" in out and "--preview" in out
+
+
+# --- a failing fetch never leaks the error text ---------------------------------------------
+
+SECRET = "fake-secret-value"
+
+
+@pytest.mark.parametrize("module_path, name, source", [
+    ("taskFetcher.todoApp.todoAppSource", "get_access_token",
+     resolve_source("todoapp", env={"TODOAPP_PROJECT_ID": "p", "TODOAPP_SPACE_ID": "s", "TODOAPP_KEY_FILE": "k"})),
+    ("taskFetcher.tickTick.tickTickSource", "get_project_data", resolve_source("ticktick", env={})),
+])
+def test_a_failed_fetch_prints_and_shows_no_error_text(monkeypatch, capsys, module_path, name, source):
+    def fails(*args, **kwargs):
+        raise ConnectionError(f"https://example.test/?token={SECRET}")
+
+    monkeypatch.setattr(sys.modules[module_path], name, fails)
+    shown = []
+    monkeypatch.setattr(app, "display_image", shown.append)
+    monkeypatch.setattr(app, "policy", app.RefreshPolicy(source))
+
+    app.task_image(source)
+
+    assert len(shown) == 1  # the error notice was drawn
+    assert SECRET not in capsys.readouterr().out
+
+
+def test_fake_preview_needs_no_real_source(tmp_path):
+    out = tmp_path / "fake.png"
+
+    app.task_preview(str(out), SOURCE, fake="few", open_after=False)
+
+    assert Image.open(out).size == (648, 480)

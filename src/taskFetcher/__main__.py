@@ -1,11 +1,12 @@
 import argparse
 import json
+import os
 from dotenv import load_dotenv
 from taskFetcher.tickTick.apiTokenVerifier import authorize_url, verify_api_key
 from taskFetcher.tickTick.tickTickClient import get_projects, get_project_data
 from taskFetcher.tickTick.projectTaskParser import parse_project_tasks
 from models.task import TaskEncoder
-from taskFetcher.todoApp.todoAppFetcher import fetch_todoapp_tasks
+from taskFetcher.todoApp.todoAppSource import TodoAppSource
 
 def create_Url():
     print('Open this URL in your browser to authorize the application:')
@@ -35,7 +36,7 @@ def main():
         parsed_tasks = parse_project_tasks(project_data)
         print(parsed_tasks)
     if args.todoapp:
-        for task in fetch_todoapp_tasks():
+        for task in TodoAppSource(os.environ).fetch():
             print(f"{'week' if task.weekly else 'day '} {task.due_date} {task.scheduled_time or '     '} [{task.status}]{' !' if task.priority else ''} {task.title}")
 
 if __name__ == "__main__":
