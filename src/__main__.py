@@ -5,6 +5,7 @@ from pathlib import Path
 import time
 import schedule
 from taskDisplay.createTaskImage import DEFAULT_MARGINS, TaskDrawer, parse_margins
+from taskDisplay.quietHours import QuietHours
 from taskDisplay.refresh import DrawTasks, Refresher
 from taskDisplay.preview import open_file, save_preview
 from taskDisplay.previewTasks import SCENARIOS, FakeSource
@@ -13,6 +14,8 @@ from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, resolve_source
 from screenDisplay.draw_bmp import EPaperPanel
 
 fontPath = "./src/screenDisplay/fonts/DejaVuSans-Bold.ttf"
+# The screen is left alone overnight; QUIET_HOURS="off" turns that off.
+DEFAULT_QUIET_HOURS = "23:00-06:00"
 ENV_FILE = Path(__file__).resolve().parent / "taskFetcher" / ".env"
 
 def make_drawer(source):
@@ -32,8 +35,10 @@ def make_renderer(source):
         return drawer.create_message_image(action.heading, action.detail)
     return render
 
-def make_refresher(source):
-    return Refresher(source, make_renderer(source), EPaperPanel())
+def make_refresher(source, overnight_quiet=False):
+    """overnight_quiet leaves the screen alone during QUIET_HOURS; a one-off --task always refreshes."""
+    quiet_hours = QuietHours.from_config(os.getenv("QUIET_HOURS") or DEFAULT_QUIET_HOURS) if overnight_quiet else None
+    return Refresher(source, make_renderer(source), EPaperPanel(), quiet_hours=quiet_hours)
 
 def refresh_safely(refresher):
     """One refresh that can never end the run loop: a failure is logged and the next interval tries again."""
@@ -93,7 +98,7 @@ def main():
         task_preview(args.preview, source, fake=args.fake, simulate_panel=not args.raw, open_after=not args.no_open,
                      safe_area=args.safe_area)
     elif args.run:
-        task_run(args.run, make_refresher(source))
+        task_run(args.run, make_refresher(source, overnight_quiet=True))
     elif args.task:
         make_refresher(source).refresh()
     elif args.clear:
