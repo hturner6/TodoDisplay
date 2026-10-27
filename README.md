@@ -47,3 +47,12 @@ cd src && ../.venv/bin/python -m taskFetcher --todoapp
 ```
 
 It signs in with `openssl`, which Raspberry Pi OS includes, so no extra Python packages are needed.
+
+## Choosing where tasks come from
+
+The display shows tasks from TodoApp by default (today's Daily Items on the left, this week's Weekly Items on the right). TickTick is kept as a fallback.
+
+- One-off: `--source todoapp` or `--source ticktick`, on any command (`--task`, `--run`, `--preview`).
+- For the systemd service: set `TASK_SOURCE=ticktick` (or `todoapp`) in `src/taskFetcher/.env` on the Pi, then `sudo systemctl restart TodoDisplay`.
+
+The flag wins over `TASK_SOURCE`, which wins over the default. An unknown name stops the app with an error naming the choices.
