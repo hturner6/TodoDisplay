@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from models.task import Task
 from taskDisplay.screenLayout import select
 from taskFetcher.taskSource import TaskSource
+from taskFetcher.weather import Weather
 
 # An unchanged screen is redrawn at least this often, so its 'Updated HH:MM' footer stays honest.
 REDRAW_AFTER = timedelta(hours=1)
@@ -16,6 +17,7 @@ class DrawTasks:
     updated_at: datetime
     stale: bool = False  # the data is old because refreshing keeps failing
     reason: str = ""  # why it keeps failing, e.g. "Sign-in expired"; only when stale
+    weather: Weather | None = None
 
 
 @dataclass(frozen=True)
@@ -38,13 +40,14 @@ class RefreshPolicy:
         self.last_success = None
         self.shown_failure = None
 
-    def on_success(self, tasks: list[Task], now: datetime):
+    def on_success(self, tasks: list[Task], now: datetime, weather: Weather = None):
         # Everything the screen shows: a task ticked off or moved to another time must redraw, but a
         # change to a Task that is not on the screen must not.
         selected = select(tasks, now.date())
-        signature = (now.date(), tuple(tuple((task.title, task.due_date, task.status, task.priority,
-                                              task.scheduled_time, task.weekly) for task in group)
-                                       for group in selected))
+        signature = (now.date(), weather,
+                     tuple(tuple((task.title, task.due_date, task.status, task.priority,
+                                  task.scheduled_time, task.weekly) for task in group)
+                           for group in selected))
         self.last_tasks = tasks
         self.last_success = now
         self.shown_failure = None
@@ -52,7 +55,7 @@ class RefreshPolicy:
             return None
         self.signature = signature
         self.drawn_at = now
-        return DrawTasks(tasks, now)
+        return DrawTasks(tasks, now, weather=weather)
 
     def on_failure(self, error: Exception, now: datetime):
         if self.last_tasks is None:
@@ -78,9 +81,10 @@ class Refresher:
     is handled here, through the policy; anything else (such as the panel failing) is raised.
     """
 
-    def __init__(self, source: TaskSource, render, panel, quiet_hours=None):
+    def __init__(self, source: TaskSource, render, panel, quiet_hours=None, weather=None):
         self.source = source
         self._quiet_hours = quiet_hours
+        self._weather = weather
         self._render = render
         self._panel = panel
         self._policy = RefreshPolicy(source)
@@ -91,7 +95,7 @@ class Refresher:
             print("Quiet hours, screen left as it is")
             return
         try:
-            action = self._policy.on_success(self.source.fetch(), now)
+            action = self._policy.on_success(self.source.fetch(), now, self._current_weather(now))
         except Exception as error:
             print(f"Could not fetch tasks: {type(error).__name__}")
             action = self._policy.on_failure(error, now)
@@ -100,3 +104,13 @@ class Refresher:
             print("Screen left as it is")
             return
         self._panel.show(self._render(action))
+
+    def _current_weather(self, now: datetime):
+        """The weather to show, or None: it is a nicety, so nothing about it may stop the tasks being drawn."""
+        if self._weather is None:
+            return None
+        try:
+            return self._weather.current(now)
+        except Exception as error:
+            print(f"Weather skipped: {type(error).__name__}")
+            return None

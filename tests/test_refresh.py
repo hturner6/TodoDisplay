@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from models.task import Task
 from taskDisplay.quietHours import QuietHours
 from taskDisplay.refresh import REDRAW_AFTER, STALE_AFTER, DrawMessage, DrawTasks, Refresher
+from taskFetcher.weather import Weather
 from taskFetcher.sources import resolve_source
 from taskFetcher.taskSource import TaskSource
 from taskFetcher.tickTick import tickTickSource
@@ -181,6 +182,66 @@ def test_refreshing_without_a_time_uses_the_clock():
     refresher.refresh()
 
     assert abs(panel.shown[0].updated_at - datetime.now()) < timedelta(seconds=5)
+
+
+# --- weather ---------------------------------------------------------------------------------------
+
+class StubWeather:
+    """Answers current(now) with whatever is set."""
+
+    def __init__(self, weather=None):
+        self.weather = weather
+
+    def current(self, now):
+        return self.weather
+
+
+def weather_screen(weather):
+    source, panel = ScriptedSource(), RecordingPanel()
+    source.result = [Task("a", TODAY)]
+    return source, panel, weather, Refresher(source, lambda action: action, panel, weather=weather)
+
+
+def test_the_weather_is_drawn_with_the_tasks():
+    source, panel, _, refresher = weather_screen(StubWeather(Weather(12, "rain")))
+
+    refresher.refresh(NOW)
+
+    assert panel.shown == [DrawTasks(source.result, NOW, weather=Weather(12, "rain"))]
+
+
+def test_a_change_in_the_weather_redraws_but_the_same_weather_does_not():
+    _, panel, weather, refresher = weather_screen(StubWeather(Weather(12, "rain")))
+    refresher.refresh(NOW)
+
+    refresher.refresh(NOW + timedelta(minutes=30))
+    assert len(panel.shown) == 1
+
+    weather.weather = Weather(13, "rain")
+    refresher.refresh(NOW + timedelta(minutes=30))
+    assert len(panel.shown) == 2
+
+
+def test_no_weather_service_and_no_weather_both_draw_the_tasks_alone():
+    _, panel, _, refresher = weather_screen(None)
+    refresher.refresh(NOW)
+
+    _, other_panel, _, other = weather_screen(StubWeather(None))
+    other.refresh(NOW)
+
+    assert panel.shown[0].weather is None and other_panel.shown[0].weather is None
+
+
+def test_weather_that_blows_up_never_stops_the_tasks_being_drawn():
+    class Broken:
+        def current(self, now):
+            raise RuntimeError("boom")
+
+    _, panel, _, refresher = weather_screen(Broken())
+
+    refresher.refresh(NOW)
+
+    assert panel.shown[0].weather is None
 
 
 # --- quiet hours ----------------------------------------------------------------------------------

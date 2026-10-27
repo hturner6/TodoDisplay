@@ -11,6 +11,7 @@ from taskDisplay.refresh import DrawTasks, Refresher
 from taskDisplay.preview import open_file, save_preview
 from taskDisplay.previewTasks import SCENARIOS, FakeSource
 from taskFetcher.envFiles import permission_warnings
+from taskFetcher.weather import CONDITIONS, Weather, WeatherService
 from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, resolve_source
 from screenDisplay.draw_bmp import EPaperPanel
 
@@ -37,14 +38,16 @@ def make_renderer(source):
     def render(action):
         drawer = make_drawer(source)
         if isinstance(action, DrawTasks):
-            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale, reason=action.reason)
+            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale,
+                                            reason=action.reason, weather=action.weather)
         return drawer.create_message_image(action.heading, action.detail)
     return render
 
 def make_refresher(source, overnight_quiet=False):
     """overnight_quiet leaves the screen alone during QUIET_HOURS; a one-off --task always refreshes."""
     quiet_hours = QuietHours.from_config(os.getenv("QUIET_HOURS") or DEFAULT_QUIET_HOURS) if overnight_quiet else None
-    return Refresher(source, make_renderer(source), EPaperPanel(), quiet_hours=quiet_hours)
+    return Refresher(source, make_renderer(source), EPaperPanel(), quiet_hours=quiet_hours,
+                     weather=WeatherService.from_env(os.environ))
 
 def refresh_safely(refresher):
     """One refresh that can never end the run loop: a failure is logged and the next interval tries again."""
@@ -67,7 +70,7 @@ def task_test(source):
     image = make_drawer(source).create_task_image(source.fetch())
     image.show()
 
-def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False):
+def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False, weather=None):
     if fake:
         source = FakeSource(fake if fake in SCENARIOS else "few")
     drawer = make_drawer(source)
@@ -78,7 +81,7 @@ def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, 
         image = drawer.create_task_image(source.fetch(), updated_at=stale_since, stale=True,
                                          reason=source.describe_error(OSError())[0])
     else:
-        image = drawer.create_task_image(source.fetch())
+        image = drawer.create_task_image(source.fetch(), weather=Weather(14, weather) if weather else None)
     save_preview(image, path, simulate_panel, safe_area=drawer.margins if safe_area else None)
     print(f"Preview saved to {path}")
     if open_after:
@@ -96,6 +99,7 @@ def main():
                         help='Saves the task image to a PNG (default previews/preview.png) without using the display')
     parser.add_argument('--fake', choices=sorted(SCENARIOS) + PREVIEW_SCREENS,
                         help='With --preview, use sample tasks instead of fetching; stale and error show those screens')
+    parser.add_argument('--weather', choices=CONDITIONS, help='With --preview, show sample weather of this kind')
     parser.add_argument('--no-open', action='store_true', help='With --preview, do not open the PNG afterwards')
     parser.add_argument('--raw', action='store_true', help='With --preview, skip the black/white panel simulation')
     parser.add_argument('--safe-area', action='store_true', help='With --preview, outline the frame-safe area in red')
@@ -110,7 +114,7 @@ def main():
 
     if args.preview:
         task_preview(args.preview, source, fake=args.fake, simulate_panel=not args.raw, open_after=not args.no_open,
-                     safe_area=args.safe_area)
+                     safe_area=args.safe_area, weather=args.weather)
     elif args.run:
         task_run(args.run, make_refresher(source, overnight_quiet=True))
     elif args.task:

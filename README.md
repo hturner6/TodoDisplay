@@ -30,6 +30,10 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 
 **Quiet hours.** The `--run` loop neither fetches nor draws overnight (default 23:00 to 06:00), leaving the last picture on the panel, which keeps it without power. The first refresh after the window always redraws. Set `QUIET_HOURS="HH:MM-HH:MM"` in `src/taskFetcher/.env` to change the window, or `QUIET_HOURS=off` to disable it. A one-off `--task` (and `./refresh.sh`) ignores quiet hours.
 
+## Weather
+
+Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour (a failed request is retried after ten minutes); if it keeps failing, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
+
 ## Running on the Pi (systemd)
 
 The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere, and compare it with `systemctl cat TodoDisplay` on the Pi.

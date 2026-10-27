@@ -1,8 +1,10 @@
 from collections import namedtuple
+import math
 from datetime import date, datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 from models.task import Task
 from taskDisplay.timeFormat import format_time
+from taskFetcher.weather import Weather
 from taskDisplay.screenLayout import (GLYPH_COLUMN, LINE_HEIGHT, META_SIZE, ROW_PADDING, TASK_SIZE, Column, Row,
                                       build_layout)
 
@@ -18,6 +20,8 @@ TITLE_SIZE = 38
 SMALL_SIZE = 19
 
 LABEL_TRACKING = 0.14  # of the font size, for the uppercase labels (the TodoApp's one label style)
+WEATHER_GLYPH = 34  # width of a weather glyph
+WEATHER_GAP = 8  # between the glyph and the temperature
 COLUMN_GAP = 24
 DAILY_SHARE = 0.56  # of the content width; Daily Items carry a time, Weekly Items only a day
 
@@ -57,7 +61,8 @@ class TaskDrawer():
     # --- screens -------------------------------------------------------------------------------
 
     def create_task_image(self, tasks: list[Task] = None, updated_at: datetime = None,
-                          today: date = None, stale: bool = False, reason: str = "") -> Image:
+                          today: date = None, stale: bool = False, reason: str = "",
+                          weather: Weather = None) -> Image:
         self._new_canvas()
         tasks = tasks or []
         today = today or datetime.now().date()
@@ -65,7 +70,7 @@ class TaskDrawer():
         footer_top = self._draw_footer(updated_at, stale=stale, reason=reason)
         # The Weekly column labels each item with its day, so the week strip would be a
         # repeat that costs a third of the height.
-        top = self._draw_header(today, week_strip=not self.two_columns)
+        top = self._draw_header(today, week_strip=not self.two_columns, weather=weather)
         spans, divider = self._column_spans()
         rows_top = top + (6 + META_SIZE + 10 if self.two_columns else 0)
         layout = build_layout(tasks, today, [x1 - x0 for x0, x1 in spans], footer_top - 4 - rows_top,
@@ -91,9 +96,11 @@ class TaskDrawer():
 
     # --- header and footer ---------------------------------------------------------------------
 
-    def _draw_header(self, today: date, week_strip: bool = True) -> int:
-        """Draws the date heading and week strip, and returns the y where the content can start."""
+    def _draw_header(self, today: date, week_strip: bool = True, weather: Weather = None) -> int:
+        """Draws the date heading, weather and week strip, and returns the y where the content can start."""
         y = self.margins.top
+        if weather:
+            self._draw_weather(weather, y + TITLE_SIZE // 2 + 4)
         self._draw_text_inside((self.left, y), today.strftime("%A %-d %B"), self.titleFont)
         y += TITLE_SIZE + 14
 
@@ -115,6 +122,59 @@ class TaskDrawer():
 
         self.draw.line((self.left, y, self.right, y), fill=BLACK, width=3)
         return y + 3
+
+    def _draw_weather(self, weather: Weather, cy: int):
+        """The weather glyph and temperature, right-aligned with the date heading."""
+        text = f"{weather.temperature}\u00b0"
+        text_width = self.taskFont.getlength(text)
+        self.draw.text((self.right - text_width, cy - TASK_SIZE * 0.62), text, font=self.taskFont, fill=BLACK)
+        self._draw_weather_glyph(weather.condition, int(self.right - text_width - WEATHER_GAP - WEATHER_GLYPH // 2), cy)
+
+    def _draw_weather_glyph(self, condition: str, cx: int, cy: int):
+        """A fixed-size shape per condition, about 34px across, so it looks the same whatever the font."""
+        d = self.draw
+        if condition == "clear":
+            self._draw_sun(cx, cy, 8)
+        elif condition == "fog":
+            for i, (inset, dy) in enumerate(((2, -9), (8, -1), (0, 7))):
+                d.line((cx - 16 + inset, cy + dy, cx + 16 - (8 if i == 1 else 2), cy + dy), fill=BLACK, width=4)
+        elif condition == "partly":
+            self._draw_sun(cx - 5, cy - 6, 6)
+            self._draw_cloud(cx + 3, cy + 5, outline=True)
+        else:
+            self._draw_cloud(cx, cy - 4)
+            self._draw_precipitation(condition, cx, cy + 8)
+
+    def _draw_sun(self, cx: int, cy: int, r: int):
+        self.draw.ellipse((cx - r, cy - r, cx + r, cy + r), outline=BLACK, width=3)
+        for k in range(8):
+            angle = k * math.pi / 4
+            ux, uy = math.cos(angle), math.sin(angle)
+            self.draw.line((cx + ux * (r + 4), cy + uy * (r + 4), cx + ux * (r + 8), cy + uy * (r + 8)),
+                           fill=BLACK, width=3)
+
+    def _draw_cloud(self, cx: int, cy: int, outline: bool = False):
+        """A solid cloud about 30px wide; outline leaves a white margin round it, to sit in front of a sun."""
+        d = self.draw
+        for grow, fill in (((4, WHITE),) if outline else ()) + ((0, BLACK),):
+            g = grow
+            d.ellipse((cx - 14 - g, cy - 2 - g, cx - 2 + g, cy + 10 + g), fill=fill)
+            d.ellipse((cx - 8 - g, cy - 10 - g, cx + 8 + g, cy + 6 + g), fill=fill)
+            d.ellipse((cx + 2 - g, cy - 4 - g, cx + 14 + g, cy + 10 + g), fill=fill)
+            d.rectangle((cx - 8 - g, cy - 2 - g, cx + 8 + g, cy + 10 + g), fill=fill)
+
+    def _draw_precipitation(self, condition: str, cx: int, y: int):
+        d = self.draw
+        if condition == "rain":
+            for dx in (-9, 0, 9):
+                d.line((cx + dx + 2, y, cx + dx - 2, y + 9), fill=BLACK, width=4)
+        elif condition == "snow":
+            for dx in (-9, 0, 9):
+                d.ellipse((cx + dx - 2, y + 2, cx + dx + 2, y + 6), fill=BLACK)
+                d.ellipse((cx + dx - 2, y + 9, cx + dx + 2, y + 13), fill=BLACK) if dx == 0 else None
+        elif condition == "storm":
+            d.polygon([(cx + 3, y - 1), (cx - 5, y + 7), (cx, y + 7), (cx - 3, y + 15), (cx + 6, y + 5), (cx + 1, y + 5)],
+                      fill=BLACK)
 
     def _draw_footer(self, updated_at: datetime = None, show_time: bool = True, stale: bool = False,
                      reason: str = "") -> int:
