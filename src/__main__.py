@@ -115,7 +115,7 @@ def main():
     elif args.test:
         task_test(source)
     else:
-        print("No valid argument provided. Use --image to create and display the mockup image.")
+        print("No valid argument provided. Use --run N, --task, --preview, --test or --clear (see --help).")
 
 if __name__ == "__main__":
     main()
