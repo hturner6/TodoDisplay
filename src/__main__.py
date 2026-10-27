@@ -25,14 +25,22 @@ def margins():
     text = os.getenv("DISPLAY_MARGINS")
     return parse_margins(text) if text else DEFAULT_MARGINS
 
+def refresh_safely(source):
+    """One refresh that can never end the run loop: a failure is logged and the next interval tries again."""
+    try:
+        task_image(source)
+    except Exception as error:
+        print(f"Refresh failed, will retry: {type(error).__name__}")
+
 def task_run(refresh_interval_minutes, source):
     print(f"Running TodoDisplay every {refresh_interval_minutes} minutes, tasks from {source}")
-    schedule.every(refresh_interval_minutes).minutes.do(task_image, source)
-    
+    refresh_safely(source)
+    schedule.every(refresh_interval_minutes).minutes.do(refresh_safely, source)
+
     while True:
         schedule.run_pending()
         time.sleep(1)
-    
+
 
 def task_image(source):
     now = datetime.now()
