@@ -90,14 +90,16 @@ class TaskDrawer():
 
         layout = fit(footer_top)
         content_bottom = footer_top
-        # A stale footer already has a notice to show, so it gets no word. Tasks come first: the
-        # word is only drawn when it costs no task its place.
+        # A stale footer already has a notice to show, so it gets no word. Otherwise the word and its
+        # meaning always sit on the footer row, which is reserved anyway; tasks come first, so the
+        # example sentence above it is only drawn when it costs no task its place.
         word = None if stale else word_for(today, self.words)
         if word:
-            with_word = fit(footer_top - WORD_BLOCK_HEIGHT)
-            if _hidden(with_word) == _hidden(layout):
-                layout = with_word
-                content_bottom = self._draw_word(word, footer_top, updated_at)
+            self._draw_word_line(word, footer_top, updated_at)
+            with_example = fit(footer_top - WORD_BLOCK_HEIGHT)
+            if _hidden(with_example) == _hidden(layout):
+                layout = with_example
+                content_bottom = self._draw_word_example(word, footer_top)
 
         if layout.message:
             self._draw_message(layout.message.heading, layout.message.detail, top, content_bottom)
@@ -199,29 +201,31 @@ class TaskDrawer():
             d.polygon([(cx + 3, y - 1), (cx - 5, y + 7), (cx, y + 7), (cx - 3, y + 15), (cx + 6, y + 5), (cx + 1, y + 5)],
                       fill=BLACK)
 
-    def _draw_word(self, word: Word, footer_top: int, updated_at: datetime = None) -> int:
-        """Draws the Polish word of the day and returns the y where the content above it must end.
+    def _cut(self, font, text: str, width: float) -> str:
+        """The text on one line, ending in an ellipsis if it is wider than width."""
+        return wrap_text(font.getlength, text, [max(width, 0)], 1)[0] if text else ""
 
-        The word and its meaning share the footer's row, to the left of 'Updated HH:MM'; the example
-        sentence and its translation sit on the two lines above, under a hairline.
-        """
-        def cut(font, text, width):
-            return wrap_text(font.getlength, text, [max(width, 0)], 1)[0] if text else ""
-
+    def _draw_word_line(self, word: Word, footer_top: int, updated_at: datetime = None):
+        """The Polish word and its meaning, on the footer's row to the left of 'Updated HH:MM'."""
         updated = f"Updated {format_time(updated_at or datetime.now())}"
         row_right = self.right - self.smallFont.getlength(updated) - WORD_GAP * 2
-        polish = cut(self.metaFont, word.polish, row_right - self.left)
+        polish = self._cut(self.metaFont, word.polish, row_right - self.left)
         used = self.metaFont.getlength(polish) + WORD_GAP
-        english = cut(self.smallFont, word.english, row_right - self.left - used)
+        english = self._cut(self.smallFont, word.english, row_right - self.left - used)
         self._draw_text_inside((self.left, footer_top), polish, self.metaFont)
         self.draw.text((self.left + used, footer_top + 2), english, font=self.smallFont, fill=BLACK)
 
+    def _draw_word_example(self, word: Word, footer_top: int) -> int:
+        """The example sentence and its translation above the footer row, under a hairline.
+
+        Returns the y where the content above must end.
+        """
         width = self.right - self.left
         rule_y = footer_top - WORD_BLOCK_HEIGHT
         example_y = rule_y + 8
         translation_y = example_y + META_SIZE + 4
-        self._draw_text_inside((self.left, example_y), cut(self.metaFont, word.example, width), self.metaFont)
-        self._draw_text_inside((self.left, translation_y), cut(self.smallFont, word.example_english, width),
+        self._draw_text_inside((self.left, example_y), self._cut(self.metaFont, word.example, width), self.metaFont)
+        self._draw_text_inside((self.left, translation_y), self._cut(self.smallFont, word.example_english, width),
                                self.smallFont)
         self.draw.line((self.left, rule_y, self.right, rule_y), fill=BLACK, width=1)
         return rule_y

@@ -166,21 +166,44 @@ SOME_DAY = datetime(2026, 10, 27).date()
 FEW_TASKS = [Task("Buy milk", SOME_DAY), Task("Call the dentist", SOME_DAY)]
 
 
-def test_the_word_of_the_day_is_drawn_above_the_footer_when_there_is_room():
-    with_word = TaskDrawer(FONT, words=WORDS).create_task_image(FEW_TASKS, today=SOME_DAY)
-    without = TaskDrawer(FONT).create_task_image(FEW_TASKS, today=SOME_DAY)
+def above_the_footer(image):
+    """Everything above the footer row, where tasks and the example block would be drawn."""
+    return image.crop((0, 0, image.width, 415)).tobytes()
 
-    assert with_word.tobytes() != without.tobytes()
+
+def footer_row(image):
+    return image.crop((0, 415, image.width, image.height)).tobytes()
 
 
 @pytest.mark.parametrize("scenario", ["few", "many"])
-def test_the_word_never_costs_a_task_its_place(scenario):
-    # These scenarios fill the screen once the word takes its room, so the word is left out.
+def test_on_a_full_screen_the_word_is_still_shown_in_the_footer_row_and_costs_no_task(scenario):
     drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
     plain = TaskDrawer(FONT, two_columns=True)
+    with_word = drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY)
+    without = plain.create_task_image(fake_tasks(scenario), today=SOME_DAY)
 
-    assert drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY).tobytes() == \
-        plain.create_task_image(fake_tasks(scenario), today=SOME_DAY).tobytes()
+    assert footer_row(with_word) != footer_row(without)
+    assert above_the_footer(with_word) == above_the_footer(without)
+
+
+def test_when_there_is_room_the_example_is_drawn_above_the_footer_too():
+    with_word = TaskDrawer(FONT, words=WORDS).create_task_image(FEW_TASKS, today=SOME_DAY)
+    without = TaskDrawer(FONT).create_task_image(FEW_TASKS, today=SOME_DAY)
+
+    assert footer_row(with_word) != footer_row(without)
+    assert above_the_footer(with_word) != above_the_footer(without)
+
+
+@pytest.mark.parametrize("scenario", ["few", "many"])
+def test_every_word_fits_inside_the_margins_on_a_full_screen_too(scenario):
+    margins = DEFAULT_MARGINS
+    drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
+
+    for offset in range(0, len(WORDS), 3):
+        image = drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY + timedelta(days=offset))
+        left, top, right, bottom = image.point(lambda value: 255 - value).getbbox()
+        assert left >= margins.left and right <= image.width - margins.right
+        assert bottom <= image.height - margins.bottom
 
 
 def test_a_different_day_shows_a_different_word():

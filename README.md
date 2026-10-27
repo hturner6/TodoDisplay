@@ -40,7 +40,7 @@ Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi
 
 ## Polish word of the day
 
-A beginner Polish word with its meaning and an example sentence (and its translation) sits under the tasks: the word and meaning on the footer line, the example above it. The words are in `src/taskDisplay/polishWords.csv` and one is picked by date, so it is the same all day and every word comes round before any repeats. Tasks come first: the word is only drawn when it costs no task its place, so a full day hides it, and a stale or error screen never shows it. Set `WORD_OF_THE_DAY=off` in `src/taskFetcher/.env` to turn it off.
+A beginner Polish word with its meaning and an example sentence (and its translation) sits under the tasks. The word and its meaning are always on the footer line, beside 'Updated', which costs no room. The example sentence and its translation go above that line when there is room: tasks come first, so a full day shows only the word. The words are in `src/taskDisplay/polishWords.csv` and one is picked by date, so it is the same all day and every word comes round before any repeats. A stale or error screen shows no word. Set `WORD_OF_THE_DAY=off` in `src/taskFetcher/.env` to turn it off.
 
 The list has 339 sourced entries and 8 hand-written ones (phrases and verb forms such as "dzień dobry" and "rozumiem"). The columns are `polish`, `english`, `example`, `example_english`, then the Tatoeba sentence ids and authors (blank for the hand-written rows). Quote fields that contain commas when editing.
 
