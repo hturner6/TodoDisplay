@@ -16,6 +16,7 @@ WHITE = 255
 TITLE_SIZE = 38
 SMALL_SIZE = 19
 
+PRIORITY_BAR = 6  # width of the bar marking a priority row
 COLUMN_GAP = 24
 DAILY_SHARE = 0.56  # of the content width; Daily Items carry a time, Weekly Items only a day
 
@@ -171,6 +172,9 @@ class TaskDrawer():
             meta_width = self.metaFont.getlength(row.meta)
             self.draw.text((x1 - meta_width, y + ROW_PADDING + 4), row.meta, font=self.metaFont, fill=BLACK)
 
+        if row.priority:
+            # A heavy bar down the row's left edge: it reads from across a room, which a small mark does not.
+            self.draw.rectangle((x0, y + 3, x0 + PRIORITY_BAR - 1, y + row.height - 4), fill=BLACK)
         glyph_cy = y + ROW_PADDING + LINE_HEIGHT // 2
         self._draw_glyph(row, x0 + 24, glyph_cy)
 
@@ -178,8 +182,6 @@ class TaskDrawer():
 
     def _draw_glyph(self, row: Row, cx: int, cy: int):
         d = self.draw
-        if row.priority:
-            self._draw_asterisk(cx - 18, cy)
         if row.status == Task.DONE:
             r = 7
             d.line((cx - r, cy - r, cx + r, cy + r), fill=BLACK, width=4)
@@ -193,11 +195,6 @@ class TaskDrawer():
         else:
             r = 6
             d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=BLACK)
-
-    def _draw_asterisk(self, cx: int, cy: int):
-        r = 6
-        for dx, dy in ((r, 0), (0, r), (r * 0.7, r * 0.7), (r * 0.7, -r * 0.7)):
-            self.draw.line((cx - dx, cy - dy, cx + dx, cy + dy), fill=BLACK, width=2)
 
     # --- messages ------------------------------------------------------------------------------
 
