@@ -20,6 +20,10 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 
 The display draws in pure 1-bit black and white (the panel has no greys) in Inter Bold with an italic Newsreader date heading (the TodoApp's type; see `docs/design-system.md`), with a date header, a week strip, ruled task rows and an 'Updated 9:30 AM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
 
+## Fonts and licences
+
+The display's text is set in Inter and Newsreader Italic, the TodoApp's typefaces, bundled as static Latin-subset instances in `src/screenDisplay/fonts/` (`Inter-Bold.ttf`, `Newsreader-SemiBoldItalic.ttf`). Both are © their authors and licensed under the SIL Open Font License 1.1, which allows bundling and redistribution; the full licence texts are `OFL-Inter.txt` and `OFL-Newsreader.txt` in the same folder and must stay with the fonts. `docs/design-system.md` explains the choice. The other font files in that folder are not used by the display.
+
 ## When the screen is redrawn
 
 To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker; if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TodoApp or TickTick) is shown. The driver has no partial refresh, so every update is a full one.
