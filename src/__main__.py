@@ -65,7 +65,8 @@ def task_preview(path, fake=None, simulate_panel=True, open_after=True, safe_are
     else:
         project_id = "687164e8fb06fe7e7a3d621a"
         tasks = parse_project_tasks(get_project_data(project_id))
-    drawer = TaskDrawer(fontPath, margins=margins())
+    # Sample tasks preview the two-column layout the TodoApp source will use.
+    drawer = TaskDrawer(fontPath, margins=margins(), two_columns=True if fake else None)
     image = drawer.create_task_image(tasks)
     save_preview(image, path, simulate_panel, safe_area=drawer.margins if safe_area else None)
     print(f"Preview saved to {path}")
