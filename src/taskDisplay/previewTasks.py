@@ -93,4 +93,4 @@ class FakeSource(TaskSource):
         return fake_tasks(self._scenario)
 
     def describe_error(self, error: Exception) -> tuple[str, str]:
-        return "Sample tasks failed", "This source cannot fail"
+        return "Cannot reach TodoApp", "Will keep trying"

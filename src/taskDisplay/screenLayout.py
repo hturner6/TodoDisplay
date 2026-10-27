@@ -8,7 +8,7 @@ from taskDisplay.timeFormat import format_time
 TASK_SIZE = 27
 META_SIZE = 21
 LINE_HEIGHT = TASK_SIZE + 6
-GLYPH_COLUMN = 42
+GLYPH_COLUMN = 50  # the Priority asterisk's gutter, then the status glyph
 ROW_PADDING = 8
 MAX_TITLE_LINES = 2
 META_GAP = 16  # kept clear between a title and the label to its right
