@@ -11,9 +11,10 @@ from taskDisplay.screenLayout import (GLYPH_COLUMN, LINE_HEIGHT, META_SIZE, ROW_
                                       build_layout, wrap_text)
 
 # Space kept clear around the content, in pixels. The picture frame's mat hides the panel's edges,
-# so these are a first guess and need measuring against the real frame (see issue #50).
+# so these are still an estimate, not measured: the sides are set very close to the edge, from how the
+# display looks in its frame (see issue #50). Override with DISPLAY_MARGINS if the mat clips anything.
 Margins = namedtuple("Margins", "top right bottom left")
-DEFAULT_MARGINS = Margins(top=28, right=32, bottom=30, left=32)
+DEFAULT_MARGINS = Margins(top=28, right=10, bottom=30, left=6)
 
 BLACK = 0
 WHITE = 255
