@@ -1,23 +1,61 @@
+import csv
 import sys
 from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
+from PIL import ImageFont
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from taskDisplay.wordOfTheDay import Word, load_words, word_for
 
 WORDS_FILE = Path(__file__).resolve().parent.parent / "src/taskDisplay/polishWords.csv"
+FONTS = Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts"
 DAY = date(2026, 10, 27)
 
 
 def test_the_shipped_list_is_a_few_dozen_complete_distinct_beginner_words():
     words = load_words(WORDS_FILE)
 
-    assert len(words) >= 90
+    assert len(words) >= 300
     assert all(word.polish and word.english and word.example and word.example_english for word in words)
     assert len({word.polish for word in words}) == len(words)
+
+
+def rows():
+    with open(WORDS_FILE, encoding="utf-8", newline="") as file:
+        return list(csv.DictReader(file))
+
+
+def test_every_sentence_taken_from_tatoeba_credits_its_authors_and_ids():
+    # CC BY 2.0 FR: using a sentence needs its author named. Hand-written rows have no ids and no authors.
+    sourced = [row for row in rows() if row["polish_sentence_id"]]
+
+    assert len(sourced) >= 300
+    assert all(row["polish_author"] and row["english_sentence_id"] and row["english_author"] for row in sourced)
+    assert all(not row["polish_author"] and not row["english_author"] for row in rows() if not row["polish_sentence_id"])
+
+
+def test_no_example_is_drawn_from_the_same_sentence_twice():
+    ids = [row["polish_sentence_id"] for row in rows() if row["polish_sentence_id"]]
+
+    assert len(ids) == len(set(ids))
+
+
+def test_every_example_fits_the_footer_without_being_cut_short():
+    inter = FONTS / "Inter-Bold.ttf"
+    width = 648 - 32 - 32 - 1  # the content width between the default margins
+    for word in load_words(WORDS_FILE):
+        assert ImageFont.truetype(str(inter), 21).getlength(word.example) <= width, word.polish
+        assert ImageFont.truetype(str(inter), 19).getlength(word.example_english) <= width, word.polish
+
+
+def test_nothing_rude_or_morbid_is_on_a_wall_display():
+    text = " ".join(f"{w.example} {w.example_english}" for w in load_words(WORDS_FILE)).lower()
+
+    for avoid in ("kurw", "chuj", "srał", "szlag", "idiot", "zabi", "śmierć", "umar", "fuck", "shit", "bloody", "kill", "dead", "murder"):
+        assert avoid not in text, avoid
 
 
 def test_the_example_sentences_use_polish_letters():
