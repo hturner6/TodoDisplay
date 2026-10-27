@@ -57,12 +57,12 @@ class TaskDrawer():
     # --- screens -------------------------------------------------------------------------------
 
     def create_task_image(self, tasks: list[Task] = None, updated_at: datetime = None,
-                          today: date = None, stale: bool = False) -> Image:
+                          today: date = None, stale: bool = False, reason: str = "") -> Image:
         self._new_canvas()
         tasks = tasks or []
         today = today or datetime.now().date()
 
-        footer_top = self._draw_footer(updated_at, stale=stale)
+        footer_top = self._draw_footer(updated_at, stale=stale, reason=reason)
         # The Weekly column labels each item with its day, so the week strip would be a
         # repeat that costs a third of the height.
         top = self._draw_header(today, week_strip=not self.two_columns)
@@ -116,15 +116,16 @@ class TaskDrawer():
         self.draw.line((self.left, y, self.right, y), fill=BLACK, width=3)
         return y + 3
 
-    def _draw_footer(self, updated_at: datetime = None, show_time: bool = True, stale: bool = False) -> int:
-        """Draws 'Updated HH:MM' bottom-right (or a STALE notice), and returns the y where the footer starts."""
+    def _draw_footer(self, updated_at: datetime = None, show_time: bool = True, stale: bool = False,
+                     reason: str = "") -> int:
+        """Draws 'Updated HH:MM' bottom-right (or a STALE notice with its cause), and returns the y where the footer starts."""
         top = self.bottom - SMALL_SIZE - 6
         if not show_time:
             return top
 
         updated_at = updated_at or datetime.now()
         if stale:
-            label = f"STALE - last update {format_time(updated_at)}"
+            label = f"STALE - {reason + ' - ' if reason else ''}last update {format_time(updated_at)}"
             text_width = self.smallFont.getlength(label)
             x0 = self.right - text_width - 12
             self.draw.rectangle((x0, top, self.right, self.bottom), fill=BLACK)
@@ -192,14 +193,14 @@ class TaskDrawer():
             self.draw.text((x1 - meta_width, y + ROW_PADDING + 4), row.meta, font=self.metaFont, fill=BLACK)
 
         glyph_cy = y + ROW_PADDING + LINE_HEIGHT // 2
-        self._draw_glyph(row, x0 + 24, glyph_cy)
+        if row.priority:
+            self._draw_asterisk(x0 + 10, glyph_cy)
+        self._draw_glyph(row, x0 + 32, glyph_cy)
 
     # --- glyphs: fixed-size shapes, so they look the same whatever the font ---------------------
 
     def _draw_glyph(self, row: Row, cx: int, cy: int):
         d = self.draw
-        if row.priority:
-            self._draw_asterisk(cx - 18, cy)
         if row.status == Task.DONE:
             r = 7
             d.line((cx - r, cy - r, cx + r, cy + r), fill=BLACK, width=4)
@@ -220,9 +221,11 @@ class TaskDrawer():
             d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=BLACK)
 
     def _draw_asterisk(self, cx: int, cy: int):
-        r = 6
-        for dx, dy in ((r, 0), (0, r), (r * 0.7, r * 0.7), (r * 0.7, -r * 0.7)):
-            self.draw.line((cx - dx, cy - dy, cx + dx, cy + dy), fill=BLACK, width=2)
+        """The TodoApp's Priority mark: a vertical stroke and two diagonals, in the gutter left of the bullet."""
+        r = 8
+        dx, dy = r * 0.87, r * 0.5
+        for x, y in ((0, r), (dx, dy), (dx, -dy)):
+            self.draw.line((cx - x, cy - y, cx + x, cy + y), fill=BLACK, width=4)
 
     # --- messages ------------------------------------------------------------------------------
 
