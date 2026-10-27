@@ -28,6 +28,10 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 
 Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour; if the request fails, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
 
+## Polish word of the day
+
+A beginner Polish word with its meaning and an example sentence (and its translation) sits under the tasks: the word and meaning on the footer line, the example above it. The word comes from `src/taskDisplay/polishWords.csv` (columns `polish`, `english`, `example`, `example_english`; edit or extend it freely, quoting fields that contain commas) and is picked by date, so it is the same all day and every word comes round before any repeats. Tasks come first: the word is only drawn when it costs no task its place, so a full day hides it, and a stale or error screen never shows it. Set `WORD_OF_THE_DAY=off` in `src/taskFetcher/.env` to turn it off. The list is hand-written beginner vocabulary and has not been checked by a Polish speaker.
+
 ## Running on the Pi (systemd)
 
 The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere, and compare it with `systemctl cat TodoDisplay` on the Pi.
