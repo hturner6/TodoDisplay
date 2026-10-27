@@ -30,7 +30,7 @@ To limit ghosting and wear, the `--run` loop skips the redraw when the tasks hav
 
 ## Weather
 
-Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour; if the request fails, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
+Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour (a failed request is retried after ten minutes); if it keeps failing, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
 
 ## Running on the Pi (systemd)
 

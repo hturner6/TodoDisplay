@@ -98,9 +98,22 @@ def test_a_failure_after_a_good_fetch_keeps_the_last_weather_for_a_while_then_hi
     assert weather.current(NOW + timedelta(hours=4)) is None
 
 
-def test_a_failing_fetch_is_not_retried_on_every_refresh():
+def test_a_failed_fetch_is_retried_after_a_short_wait_not_a_full_hour():
     get = FakeGet()
     get.fail = True
+    weather = service(get)
+
+    weather.current(NOW)
+    weather.current(NOW + timedelta(minutes=5))
+    assert len(get.calls) == 1
+
+    get.fail = False
+    assert weather.current(NOW + timedelta(minutes=10)) == Weather(12, "clear")
+    assert len(get.calls) == 2
+
+
+def test_after_a_good_fetch_the_next_ask_is_still_an_hour_away():
+    get = FakeGet()
     weather = service(get)
 
     weather.current(NOW)
