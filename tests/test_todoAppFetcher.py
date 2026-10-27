@@ -14,7 +14,8 @@ from models.task import Task
 from taskFetcher.todoApp import auth
 from taskFetcher.todoApp.firestoreClient import list_documents
 from taskFetcher.todoApp.todoAppSource import TodoAppSource
-from taskFetcher.todoApp.todoItemParser import parse_todo_item, parse_todo_items, select_for_display, week_bounds
+from taskFetcher.todoApp import todoAppSource
+from taskFetcher.todoApp.todoItemParser import parse_todo_item, parse_todo_items
 
 WEDNESDAY = date(2026, 10, 28)  # week is Mon 26 Oct to Sun 1 Nov
 
@@ -65,45 +66,6 @@ def test_unreadable_documents_are_skipped_not_fatal():
     assert len(parse_todo_items(broken + [item("fine")])) == 1
 
 
-def test_weeks_run_monday_to_sunday():
-    assert week_bounds(date(2026, 10, 26)) == (date(2026, 10, 26), date(2026, 11, 1))
-    assert week_bounds(date(2026, 11, 1)) == (date(2026, 10, 26), date(2026, 11, 1))
-
-
-def test_selection_keeps_daily_items_up_to_today_and_this_weeks_weekly_items():
-    tasks = parse_todo_items([
-        item("today", WEDNESDAY),
-        item("overdue", date(2026, 10, 27)),
-        item("tomorrow", date(2026, 10, 29)),
-        item("this week", date(2026, 10, 30), daily=False),
-        item("sunday", date(2026, 11, 1), daily=False),
-        item("last week", date(2026, 10, 25), daily=False),
-        item("next week", date(2026, 11, 2), daily=False),
-    ])
-
-    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["overdue", "today", "this week", "sunday"]
-
-
-@pytest.mark.parametrize("state", ["isDone", "isCancelled", "isMoved"])
-def test_finished_daily_items_from_past_days_are_not_shown(state):
-    tasks = parse_todo_items([item("old", date(2026, 10, 20), state=state), item("today", WEDNESDAY, state=state)])
-
-    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["today"]
-
-
-def test_overdue_daily_items_come_before_todays_whatever_their_time():
-    tasks = parse_todo_items([item("today early", WEDNESDAY, scheduledTime="07:00"),
-                              item("old late", date(2026, 10, 20), scheduledTime="22:00")])
-
-    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["old late", "today early"]
-
-
-def test_daily_items_sort_by_time_with_untimed_last():
-    tasks = parse_todo_items([item("untimed"), item("late", scheduledTime="18:00"), item("early", scheduledTime="08:00")])
-
-    assert [t.title for t in select_for_display(tasks, WEDNESDAY)] == ["early", "late", "untimed"]
-
-
 def test_listing_follows_pagination_until_the_last_page():
     pages = [{"documents": [item("a"), item("b")], "nextPageToken": "t1"},
              {"documents": [item("c")], "nextPageToken": "t2"},
@@ -131,6 +93,15 @@ def test_an_empty_collection_has_no_documents_key():
         def json(self): return {}
 
     assert list_documents("p", "s", "todoItems", "t", get=lambda *a, **k: Response()) == []
+
+
+def test_fetch_returns_every_item_and_leaves_choosing_to_the_screen(monkeypatch):
+    documents = [item("today"), item("next month", date(2026, 12, 1)), item("old", date(2026, 1, 1), state="isDone")]
+    monkeypatch.setattr(todoAppSource, "get_access_token", lambda key_file: "token")
+    monkeypatch.setattr(todoAppSource, "list_documents", lambda *args: documents)
+    env = {"TODOAPP_PROJECT_ID": "p", "TODOAPP_SPACE_ID": "s", "TODOAPP_KEY_FILE": "k"}
+
+    assert [t.title for t in TodoAppSource(env=env).fetch()] == ["today", "next month", "old"]
 
 
 def test_fetch_reports_missing_configuration():
