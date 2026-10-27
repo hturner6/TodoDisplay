@@ -18,7 +18,11 @@ Render the screen to a PNG on any machine, without the display or GPIO, from the
 
 ## Layout and frame margins
 
-The display draws in pure 1-bit black and white (the panel has no greys) in DejaVu Sans Bold, with a date header, a week strip, ruled task rows (a priority row has a heavy asterisk before its bullet, as in the TodoApp) and an 'Updated HH:MM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
+The display draws in pure 1-bit black and white (the panel has no greys) in Inter Bold with an italic Newsreader date heading (the TodoApp's type; see `docs/design-system.md`), with a date header, a week strip, ruled task rows (a priority row has a heavy asterisk before its bullet, as in the TodoApp) and an 'Updated 9:30 AM' footer. The picture frame's mat hides the panel's edges, so content stays inside margins (default top 28, right 32, bottom 30, left 32 px; a first guess, not yet measured). Override them with the `DISPLAY_MARGINS="top,right,bottom,left"` environment variable, and check them with `--preview --safe-area`, which outlines the safe area in red.
+
+## Fonts and licences
+
+The display's text is set in Inter and Newsreader Italic, the TodoApp's typefaces, bundled as static Latin-subset instances in `src/screenDisplay/fonts/` (`Inter-Bold.ttf`, `Newsreader-SemiBoldItalic.ttf`). Both are © their authors and licensed under the SIL Open Font License 1.1, which allows bundling and redistribution; the full licence texts are `OFL-Inter.txt` and `OFL-Newsreader.txt` in the same folder and must stay with the fonts. `docs/design-system.md` explains the choice. The other font files in that folder are not used by the display.
 
 ## When the screen is redrawn
 

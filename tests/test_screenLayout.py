@@ -7,6 +7,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from models.task import Task
+from taskDisplay.timeFormat import format_time
 from taskDisplay.screenLayout import (LINE_HEIGHT, MORE_HEIGHT, ROW_PADDING, Message, build_layout, select,
                                       week_bounds, wrap_text)
 
@@ -157,7 +158,7 @@ def test_the_daily_label_is_late_in_preference_to_the_time():
     result = layout([task("a", date(2026, 10, 26), scheduled_time=time(9, 30)),
                      task("b", scheduled_time=time(9, 30)), task("c")], widths=(300, 200))
 
-    assert [row.meta for row in result.columns[0].rows] == ["2d late", "09:30", ""]
+    assert [row.meta for row in result.columns[0].rows] == ["2d late", "9:30 AM", ""]
 
 
 def test_weekly_items_carry_no_label():
@@ -174,7 +175,7 @@ def test_rows_carry_status_and_priority_not_the_task():
 
 
 def test_a_label_takes_width_from_the_first_line_of_the_title():
-    # 300 wide less the glyph column leaves 258; the "09:30" label and its gap take 66 of it.
+    # 300 wide less the glyph column leaves 258; the "9:30 AM" label and its gap take 66 of it.
     title = "alpha beta gamma delta"
     result = layout([task(title, scheduled_time=time(9, 30))], widths=(300, 200))
 
@@ -224,3 +225,11 @@ def test_open_tasks_come_before_done_ones_in_the_list():
 ])
 def test_an_empty_list_picks_the_right_message(tasks, expected):
     assert layout(tasks).message == expected
+
+
+@pytest.mark.parametrize("moment, text", [
+    (time(0, 5), "12:05 AM"), (time(9, 30), "9:30 AM"), (time(12, 0), "12:00 PM"),
+    (time(13, 45), "1:45 PM"), (time(23, 59), "11:59 PM"),
+])
+def test_times_read_on_the_twelve_hour_clock_like_the_todoapp(moment, text):
+    assert format_time(moment) == text
