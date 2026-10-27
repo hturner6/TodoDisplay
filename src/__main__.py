@@ -9,6 +9,7 @@ from taskDisplay.refresh import DrawTasks, Refresher
 from taskDisplay.preview import open_file, save_preview
 from taskDisplay.previewTasks import SCENARIOS, FakeSource
 from taskFetcher.envFiles import permission_warnings
+from taskFetcher.weather import CONDITIONS, Weather, WeatherService
 from taskFetcher.sources import SOURCES, DEFAULT_SOURCE, resolve_source
 from screenDisplay.draw_bmp import EPaperPanel
 
@@ -31,12 +32,12 @@ def make_renderer(source):
     def render(action):
         drawer = make_drawer(source)
         if isinstance(action, DrawTasks):
-            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale)
+            return drawer.create_task_image(action.tasks, updated_at=action.updated_at, stale=action.stale, weather=action.weather)
         return drawer.create_message_image(action.heading, action.detail)
     return render
 
 def make_refresher(source):
-    return Refresher(source, make_renderer(source), EPaperPanel())
+    return Refresher(source, make_renderer(source), EPaperPanel(), weather=WeatherService.from_env(os.environ))
 
 def refresh_safely(refresher):
     """One refresh that can never end the run loop: a failure is logged and the next interval tries again."""
@@ -59,11 +60,11 @@ def task_test(source):
     image = make_drawer(source).create_task_image(source.fetch())
     image.show()
 
-def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False):
+def task_preview(path, source, fake=None, simulate_panel=True, open_after=True, safe_area=False, weather=None):
     if fake:
         source = FakeSource(fake)
     drawer = make_drawer(source)
-    image = drawer.create_task_image(source.fetch())
+    image = drawer.create_task_image(source.fetch(), weather=Weather(14, weather) if weather else None)
     save_preview(image, path, simulate_panel, safe_area=drawer.margins if safe_area else None)
     print(f"Preview saved to {path}")
     if open_after:
@@ -80,6 +81,7 @@ def main():
     parser.add_argument('--preview', nargs='?', const='previews/preview.png', metavar='PATH',
                         help='Saves the task image to a PNG (default previews/preview.png) without using the display')
     parser.add_argument('--fake', choices=sorted(SCENARIOS), help='With --preview, use sample tasks instead of fetching')
+    parser.add_argument('--weather', choices=CONDITIONS, help='With --preview, show sample weather of this kind')
     parser.add_argument('--no-open', action='store_true', help='With --preview, do not open the PNG afterwards')
     parser.add_argument('--raw', action='store_true', help='With --preview, skip the black/white panel simulation')
     parser.add_argument('--safe-area', action='store_true', help='With --preview, outline the frame-safe area in red')
@@ -94,7 +96,7 @@ def main():
 
     if args.preview:
         task_preview(args.preview, source, fake=args.fake, simulate_panel=not args.raw, open_after=not args.no_open,
-                     safe_area=args.safe_area)
+                     safe_area=args.safe_area, weather=args.weather)
     elif args.run:
         task_run(args.run, make_refresher(source))
     elif args.task:

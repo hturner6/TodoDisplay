@@ -3,10 +3,12 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
+from PIL import ImageChops
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from taskDisplay.createTaskImage import Margins, TaskDrawer, parse_margins
+from taskDisplay.createTaskImage import DEFAULT_MARGINS, Margins, TaskDrawer, parse_margins
+from taskFetcher.weather import Weather
 from taskDisplay.previewTasks import SCENARIOS, fake_tasks
 
 FONT = str(Path(__file__).resolve().parent.parent / "src/screenDisplay/fonts/Inter-Bold.ttf")
@@ -55,3 +57,54 @@ def test_the_drawer_does_not_decide_staleness_from_the_clock():
 
     assert TaskDrawer(FONT).create_task_image([], updated_at=old).tobytes() != \
         TaskDrawer(FONT).create_task_image([], updated_at=old, stale=True).tobytes()
+
+
+# --- weather ---------------------------------------------------------------------------------------
+
+CONDITIONS = ["clear", "partly", "cloud", "fog", "rain", "snow", "storm"]
+
+
+def header_pixels(image):
+    """The header band (date heading and weather), where nothing else is drawn."""
+    return image.crop((0, 0, image.width, 80)).tobytes()
+
+
+@pytest.mark.parametrize("two_columns", [True, False])
+def test_weather_appears_in_the_header_and_nowhere_else(two_columns):
+    drawer = TaskDrawer(FONT, two_columns=two_columns)
+    plain = drawer.create_task_image(fake_tasks("few"))
+    with_weather = drawer.create_task_image(fake_tasks("few"), weather=Weather(12, "rain"))
+
+    assert header_pixels(plain) != header_pixels(with_weather)
+    below = (0, 80, plain.width, plain.height)
+    assert plain.crop(below).tobytes() == with_weather.crop(below).tobytes()
+
+
+def test_each_condition_has_its_own_glyph():
+    drawer = TaskDrawer(FONT)
+    images = {c: header_pixels(drawer.create_task_image([], weather=Weather(12, c))) for c in CONDITIONS}
+
+    assert len(set(images.values())) == len(CONDITIONS)
+
+
+def test_the_temperature_is_drawn():
+    drawer = TaskDrawer(FONT)
+
+    assert header_pixels(drawer.create_task_image([], weather=Weather(12, "clear"))) != \
+        header_pixels(drawer.create_task_image([], weather=Weather(-3, "clear")))
+
+
+@pytest.mark.parametrize("weather", [Weather(-12, "storm"), Weather(38, "partly")])
+def test_the_widest_weather_stays_inside_the_margins_and_clear_of_the_date(weather):
+    margins = DEFAULT_MARGINS
+    drawer = TaskDrawer(FONT, margins=margins)
+    today = datetime(2026, 9, 30).date()  # Wednesday 30 September: a long date heading
+
+    image = drawer.create_task_image([], today=today, weather=weather)
+    without = drawer.create_task_image([], today=today)
+
+    assert image.point(lambda value: 255 - value).getbbox()[2] <= image.width - margins.right
+    band = (0, 0, image.width, 70)
+    date_right = without.crop(band).point(lambda value: 255 - value).getbbox()[2]
+    added = ImageChops.difference(image.crop(band), without.crop(band)).getbbox()
+    assert added[0] > date_right

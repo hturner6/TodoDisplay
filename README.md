@@ -24,6 +24,10 @@ The display draws in pure 1-bit black and white (the panel has no greys) in Inte
 
 To limit ghosting and wear, the `--run` loop skips the redraw when the tasks have not changed (it still redraws hourly so the footer time stays honest), wipes the panel once a day, and puts the panel to sleep after each draw. If a fetch fails, the screen is left alone until its data is two hours old, then redrawn with a STALE marker; if nothing has ever been drawn, an error notice (expired sign-in, or cannot reach TodoApp or TickTick) is shown. The driver has no partial refresh, so every update is a full one.
 
+## Weather
+
+Set `WEATHER_LATITUDE` and `WEATHER_LONGITUDE` in `src/taskFetcher/.env` (the Pi's own file, never committed) and the header shows a weather glyph and the temperature in whole degrees Celsius, from [Open-Meteo](https://open-meteo.com/) (no key or account). Only the coordinates, rounded to one decimal (about 11 km), are sent. The forecast is asked for at most once an hour; if the request fails, the last weather stays for up to three hours and is then hidden, with no error shown. Leave both empty for no weather. `--preview --weather rain` (or `clear`, `partly`, `cloud`, `fog`, `snow`, `storm`) shows a sample.
+
 ## Running on the Pi (systemd)
 
 The Pi (Zero 2 W, Raspberry Pi OS Bookworm, hostname `inkpi`) runs the app as the systemd service `TodoDisplay`, not from cron. The service runs `run.sh`, which starts `--run 30`: it draws as soon as it starts, then every 30 minutes. The unit file is `deploy/TodoDisplay.service`; adjust `User` and the paths if your checkout is elsewhere, and compare it with `systemctl cat TodoDisplay` on the Pi.
