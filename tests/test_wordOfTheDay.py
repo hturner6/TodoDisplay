@@ -45,7 +45,7 @@ def test_no_example_is_drawn_from_the_same_sentence_twice():
 
 def test_every_example_fits_the_footer_without_being_cut_short():
     inter = FONTS / "Inter-Bold.ttf"
-    width = 648 - 32 - 32 - 1  # the content width between the default margins
+    width = 648 - 32 - 32 - 1  # the content width at the older, wider 32 px side margins: any setting up to that works
     for word in load_words(WORDS_FILE):
         assert ImageFont.truetype(str(inter), 21).getlength(word.example) <= width, word.polish
         assert ImageFont.truetype(str(inter), 19).getlength(word.example_english) <= width, word.polish
