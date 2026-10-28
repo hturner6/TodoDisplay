@@ -179,8 +179,8 @@ def footer_row(image):
 def test_on_a_full_screen_the_word_is_still_shown_in_the_footer_row_and_costs_no_task(scenario):
     drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
     plain = TaskDrawer(FONT, two_columns=True)
-    with_word = drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY)
-    without = plain.create_task_image(fake_tasks(scenario), today=SOME_DAY)
+    with_word = drawer.create_task_image(fake_tasks(scenario, SOME_DAY), today=SOME_DAY)
+    without = plain.create_task_image(fake_tasks(scenario, SOME_DAY), today=SOME_DAY)
 
     assert footer_row(with_word) != footer_row(without)
     assert above_the_footer(with_word) == above_the_footer(without)
@@ -200,7 +200,8 @@ def test_every_word_fits_inside_the_margins_on_a_full_screen_too(scenario):
     drawer = TaskDrawer(FONT, words=WORDS, two_columns=True)
 
     for offset in range(0, len(WORDS), 3):
-        image = drawer.create_task_image(fake_tasks(scenario), today=SOME_DAY + timedelta(days=offset))
+        day = SOME_DAY + timedelta(days=offset)
+        image = drawer.create_task_image(fake_tasks(scenario, day), today=day)
         left, top, right, bottom = image.point(lambda value: 255 - value).getbbox()
         assert left >= margins.left and right <= image.width - margins.right
         assert bottom <= image.height - margins.bottom
